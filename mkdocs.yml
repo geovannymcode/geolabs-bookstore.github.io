@@ -1,0 +1,33 @@
+site_name: "GeoLabs BookStore"
+site_description: "GeoLabs BookStore Docs"
+site_author: "Geovanny Mendoza"
+site_url: "https://geolabs-bookstore.github.io/"
+
+# Repository
+repo_name: "/geovannymcode/geolabs-bookstore.github.io"
+repo_url: "https://geolabs-bookstore.github.io"
+
+# Copyright
+copyright: "Copyright &copy; 2024 Geovanny Mendoza"
+
+theme:
+  name: material
+nav:
+  - Home: index.md
+  - Integración de PayPal: integracion-paypal.md
+ 
+# Customization
+extra:
+  manifest: "manifest.webmanifest"
+  social:
+    - icon: fontawesome/brands/github-alt
+      link: "https://github.com/geovannymcode"
+    - icon: fontawesome/brands/twitter
+      link: "https://twitter.com/geovannycode"
+    - icon: fontawesome/brands/linkedin
+      link: "https://www.linkedin.com/in/geovannycode/"
+
+# Extensions
+markdown_extensions:
+  - codehilite
+  - tables
