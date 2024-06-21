@@ -14,8 +14,12 @@ theme:
   name: material
 nav:
   - Home: index.md
-  - Integración de PayPal: integracion-paypal.md
- 
+  - Integración de PayPal:
+      - Integración de PayPal: integracion-paypal.md
+      - Configuración Inicial: integracion-paypal.md#configuracion-inicial
+  - Cache con Redis: cache-redis.md
+  - Anotaciones con Spring AOP: spring-aop.md
+
 # Customization
 extra:
   manifest: "manifest.webmanifest"
