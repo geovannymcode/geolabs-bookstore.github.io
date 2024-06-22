@@ -1,7 +1,7 @@
 site_name: "GeoLabs BookStore"
 site_description: "GeoLabs BookStore Docs"
 site_author: "Geovanny Mendoza"
-site_url: "https://geolabs-bookstore.github.io/"
+site_url: "https://geovannymcode.github.io/geolabs-bookstore.github.io/"
 
 # Repository
 repo_name: "/geovannymcode/geolabs-bookstore.github.io"
@@ -14,11 +14,10 @@ theme:
   name: material
 nav:
   - Home: index.md
-  - Integración de PayPal:
-      - Integración de PayPal: integracion-paypal.md
-      - Configuración Inicial: integracion-paypal.md#configuracion-inicial
-  - Cache con Redis: cache-redis.md
-  - Anotaciones con Spring AOP: spring-aop.md
+  - Referencias: referencia.md
+  #- Integración de PayPal: integracion-paypal.md
+  #- Cache con Redis: cache-redis.md
+  #- Anotaciones con Spring AOP: spring-aop.md
 
 # Customization
 extra:
@@ -35,3 +34,6 @@ extra:
 markdown_extensions:
   - codehilite
   - tables
+  - pymdownx.tasklist:
+      custom_checkbox: true
+      clickable_checkbox: true

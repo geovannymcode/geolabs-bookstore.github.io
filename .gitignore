@@ -9,3 +9,4 @@ build
 .springBeans
 /site/
 myenv
+**/.DS_Store

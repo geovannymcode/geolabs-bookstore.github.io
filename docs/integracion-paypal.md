@@ -1,5 +1,7 @@
 ## Integración de PayPal
 
+![GeoLabs BookStore](./files/capas-paypal.png "GeoLabs BookStore")
+
 ### Configuracion Inicial
 Para comenzar con la integración de PayPal en tu proyecto de Spring Boot, sigue estos pasos:
 
@@ -98,4 +100,4 @@ public class PayPalService {
 Para asegurar las transacciones, considera validar las notificaciones de pago instantáneo (IPN) de PayPal y proteger los datos de los usuarios.
 
 1.  Validar IPN:
-* Configura tu aplicación para recibir y validar mensajes IPN desde PayPal, asegurando la integridad de las transacciones.
+    * Configura tu aplicación para recibir y validar mensajes IPN desde PayPal, asegurando la integridad de las transacciones.
