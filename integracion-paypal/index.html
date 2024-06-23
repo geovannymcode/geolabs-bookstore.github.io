@@ -151,7 +151,7 @@
     
     
       <div class="md-header__source">
-        <a href="https://geolabs-bookstore.github.io" title="Go to repository" class="md-source" data-md-component="source">
+        <a href="https://geovannymcode.github.io/geolabs-bookstore.github.io" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
@@ -197,7 +197,7 @@
   </label>
   
     <div class="md-nav__source">
-      <a href="https://geolabs-bookstore.github.io" title="Go to repository" class="md-source" data-md-component="source">
+      <a href="https://geovannymcode.github.io/geolabs-bookstore.github.io" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
@@ -222,6 +222,26 @@
   
   <span class="md-ellipsis">
     Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../get-bookstores/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Creacion Proyecto
   </span>
   
 
@@ -348,84 +368,80 @@
 </li>
 <li>Agrega las credenciales en tu archivo <code>application.properties</code> o <code>application.yml</code>:</li>
 </ol>
-<div class="codehilite"><pre><span></span><code><span class="na">paypal.client.id</span><span class="o">=</span><span class="s">YOUR_CLIENT_ID</span>
-<span class="na">paypal.client.secret</span><span class="o">=</span><span class="s">YOUR_CLIENT_SECRET</span>
-<span class="na">paypal.mode</span><span class="o">=</span><span class="s">sandbox</span>
-</code></pre></div>
-
-<p>Configurar el APIContext de PayPal en Spring Boot:</p>
-<div class="codehilite"><pre><span></span><code><span class="nd">@Configuration</span>
-<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">PayPalConfig</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nd">@Value</span><span class="p">(</span><span class="s">&quot;${paypal.client.id}&quot;</span><span class="p">)</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">clientId</span><span class="p">;</span>
-<span class="w">    </span><span class="nd">@Value</span><span class="p">(</span><span class="s">&quot;${paypal.client.secret}&quot;</span><span class="p">)</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">clientSecret</span><span class="p">;</span>
-<span class="w">    </span><span class="nd">@Value</span><span class="p">(</span><span class="s">&quot;${paypal.mode}&quot;</span><span class="p">)</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">mode</span><span class="p">;</span>
-
-<span class="w">    </span><span class="nd">@Bean</span>
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">APIContext</span><span class="w"> </span><span class="nf">apiContext</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">APIContext</span><span class="p">(</span><span class="n">clientId</span><span class="p">,</span><span class="w"> </span><span class="n">clientSecret</span><span class="p">,</span><span class="w"> </span><span class="n">mode</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
+<div class="language-properties highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="na">paypal.client.id</span><span class="o">=</span><span class="s">YOUR_CLIENT_ID</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="na">paypal.client.secret</span><span class="o">=</span><span class="s">YOUR_CLIENT_SECRET</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="na">paypal.mode</span><span class="o">=</span><span class="s">sandbox</span>
+</span></code></pre></div>
+<p>Configurar el APIContext de PayPal en Spring Boot:
+<div class="language-java highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nd">@Configuration</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">PayPalConfig</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nd">@Value</span><span class="p">(</span><span class="s">&quot;${paypal.client.id}&quot;</span><span class="p">)</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">clientId</span><span class="p">;</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nd">@Value</span><span class="p">(</span><span class="s">&quot;${paypal.client.secret}&quot;</span><span class="p">)</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">clientSecret</span><span class="p">;</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="nd">@Value</span><span class="p">(</span><span class="s">&quot;${paypal.mode}&quot;</span><span class="p">)</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">mode</span><span class="p">;</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="nd">@Bean</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">APIContext</span><span class="w"> </span><span class="nf">apiContext</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">APIContext</span><span class="p">(</span><span class="n">clientId</span><span class="p">,</span><span class="w"> </span><span class="n">clientSecret</span><span class="p">,</span><span class="w"> </span><span class="n">mode</span><span class="p">);</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="p">}</span>
+</span></code></pre></div></p>
 <h2 id="manejo-de-transacciones">Manejo de Transacciones</h2>
 <p>Implementa los servicios necesarios para manejar las transacciones con PayPal:</p>
-<p>1) Servicio para crear pagos:</p>
-<div class="codehilite"><pre><span></span><code><span class="nd">@Service</span>
-<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">PayPalService</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nd">@Autowired</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">APIContext</span><span class="w"> </span><span class="n">apiContext</span><span class="p">;</span>
-
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Payment</span><span class="w"> </span><span class="nf">createPayment</span><span class="p">(</span><span class="n">Double</span><span class="w"> </span><span class="n">total</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">currency</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">method</span><span class="p">,</span><span class="w"> </span>
-<span class="w">                                 </span><span class="n">String</span><span class="w"> </span><span class="n">intent</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">description</span><span class="p">,</span><span class="w"> </span>
-<span class="w">                                 </span><span class="n">String</span><span class="w"> </span><span class="n">cancelUrl</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">successUrl</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">PayPalRESTException</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">Amount</span><span class="w"> </span><span class="n">amount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Amount</span><span class="p">();</span>
-<span class="w">        </span><span class="n">amount</span><span class="p">.</span><span class="na">setCurrency</span><span class="p">(</span><span class="n">currency</span><span class="p">);</span>
-<span class="w">        </span><span class="n">amount</span><span class="p">.</span><span class="na">setTotal</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="s">&quot;%.2f&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">total</span><span class="p">));</span>
-
-<span class="w">        </span><span class="n">Transaction</span><span class="w"> </span><span class="n">transaction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Transaction</span><span class="p">();</span>
-<span class="w">        </span><span class="n">transaction</span><span class="p">.</span><span class="na">setDescription</span><span class="p">(</span><span class="n">description</span><span class="p">);</span>
-<span class="w">        </span><span class="n">transaction</span><span class="p">.</span><span class="na">setAmount</span><span class="p">(</span><span class="n">amount</span><span class="p">);</span>
-
-<span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Transaction</span><span class="o">&gt;</span><span class="w"> </span><span class="n">transactions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
-<span class="w">        </span><span class="n">transactions</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">transaction</span><span class="p">);</span>
-
-<span class="w">        </span><span class="n">Payer</span><span class="w"> </span><span class="n">payer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Payer</span><span class="p">();</span>
-<span class="w">        </span><span class="n">payer</span><span class="p">.</span><span class="na">setPaymentMethod</span><span class="p">(</span><span class="n">method</span><span class="p">.</span><span class="na">toString</span><span class="p">());</span>
-
-<span class="w">        </span><span class="n">Payment</span><span class="w"> </span><span class="n">payment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Payment</span><span class="p">();</span>
-<span class="w">        </span><span class="n">payment</span><span class="p">.</span><span class="na">setIntent</span><span class="p">(</span><span class="n">intent</span><span class="p">.</span><span class="na">toString</span><span class="p">());</span>
-<span class="w">        </span><span class="n">payment</span><span class="p">.</span><span class="na">setPayer</span><span class="p">(</span><span class="n">payer</span><span class="p">);</span>
-<span class="w">        </span><span class="n">payment</span><span class="p">.</span><span class="na">setTransactions</span><span class="p">(</span><span class="n">transactions</span><span class="p">);</span>
-
-<span class="w">        </span><span class="n">RedirectUrls</span><span class="w"> </span><span class="n">redirectUrls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RedirectUrls</span><span class="p">();</span>
-<span class="w">        </span><span class="n">redirectUrls</span><span class="p">.</span><span class="na">setCancelUrl</span><span class="p">(</span><span class="n">cancelUrl</span><span class="p">);</span>
-<span class="w">        </span><span class="n">redirectUrls</span><span class="p">.</span><span class="na">setReturnUrl</span><span class="p">(</span><span class="n">successUrl</span><span class="p">);</span>
-<span class="w">        </span><span class="n">payment</span><span class="p">.</span><span class="na">setRedirectUrls</span><span class="p">(</span><span class="n">redirectUrls</span><span class="p">);</span>
-
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">payment</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="n">apiContext</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
+<p>1) Servicio para crear pagos:
+<div class="language-java highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nd">@Service</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">PayPalService</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nd">@Autowired</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">APIContext</span><span class="w"> </span><span class="n">apiContext</span><span class="p">;</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Payment</span><span class="w"> </span><span class="nf">createPayment</span><span class="p">(</span><span class="n">Double</span><span class="w"> </span><span class="n">total</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">currency</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">method</span><span class="p">,</span><span class="w"> </span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">                                 </span><span class="n">String</span><span class="w"> </span><span class="n">intent</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">description</span><span class="p">,</span><span class="w"> </span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">                                 </span><span class="n">String</span><span class="w"> </span><span class="n">cancelUrl</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">successUrl</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">PayPalRESTException</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">        </span><span class="n">Amount</span><span class="w"> </span><span class="n">amount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Amount</span><span class="p">();</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">        </span><span class="n">amount</span><span class="p">.</span><span class="na">setCurrency</span><span class="p">(</span><span class="n">currency</span><span class="p">);</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">        </span><span class="n">amount</span><span class="p">.</span><span class="na">setTotal</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="s">&quot;%.2f&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">total</span><span class="p">));</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">        </span><span class="n">Transaction</span><span class="w"> </span><span class="n">transaction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Transaction</span><span class="p">();</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">        </span><span class="n">transaction</span><span class="p">.</span><span class="na">setDescription</span><span class="p">(</span><span class="n">description</span><span class="p">);</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">        </span><span class="n">transaction</span><span class="p">.</span><span class="na">setAmount</span><span class="p">(</span><span class="n">amount</span><span class="p">);</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Transaction</span><span class="o">&gt;</span><span class="w"> </span><span class="n">transactions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">        </span><span class="n">transactions</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">transaction</span><span class="p">);</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">        </span><span class="n">Payer</span><span class="w"> </span><span class="n">payer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Payer</span><span class="p">();</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">        </span><span class="n">payer</span><span class="p">.</span><span class="na">setPaymentMethod</span><span class="p">(</span><span class="n">method</span><span class="p">.</span><span class="na">toString</span><span class="p">());</span>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">        </span><span class="n">Payment</span><span class="w"> </span><span class="n">payment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Payment</span><span class="p">();</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">        </span><span class="n">payment</span><span class="p">.</span><span class="na">setIntent</span><span class="p">(</span><span class="n">intent</span><span class="p">.</span><span class="na">toString</span><span class="p">());</span>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">        </span><span class="n">payment</span><span class="p">.</span><span class="na">setPayer</span><span class="p">(</span><span class="n">payer</span><span class="p">);</span>
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">        </span><span class="n">payment</span><span class="p">.</span><span class="na">setTransactions</span><span class="p">(</span><span class="n">transactions</span><span class="p">);</span>
+</span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>
+</span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">        </span><span class="n">RedirectUrls</span><span class="w"> </span><span class="n">redirectUrls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RedirectUrls</span><span class="p">();</span>
+</span><span id="__span-2-29"><a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="w">        </span><span class="n">redirectUrls</span><span class="p">.</span><span class="na">setCancelUrl</span><span class="p">(</span><span class="n">cancelUrl</span><span class="p">);</span>
+</span><span id="__span-2-30"><a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="w">        </span><span class="n">redirectUrls</span><span class="p">.</span><span class="na">setReturnUrl</span><span class="p">(</span><span class="n">successUrl</span><span class="p">);</span>
+</span><span id="__span-2-31"><a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="w">        </span><span class="n">payment</span><span class="p">.</span><span class="na">setRedirectUrls</span><span class="p">(</span><span class="n">redirectUrls</span><span class="p">);</span>
+</span><span id="__span-2-32"><a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>
+</span><span id="__span-2-33"><a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">payment</span><span class="p">.</span><span class="na">create</span><span class="p">(</span><span class="n">apiContext</span><span class="p">);</span>
+</span><span id="__span-2-34"><a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-2-35"><a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="p">}</span>
+</span></code></pre></div></p>
 <p>2) Servicio para ejecutar pagos:</p>
-<div class="codehilite"><pre><span></span><code><span class="nd">@Service</span>
-<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">PayPalService</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nd">@Autowired</span>
-<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">APIContext</span><span class="w"> </span><span class="n">apiContext</span><span class="p">;</span>
-
-<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Payment</span><span class="w"> </span><span class="nf">executePayment</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">paymentId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">payerId</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">PayPalRESTException</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">Payment</span><span class="w"> </span><span class="n">payment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Payment</span><span class="p">();</span>
-<span class="w">        </span><span class="n">payment</span><span class="p">.</span><span class="na">setId</span><span class="p">(</span><span class="n">paymentId</span><span class="p">);</span>
-<span class="w">        </span><span class="n">PaymentExecution</span><span class="w"> </span><span class="n">paymentExecute</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentExecution</span><span class="p">();</span>
-<span class="w">        </span><span class="n">paymentExecute</span><span class="p">.</span><span class="na">setPayerId</span><span class="p">(</span><span class="n">payerId</span><span class="p">);</span>
-<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">payment</span><span class="p">.</span><span class="na">execute</span><span class="p">(</span><span class="n">apiContext</span><span class="p">,</span><span class="w"> </span><span class="n">paymentExecute</span><span class="p">);</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
-
+<div class="language-java highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nd">@Service</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">PayPalService</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nd">@Autowired</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">APIContext</span><span class="w"> </span><span class="n">apiContext</span><span class="p">;</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Payment</span><span class="w"> </span><span class="nf">executePayment</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">paymentId</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">payerId</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">PayPalRESTException</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">        </span><span class="n">Payment</span><span class="w"> </span><span class="n">payment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Payment</span><span class="p">();</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">        </span><span class="n">payment</span><span class="p">.</span><span class="na">setId</span><span class="p">(</span><span class="n">paymentId</span><span class="p">);</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">        </span><span class="n">PaymentExecution</span><span class="w"> </span><span class="n">paymentExecute</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentExecution</span><span class="p">();</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">        </span><span class="n">paymentExecute</span><span class="p">.</span><span class="na">setPayerId</span><span class="p">(</span><span class="n">payerId</span><span class="p">);</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">payment</span><span class="p">.</span><span class="na">execute</span><span class="p">(</span><span class="n">apiContext</span><span class="p">,</span><span class="w"> </span><span class="n">paymentExecute</span><span class="p">);</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="p">}</span>
+</span></code></pre></div>
 <h2 id="seguridad-en-los-pagos">Seguridad en los Pagos</h2>
 <p>Para asegurar las transacciones, considera validar las notificaciones de pago instantáneo (IPN) de PayPal y proteger los datos de los usuarios.</p>
 <ol>
@@ -525,6 +541,10 @@
     
     
       <script src="../assets/javascripts/bundle.ad660dcc.min.js"></script>
+      
+        <script src="https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js"></script>
+      
+        <script src="../javascripts/tablesort.js"></script>
       
     
   </body>
