@@ -5,7 +5,7 @@ site_url: "https://geovannymcode.github.io/geolabs-bookstore.github.io/"
 
 # Repository
 repo_name: "/geovannymcode/geolabs-bookstore.github.io"
-repo_url: "https://geolabs-bookstore.github.io"
+repo_url: "https://geovannymcode.github.io/geolabs-bookstore.github.io"
 
 # Copyright
 copyright: "Copyright &copy; 2024 Geovanny Mendoza"
@@ -14,10 +14,16 @@ theme:
   name: material
 nav:
   - Home: index.md
+  - Creacion Book: get-book.md
+  - Creacion User: get-user.md
+  - Creacion Order e Item: get-order.md
+  - Integración con PayPal API: integration-paypal.md
+  - Cache con Redis: cache-redis.md
+  - Anotaciones con Spring AOP: spring-aop.md
+  - Frontend WebApp: bookstore-webapp.md
+  - Testing BookStore: testing-book.md 
+  - Tips de Desarrollo: good-practice.md
   - Referencias: referencia.md
-  #- Integración de PayPal: integracion-paypal.md
-  #- Cache con Redis: cache-redis.md
-  #- Anotaciones con Spring AOP: spring-aop.md
 
 # Customization
 extra:
@@ -37,3 +43,19 @@ markdown_extensions:
   - pymdownx.tasklist:
       custom_checkbox: true
       clickable_checkbox: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+# Tables
+extra_javascript:
+  - https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js
+  - javascripts/tablesort.js

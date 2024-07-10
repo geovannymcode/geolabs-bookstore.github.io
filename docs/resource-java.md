@@ -1,4 +1,5 @@
-# **Programas**
+## **Programas**
+
 * [Open JDK 21](https://www.azul.com/downloads/?version=java-21-lts&package=jdk#zulu)
 * [SDKMAN](https://sdkman.io/)
 * [PostgreSQL](https://www.postgresql.org/download/)
@@ -9,17 +10,19 @@
 * [Docker & DockerCompose](https://docs.docker.com/engine/install/)
 * [Portainer](https://docs.portainer.io/start/install/server/docker)
 
-# **Dependencias Maven**
+## **Dependencias Maven**
+
 * [ ] Web
 * [ ] DevTools
 * [ ] Spring Data JPA
 * [ ] PostgreSQL Driver
 * [ ] Lombok
-* [ ] ModelMapper
 * [ ] Validation
 * [ ] Flyway
+* [ ] ModelMapper
 * [ ] Security
 * [ ] JWT
 
-# **Enlaces útiles**
+## **Enlaces útiles**
+
 * [Spring initialzr](https://start.spring.io/)
