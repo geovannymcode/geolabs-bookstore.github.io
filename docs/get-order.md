@@ -1,10 +1,44 @@
-## **Order Entity**
+# **Creación de Entidades Order e Item**
 
-```java title="OrderEntity.java" linenums="1"
-public class OrderEntity {
+### 1. **Entidad Sales Order**
+
+La clase `SalesOrderEntity` representa una orden en nuestro sistema, que incluye el total de la orden, el estado del pago y los ítems asociados a esa orden.
+
+```java title="SalesOrderEntity.java" linenums="1"
+import com.jconfdominicana.bookstore.model.enums.PaymentStatus;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "sales_orders")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class SalesOrderEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_id_generator")
-    @SequenceGenerator(name = "order_id_generator", sequenceName = "order_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sales_order_id_generator")
+    @SequenceGenerator(name = "sales_order_id_generator", sequenceName = "sales_order_id_seq")
     private Long id;
 
     private BigDecimal total;
@@ -14,17 +48,35 @@ public class OrderEntity {
 
     private LocalDateTime createdAt;
 
-    //@ManyToOne
-    //@JoinColumn(name = "customer_id", referencedColumnName = "id")
-   // private User customer;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
+    private UserEntity customer;
 
-    @OneToMany(mappedBy = "orderEntity", cascade = CascadeType.ALL)
-    private List<OrderItemEntity> items;
-
+    @OneToMany(mappedBy = "salesOrderEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<SalesOrderItemEntity> items;
 }
+
 ```
 
-## **Payment Status**
+- **Línea 39**:
+    - **`@Enumerated(EnumType.STRING)`**: Especifica que el campo paymentStatus es un enumerado y se almacenará como una cadena en la base de datos.
+
+- **Línea 44-46**:
+    - **`@ManyToOne`**: Esta anotación indica que existe una relación de muchos a uno entre `OrderEntity` y `User`. En términos de base de datos, esto significa que muchas órdenes pueden estar asociadas con un solo usuario. Esta relación permite que una orden esté vinculada a un único cliente.
+    - **`@JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)`**: Especifica la columna de unión para la relación con `UserEntity`. La columna `customer_id` en `SalesOrderEntity` se refiere a la columna `id` en `UserEntity` y es obligatoria (`nullable = false`).
+
+- **Línea 48-49**:
+    - **`@OneToMany(mappedBy = "salesOrderEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)`**: Indica una relación de uno a muchos con `SalesOrderItemEntity`. La propiedad `mappedBy` se refiere al campo `salesOrderEntity` en `SalesOrderItemEntity`, `cascade = CascadeType.ALL` indica que todas las operaciones de persistencia se propagarán a los elementos relacionados, y `fetch = FetchType.LAZY` indica que la relación se cargará de manera perezosa.
+
+- **Lombok Annotations**:
+    - **`@Getter`**: Genera automáticamente métodos getter para todos los campos.
+    - **`@Setter`**: Genera automáticamente métodos setter para todos los campos.
+    - **`@AllArgsConstructor`**: Genera un constructor con un argumento para cada campo en la clase.
+    - **`@NoArgsConstructor`**: Genera un constructor sin argumentos.
+    - **`@Builder`**: Permite construir objetos de esta clase de manera fluida.
+
+### 2. **Enumerado PaymentStatus**
+El enumerado PaymentStatus define los posibles estados de pago de una orden.
 
 ```java title="PaymentStatus.java" linenums="1"
 public enum PaymentStatus {
@@ -33,96 +85,145 @@ public enum PaymentStatus {
 }
 ```
 
-## **OrderItemEntity**
+- **`PENDING`**: Indica que el pago está pendiente.
+- **`PAID`**: Indica que el pago ha sido completado.
 
-```java title="OrderItemEntity.java" linenums="1"
-public class OrderItemEntity {
+### 3. **Entidad Sales Order Item**
+
+La clase `SalesOrderItemEntity` representa un ítem dentro de una orden de venta, incluyendo detalles como el precio, el número de descargas disponibles, y las relaciones con `BookEntity` y `SalesOrderEntity`.
+
+```java title="SalesOrderItemEntity.java" linenums="1"
+@Entity
+@Table(name = "sales_order_items")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class SalesOrderItemEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_items_id_generator")
-    @SequenceGenerator(name = "order_items_id_generator", sequenceName = "order_items_id_seq")
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sales_order_items_id_generator")
+    @SequenceGenerator(name = "sales_order_items_id_generator", sequenceName = "sales_order_items_id_seq")
+    private Long id;
 
-    private Float price;
+    private BigDecimal price;
 
-    @Column(name = "downs_ava")
+    @Column(name = "downloads_available")
     private Integer downloadsAvailable;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", referencedColumnName = "id")
     private BookEntity bookEntity;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", referencedColumnName = "id")
-    private OrderEntity orderEntity;
+    private SalesOrderEntity salesOrderEntity;
 }
 ```
 
+- **Línea 19-21**:
+    - **`@ManyToOne(fetch = FetchType.LAZY)`**: Indica una relación de muchos a uno con `BookEntity`. La propiedad `fetch = FetchType.LAZY` indica que la relación se cargará de manera perezosa.
+    - **`@JoinColumn(name = "book_id", referencedColumnName = "id")`**: Especifica la columna de unión para la relación con `BookEntity`. La columna `book_id` en `SalesOrderItemEntity` se refiere a la columna `id` en `BookEntity`.
 
-* Repositorio
+- **Línea 23-26**:
+    - **`@JsonIgnore`**: Anotación de Jackson para ignorar esta propiedad durante la serialización y deserialización `JSON`, evitando posibles problemas de recursión infinita.
+    - **`@ManyToOne(fetch = FetchType.LAZY)`**: Indica una relación de muchos a uno con `SalesOrderEntity`. La propiedad `fetch = FetchType.LAZY` indica que la relación se cargará de manera perezosa.
+    - **`@JoinColumn(name = "order_id", referencedColumnName = "id")`**: Especifica la columna de unión para la relación con `SalesOrderEntity`. La columna `order_id` en `SalesOrderItemEntity` se refiere a la columna `id` en `SalesOrderEntity`.
 
-## **OrderRepository**
+## **Creación de Repositorios**
 
-```java title="OrderRepository.java"
-public interface OrderRepository extends JpaRepository<OrderEntity, Long> {}
-```
+En esta sección, vamos a detallar los repositorios `SalesOrderRepository` y `SalesOrderItemRepository` que proporcionan la interfaz para realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) en las entidades `SalesOrderEntity` y `SalesOrderItemEntity`.
 
-## **OrderItemRepository**
+### 1. **Repositorio SalesOrderRepository**
 
-```java title="OrderItemRepository.java"
-public interface OrderItemRepository extends JpaRepository<OrderItemEntity, Long> {
-    Optional<OrderItemEntity> findByIdAndOrderEntity(Long id, OrderEntity orderEntity);
-    Optional<OrderItemEntity> findByIdAndOrderEntityId(Long id, Long orderId);
+El repositorio `SalesOrderRepository` proporciona métodos para realizar operaciones CRUD en la entidad `SalesOrderEntity`
+
+```java title="SalesOrderRepository.java"
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface SalesOrderRepository extends JpaRepository<SalesOrderEntity, Long> {
 }
 ```
 
-* Servicio
+- **`public interface SalesOrderRepository extends JpaRepository<SalesOrderEntity, Long>`**: Define una interfaz de repositorio que extiende `JpaRepository`. Esto proporciona automáticamente métodos para realizar operaciones CRUD en la entidad `SalesOrderEntity`.
+    - **`JpaRepository<SalesOrderEntity, Long>`**: Especifica que el repositorio trabaja con la entidad SalesOrderEntity y utiliza Long como tipo de dato para la clave primaria.
+    - Los métodos CRUD estándar que proporciona `JpaRepository` incluyen:
+        - **`save(S entity)`**: Guarda una entidad.
+        - **`findById(ID id)`**: Encuentra una entidad por su ID.
+        - **`findAll()`**: Encuentra todas las entidades.
+        - **`deleteById(ID id)`**: Elimina una entidad por su ID.
 
-```java title="OrderService.java" linenums="1"
 
+### 2. **Repositorio SalesOrderItemRepository**
+
+El repositorio `SalesOrderItemRepository` proporciona métodos para realizar operaciones CRUD en la entidad `SalesOrderItemEntity`, así como un método adicional para encontrar un ítem de una orden específica.
+
+```java title="SalesOrderItemRepository.java"
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.Optional;
+
+public interface SalesOrderItemRepository extends JpaRepository<SalesOrderItemEntity, Long> {
+    Optional<SalesOrderItemEntity> findByIdAndSalesOrderEntity(Long id, SalesOrderEntity salesOrderEntity);
+}
+```
+
+- **`Optional<SalesOrderItemEntity> findByIdAndSalesOrderEntity(Long id, SalesOrderEntity salesOrderEntity)`**: Método adicional definido en el repositorio para encontrar un ítem de una orden específica.
+    - **`Optional<SalesOrderItemEntity> findByIdAndSalesOrderEntity(Long id, SalesOrderEntity salesOrderEntity)`**: Encuentra un ítem de una orden específica por su ID y la entidad de la orden a la que pertenece. Retorna un `Optional` que puede contener el ítem encontrado o estar vacío si no se encuentra ningún ítem que coincida con los criterios.
+        - **`Long id`**: El ID del ítem de la orden.
+        - **`SalesOrderEntity salesOrderEntity`**: La entidad de la orden a la que pertenece el ítem.
+
+## **Creación del Servicio SalesOrderService**
+
+El servicio `SalesOrderService` se encarga de la lógica de negocio relacionada con las órdenes de venta en la aplicación. Proporciona métodos para crear una nueva orden y para recuperar órdenes existentes.
+
+- **Servicio `SalesOrderService`**
+
+```java title="SalesOrderService.java" linenums="1"
 @Service
-public class OrderService {
+@Transactional
+public class SalesOrderService {
 
     private final BookRepository bookRepository;
 
     private final OrderRepository orderRepository;
 
-    public OrderService(BookRepository bookRepository, OrderRepository orderRepository) {
+    public SalesOrderService(BookRepository bookRepository, OrderRepository orderRepository) {
         this.bookRepository = bookRepository;
         this.orderRepository = orderRepository;
     }
 
     public OrderEntity createOrder(List<Long> bookIds){
-        OrderEntity orderEntity = new OrderEntity();
-        List<OrderItemEntity> items =  new ArrayList<>();
+        SalesOrderEntity() salesOrderEntity = new SalesOrderEntity();
+        List<SalesOrderItemEntity> items =  new ArrayList<>();
         BigDecimal total = BigDecimal.ZERO;
         for( Long bookId : bookIds) {
             BookEntity book = bookRepository
                     .findById(bookId)
                     .orElseThrow(() -> new BookNotFoundException("Book not found with id: " + bookId));
 
-            OrderItemEntity orderItem = new OrderItemEntity();
-            orderItem.setBookEntity(book);
-            orderItem.setPrice(book.getPrice());
-            orderItem.setDownloadsAvailable(3);
-            orderItem.setOrderEntity(orderEntity);
+            SalesOrderItemEntity salesOrderItem = new SalesOrderItemEntity();
+            salesOrderItem.setBookEntity(book);
+            salesOrderItem.setPrice(book.getPrice());
+            salesOrderItem.setDownloadsAvailable(3);
+            salesOrderItem.setOrderEntity(salesOrderEntityy);
 
-            items.add(orderItem);
-            total = total.add(orderItem.getPrice());
+            items.add(salesOrderItem);
+            total = total.add(salesOrderItem.getPrice());
         }
-        orderEntity.setPaymentStatus(PaymentStatus.PENDING);
-        orderEntity.setCreatedAt(LocalDateTime.now());
-        orderEntity.setTotal(total);
-        orderEntity.setItems(items);
+        salesOrderEntity.setPaymentStatus(PaymentStatus.PENDING);
+        salesOrderEntity.setCreatedAt(LocalDateTime.now());
+        salesOrderEntity.setTotal(total);
+        salesOrderEntity.setItems(items);
 
-        return orderRepository.save(orderEntity);
+        return orderRepository.save(salesOrderEntity);
     }
 
-    public List<OrderEntity> getOrders() {
+    public List<SalesOrderEntity> getOrders() {
         return orderRepository.findAll();
     }
 
-    public OrderEntity getOrderById(Long id) {
+    public SalesOrderEntity getOrderById(Long id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order with id " + id + " not found"));
     }
@@ -130,25 +231,52 @@ public class OrderService {
 
 ```
 
-* Controller
+- **Línea 2**:
+    - **`@Transactional`**: Asegura que todos los métodos en esta clase se ejecuten dentro de una transacción. Si alguna parte del método falla, se realiza un rollback de todas las operaciones de la base de datos realizadas en ese método.
+
+- **Línea 14-38**:
+    - **`createOrder(List<Long> bookIds)`**: Método para crear una nueva orden de venta.
+    - **`SalesOrderEntity salesOrderEntity = new SalesOrderEntity();`**: Crea una nueva instancia de `SalesOrderEntity`.
+    - **`List<SalesOrderItemEntity> items = new ArrayList<>();`**: Inicializa una lista de ítems de la orden.
+    - **`BigDecimal total = BigDecimal.ZERO;`**: Inicializa el total de la orden en cero.
+    - **`Bucle for`**: Itera sobre los IDs de los libros proporcionados para crear ítems de la orden.
+        - **`BookEntity book = bookRepository.findById(bookId).orElseThrow(...);`**: Busca el libro por su `ID` o lanza una excepción si no se encuentra.
+        - **`SalesOrderItemEntity salesOrderItem = new SalesOrderItemEntity();`**: Crea una nueva instancia de `SalesOrderItemEntity`.
+        - **`Setters`**: Asigna los valores correspondientes al ítem de la orden.
+        - **`items.add(salesOrderItem);`**: Añade el ítem a la lista de ítems.
+        - **`total = total.add(salesOrderItem.getPrice());`**: Actualiza el total de la orden.
+    - **`Setters`**: Asigna valores a la orden de venta.
+    - **`return orderRepository.save(salesOrderEntity);`**: Guarda la orden en la base de datos y retorna la entidad guardada.
+
+- **Línea 40-42**:
+    - **`getOrders()`**: Método para recuperar todas las órdenes de venta.
+    - **`return orderRepository.findAll();`**: Retorna una lista de todas las entidades `SalesOrderEntity` de la base de datos.
+
+- **Línea 44-47**:
+    - **`getOrderById(Long id)`**: Método para recuperar una orden de venta por su `ID`.
+    - **`return orderRepository.findById(id).orElseThrow(...);`**: Busca una entidad `SalesOrderEntity` por su `ID` o lanza una excepción `ResourceNotFoundException` si no se encuentra.
+
+
+### **Creación del Controlador OrderController**
+
+El controlador OrderController se encarga de manejar las solicitudes HTTP relacionadas con las órdenes de venta. Proporciona endpoints para interactuar con las órdenes, permitiendo su recuperación y, potencialmente, otras operaciones CRUD.
+
+**Controlador `OrderControlle`**
 
 ```java title="OrderController.java" linenums="1"
 @RestController
 @RequestMapping("/api/orders")
 public class OrderController {
 
-    private BookService bookService;
-    private OrderService orderService;
-    private FileSystemStorageService fileSystemStorageService;
+   private final SalesOrderService salesOrderService;
 
-    public OrderController(BookService bookService, OrderService orderService, FileSystemStorageService fileSystemStorageService) {
-        this.bookService = bookService;
-        this.orderService = orderService;
-        this.fileSystemStorageService = fileSystemStorageService;
+    public OrderController(SalesOrderService salesOrderService) {
+            this.salesOrderService = salesOrderService;
+
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderEntity> getOrder(@PathVariable Long id) {
+    public ResponseEntity<SalesOrder> getOrder(@PathVariable Long id) {
         OrderEntity order = orderService.getOrderById(id);
 
         if (order != null) {
@@ -159,3 +287,16 @@ public class OrderController {
     }
 }
 ```
+
+- **Línea 12-21**:
+    - **`@GetMapping("/{id}")`**: Anotación que mapea las solicitudes HTTP GET a la ruta /api/orders/{id} a este método. {id} es una variable de ruta que representa el ID de la orden.
+    - **`@PathVariable Long id`**: Anotación que indica que el valor del parámetro id debe ser tomado de la variable de ruta {id}.
+    - **`ResponseEntity<SalesOrderEntity> getOrder(@PathVariable Long id)`**: Método que maneja la solicitud para obtener una orden por su ID.
+        - **`SalesOrderEntity order = salesOrderService.getOrderById(id);`**: Llama al servicio para obtener la orden por su ID.
+        - **`if (order != null) { ... } else { ... }`**: Verifica si la orden fue encontrada.
+            - **`return ResponseEntity.ok(order);`**: Si la orden es encontrada, devuelve una respuesta HTTP 200 OK con la orden en el cuerpo de la respuesta.
+            - **`return ResponseEntity.notFound().build();`**: Si la orden no es encontrada, devuelve una respuesta HTTP 404 Not Found.
+
+### **Conlusión**
+
+En esta sesión, hemos desarrollado una funcionalidad completa para la gestión de órdenes de venta en una aplicación Spring Boot. Desde la creación de las entidades, la implementación de repositorios y servicios, hasta la configuración del controlador, hemos cubierto todos los componentes necesarios para una solución robusta y bien estructurada. Con estos componentes, hemos construido una aplicación Spring Boot sólida y preparada para gestionar órdenes de venta de manera eficaz, asegurando una arquitectura modular y escalable.

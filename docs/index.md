@@ -4,22 +4,14 @@
 
 En este taller interactivo, aprenderás paso a paso cómo integrar la plataforma de pagos PayPal en aplicaciones desarrolladas con Spring Boot. Abordaremos las técnicas necesarias para manejar pagos en línea de manera segura y eficiente, un requisito esencial para cualquier negocio digital. Adicionalmente, exploraremos cómo mejorar el rendimiento de tu aplicación mediante el uso de caching con Redis, cómo personalizar tu aplicación creando anotaciones con Spring Aspect-Oriented Programming (AOP), y cómo garantizar la calidad de tu software a través de pruebas efectivas en Spring. Estas habilidades son cruciales para construir aplicaciones comerciales robustas y escalables.
 
-## **Tabla de Contenidos**
-
-- **Introducción**: Explicaremos qué habilidades y conocimientos adquirirás en este taller.
-- **Requisitos**: Listado de herramientas y conocimientos previos necesarios para participar.
-- **Arquitectura Técnica**: Una visión general de los componentes de la aplicación y cómo interactúan.
-- **Servicios Backend**: Detalle de los servicios que componen la solución y su función.
-- **Flujo Típico de la Aplicación**: Seguimiento del proceso desde que el usuario navega en la aplicación hasta que se completa la entrega del producto.
-
 ## **Introducción**
 
 En este taller, aprenderás a integrar PayPal con aplicaciones Spring Boot, implementar caching con Redis, crear anotaciones personalizadas con Spring AOP, y realizar pruebas efectivas. Estas habilidades son esenciales para desarrollar aplicaciones comerciales robustas y escalables.
 
 ## **Requisitos**
 
-- **Java**: Versión 17 o superior.
-- **Spring Boot**: Versión 2.5.x o superior.
+- **Java**: Versión 21.
+- **Spring Boot**: Versión 3.2.x o superior.
 - **Base de Datos**: PostgreSQL.
 - **Redis**: Utilizado para implementar el caching y mejorar el rendimiento.
 - **IDE (Entorno de Desarrollo Integrado)**: IntelliJ IDEA, Eclipse, o cualquier otro de tu preferencia.
@@ -31,32 +23,57 @@ En este taller, aprenderás a integrar PayPal con aplicaciones Spring Boot, impl
 
 ![GeoLabs BookStore](./files/paypal.png "GeoLabs BookStore")
 
-### **Arquitectura Técnica:**
+### **Descripción del Diagrama de la Aplicación BookStore con Integración de PayPal**
 
-- **Backend App Bookstore**: Representa la aplicación central que maneja las interacciones de bookstore, incluidos la visualización de productos, la gestión del carrito de compras y el procesamiento de los pagos.
-- **PayPal Backend**: Sistema externo que gestiona los procesos de autenticación y transacción para los pagos realizados a través de PayPal.
-- **Email System**: Utilizado para enviar notificaciones y confirmaciones relacionadas con los pedidos y pagos a los clientes.
-- **Database**: Almacena información relevante como detalles del usuario, información de productos, datos del carrito, y registros de transacciones.
+Este diagrama ilustra el flujo de trabajo de la integración de PayPal en la aplicación BookStore. A continuación, se detallan cada uno de los componentes y sus interacciones:
 
-### **Servicios Backend:**
+1. **Frontend del Usuario (Cliente Web)**
+      - **Descripción:** Es la interfaz que el usuario final utiliza para interactuar con la aplicación BookStore. Desde aquí, el usuario puede navegar por la tienda, seleccionar libros y proceder al pago.
+      - **Interacción:** El usuario realiza acciones en el cliente web que se comunican con la `Backend App BookStore` para solicitar datos o realizar transacciones.
 
-- **Servicio de Catálogo**: Gestiona la información del producto, incluidas las descripciones, precios y disponibilidad.
-- **Servicio de Pago**: Interfaz con PayPal para procesar transacciones de pago.
-- **Servicio de Pedidos**: Administra la creación y el estado de los pedidos, asegurando que los detalles del pedido se guarden y actualicen correctamente.
-- **Servicio de Notificaciones (Email)**: Envía correos electrónicos a los usuarios sobre el estado de su pedido y transacciones.
+2. **Backend App BookStore**
+      - **Descripción:** Es el núcleo de la aplicación, donde se maneja la lógica de negocio. Esta capa se encarga de procesar las solicitudes del cliente web, interactuar con la base de datos, gestionar pagos y enviar notificaciones por correo electrónico.
+      - **Interacciones:**
+          - **Con el Cliente Web:** Recibe solicitudes y envía respuestas para las acciones del usuario.
+          - **Con PayPal Backend:**
+              - Envía solicitudes de pago a PayPal cuando un usuario realiza una compra.
+              - Recibe las confirmaciones de pago de PayPal.
+          - **Con la Base de Datos:** Lee y escribe datos como información de libros, detalles de usuarios y transacciones.
+          - **Con el Servicio de Email:** Envía correos electrónicos de confirmación de pedidos y otras notificaciones relevantes al usuario.
 
-## **Flujo Típico de la Aplicación**
+3. **PayPal Backend**
+      - **Descripción:** Servicio externo proporcionado por PayPal que gestiona las transacciones de pago.
+      - **Interacciones:**
+          - **Con Backend App BookStore:**
+              - Recibe solicitudes de pago desde la `Backend App BookStore`.
+              - Envía respuestas de confirmación o rechazo de las transacciones a la `Backend App BookStore`.
 
-1. **Navegación del Catálogo**: El cliente explora los productos disponibles a través de la Backend App Bookstore.
-2. **Selección y Carrito de Compras**: Añade productos preferidos a la cesta.
-3. **Proceso de Pago**:
-      * El cliente procede a la página de pago.
-      * Introduce sus datos personales y de pago.
-4. **Validación de Datos de Pago**:
-      * Se verifica la validez de los datos de pago a través del Servicio de Pago que interactúa con el PayPal Backend.
-      * Dependiendo del resultado de la validación, el estado del pedido se establece en "NUEVO" (si es válido) o en "ERROR" (si no lo es).
-5. **Registro y Gestión de Pedidos**:
-      * Los datos del pedido son almacenados en la base de datos.
-      * Se publica un evento `OrderCreated` si el pago es exitoso; en caso contrario, se publica un evento `OrderError`.
-6. **Notificación al Cliente**: El Servicio de Notificaciones envía un email al cliente confirmando el estado del pedido basado en los eventos `OrderCreated` o `OrderError`.
+4. **Base de Datos**
+      - **Descripción:** Almacena todos los datos relevantes de la aplicación, incluyendo información de productos (libros), usuarios, y transacciones.
+      - **Interacciones:**
+          - **Con Backend App BookStore:** Proporciona datos necesarios para la lógica de negocio y almacena los resultados de las operaciones de la aplicación.
 
+5. **Servicio de Email**
+      - **Descripción:** Gestiona el envío de correos electrónicos a los usuarios.
+      - **Interacciones:**
+          - **Con Backend App BookStore:** Recibe solicitudes para enviar correos electrónicos de confirmación de pedidos y otras notificaciones importantes.
+
+### **Flujo de Trabajo**
+
+1. **Inicio de Transacción**
+      - El usuario navega por la tienda en el cliente web y selecciona los libros que desea comprar.
+      - Al proceder al pago, la solicitud se envía desde el cliente web a la `Backend App BookStore`.
+
+2. **Procesamiento del Pago**
+      - La `Backend App BookStore` recibe la solicitud de pago y envía una solicitud a PayPal para procesar el pago.
+      - PayPal procesa el pago y envía una respuesta de confirmación o rechazo a la `Backend App BookStore`.
+
+3. **Actualización de la Base de Datos**
+     - Una vez confirmado el pago, la `Backend App BookStore` actualiza la base de datos con la información de la transacción.
+
+4. **Notificación al Usuario**
+     - La `Backend App BookStore` envía una solicitud al Servicio de Email para enviar una confirmación de pedido al usuario.
+     - El Servicio de Email envía el correo de confirmación al usuario.
+
+5. **Finalización**
+     - La `Backend App BookStore` envía una respuesta al cliente web con el estado de la transacción (éxito o fallo).
