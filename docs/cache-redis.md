@@ -63,7 +63,13 @@ Sin embargo, si los datos solicitados no se encuentran en el caché (falta de ca
 
 Redis también puede usarse para tareas de eliminación y actualización, garantizando datos consistentes y actualizados en el caché y mejorando aún más la eficiencia general.
 
-### **Configure Redis para levantar la imagen en dev-stack.yml**
+## **Configuración de Redis en un Proyecto Spring Boot**
+
+### **1. Configurar Redis en Docker**
+
+Archivo `dev-stack.yml`
+
+- Este archivo de Docker Compose configura un contenedor de Redis para el entorno de desarrollo.
 
 ```yaml title="dev-stack.yaml" linenums="1"
   cache-db:
@@ -75,7 +81,18 @@ Redis también puede usarse para tareas de eliminación y actualización, garant
     command: redis-server --loglevel warning --requirepass jconfdominicana
 ```
 
-### **Configure redis usando application.properties**
+- **image**: redis:6.2-alpine: Utiliza la imagen `redis` versión `6.2-alpine`.
+- **container_name: `best_book_cach`**: Nombre del contenedor.
+- **restart: `always`**: Configura el contenedor para que se reinicie automáticamente.
+- **ports: `"6379:6379"`**: Mapea el puerto `6379` del host al puerto `6379` del contenedor.
+- **command: `redis-server --loglevel warning --requirepass jconfdominicana`**: Inicia Redis con un nivel de log `warning` y una contraseña `jconfdominicana`.
+
+
+### **2. Configurar Redis en Spring Boot**
+
+Archivo `application.properties`
+
+- Configura la conexión a Redis en el archivo de propiedades.
 
 ```properties title="application.properties" linenums="1"
 ####### Redis Configuration ########
@@ -83,7 +100,14 @@ cache.redis.address=redis://127.0.0.1:6379
 cache.redis.password=jconfdominicana
 ```
 
-### **Configurar Redis en tu proyecto Spring Boot**
+- **`cache.redis.address=redis://127.0.0.1:6379`**: Dirección del servidor Redis.
+- **`cache.redis.password=jconfdominicana`**: Contraseña para acceder a Redis.
+
+### **3. Configuración de Propiedades**
+
+Clase `PropertiesConfig.java`
+
+Esta clase carga las propiedades de configuración.
 
 ```java title="PropertiesConfig.java" linenums="1"
 @Configuration
@@ -93,7 +117,12 @@ public class PropertiesConfig {
 }
 ```
 
-* Adicionar las dependencias de Redis en el archivo ```pom.xml```:
+- **`@Configuration`**: Indica que esta clase tiene una o más definiciones de métodos `@Bean`.
+- **`@PropertySource(value="classpath:application.properties")`**: Carga el archivo `application.properties`.
+
+### **4. Dependencias en `pom.xml`**
+
+Adicionar las dependencias necesarias para Redis.
 
 ```xml
 <dependency>
@@ -107,7 +136,14 @@ public class PropertiesConfig {
 </dependency>
 ```
 
-* Añadir esta clase de constantes al proyecto para usar cache
+- **`spring-boot-starter-cache`**: Proporciona soporte para la anotación de caché de Spring.
+- **`redisson`**: Cliente Redis avanzado para Java.
+
+### **5. Clase de Constantes**
+
+Clase `CacheConstants.java`
+
+Define constantes utilizadas en la configuración de caché.
 
 ```java title="CacheConstants.java" linenums="1"
 public class CacheConstants {
@@ -116,7 +152,17 @@ public class CacheConstants {
 }
 ```
 
-* Añadir esta clase de configuracion para usar redis
+- **`USER_CACHE_NAME`**: Nombre del caché para usuarios.
+- **`SCHEDULED_RESET_CACHE`**: Cron para reiniciar el caché diariamente.
+
+- **Link**: [Redis Calendario](https://crontab.cronhub.io/)
+
+### **6. Configuración de Redis**
+
+Clase `RedisConfig.java`
+
+La clase `RedisConfig` se encarga de configurar el cliente Redis y el gestor de caché en una aplicación Spring Boot.
+
    
 ```java title="RedisConfig.java" linenums="1"
 import lombok.extern.slf4j.Slf4j;
@@ -170,7 +216,34 @@ public class RedisConfig {
 }
 ```
 
-* Adicionando cache a nuestros de servicios de users:
+- **Línea 16-18**
+    - **`@Configuration`**: Indica que esta clase tiene una o más definiciones de métodos `@Bean`.
+    - **`@EnableCaching`**: Habilita la anotación de caché de Spring, permitiendo el uso de anotaciones como `@Cacheable`, `@CacheEvict`, etc.
+    - **`@Slf4j`**: Habilita el logging en la clase mediante la biblioteca Lombok.
+
+- **Línea 21-24**
+    - **`@Value("${cache.redis.address}")`**: Inyecta el valor de la propiedad cache.redis.address desde application.properties en la variable serverAddress.
+    - **`@Value("${cache.redis.password}")`**: Inyecta el valor de la propiedad cache.redis.password desde application.properties en la variable serverPassword.
+- **Línea 29-36**
+    - **`@Bean`**: Indica que este método produce un bean que será manejado por el contenedor de Spring.
+    - **`public RedissonClient redissonClient()`**: Método que configura y retorna una instancia de RedissonClient.
+    - **`Config config = new Config();`**: Crea una nueva instancia de Config para configurar Redisson.
+    - **`config.useSingleServer()`**: Configura Redisson para usar un único servidor Redis.
+    - **`setAddress(serverAddress)`**: Establece la dirección del servidor Redis usando el valor inyectado en serverAddress.
+    - **`setPassword(serverPassword)`**: Establece la contraseña del servidor Redis usando el valor inyectado en serverPassword.
+    - **`return Redisson.create(config);`**: Crea y retorna una instancia de RedissonClient utilizando la configuración especificada.
+- **Línea 41-48**
+    - **`@Bean`**: Indica que este método produce un bean que será manejado por el contenedor de Spring.
+    - **`@Autowired`**: Inyecta automáticamente el RedissonClient en este método.
+    - **`public CacheManager cacheManager(RedissonClient redissonClient)`**: Método que configura y retorna una instancia de CacheManager.
+    - **`Map.of(CacheConstants.USER_CACHE_NAME, new CacheConfig())`**: Crea un mapa de configuraciones de caché, utilizando la constante `USER_CACHE_NAME` como clave y una nueva instancia de CacheConfig como valor.
+    - **`return new RedissonSpringCacheManager(redissonClient, configs);`**: Crea y retorna una instancia de RedissonSpringCacheManager utilizando el RedissonClient y las configuraciones de caché especificadas.
+
+### **7. Adicionar Caché en el Servicio de Usuarios**
+
+Clase `UserService.java`
+
+Aplica caché a los métodos del servicio de usuarios.
 
 ```java title="UserService.java" linenums="1"
 @Service
@@ -204,9 +277,15 @@ public class UserService {
 }
 ```
 
-* Limpiando cache con método calendarizado:
-    * Adicionamos esta anotación ```@EnableScheduling``` en la parte superior de la clase RedisConfig.
-    * Adicionamos el siguiente código deleteCache()
+- **`@Cacheable(value = CacheConstants.USER_CACHE_NAME)`**: Anotación que indica que el resultado del método debe ser almacenado en caché.
+
+### **8. Limpiar Caché con un Método Calendarizado**
+
+Adición de Anotaciones
+
+- **`@EnableScheduling`**: Habilita la programación de tareas.
+
+Método `deleteCache` en `RedisConfig.java`
 ```java
 @CacheEvict(cacheNames ={CacheConstants.USER_CACHE_NAME}, allEntries = true)
 @Scheduled(cron = CacheConstants.SCHEDULED_RESET_CACHE)
@@ -216,4 +295,10 @@ public void deleteCache() {
 }
 ```
 
+- **`@CacheEvict(cacheNames = {CacheConstants.USER_CACHE_NAME}, allEntries = true)`**: Elimina todas las entradas del caché especificado.
+- **`@Scheduled(cron = CacheConstants.SCHEDULED_RESET_CACHE)`**: Programa la tarea según la expresión cron.
+- **`@Async`**: Ejecuta el método de forma asíncrona.
+
 ### **Conclusiones**
+
+En esta sesión, hemos configurado Redis para el manejo de caché en una aplicación Spring Boot, desde la configuración del contenedor de Redis en Docker, pasando por la configuración de propiedades y la inyección de dependencias en Spring, hasta la implementación del caché en el servicio de usuarios. Esta configuración mejora significativamente el rendimiento de la aplicación, asegurando que las respuestas a las solicitudes se sirvan de manera rápida y eficiente.

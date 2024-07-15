@@ -21,16 +21,20 @@ public class User {
 ```
 
 1. Convertir la clase User en una entidad de base de datos usando las anotaciones `@Entity`, `@Id`, `@GeneratedValue`.
-2. Crear su respectivo repositorio llamado `UserRepository` que herede de `JpaRepository<User, Long>`.
-    * Adicionar un método que valide si existe el `email` 
-3. Crear el servicio `UserService` 
+2. Crear su respectivo repositorio llamado `UserRepository` 
+    * Extender `JpaRepository<User, Long>`.
+    * Adicionar un método que valide si existe el `email`
+3. Crear el schema por Flyway para la tabla `users`.
+    * Definir la secuencia y la tabla en un archivo SQL de migración.  
+4. Crear el servicio `UserService` 
     * Implementar la logica del negocio en el servicio `UserService`.
-4. Crear el DTO `User`
-    * Definir el DTO para User junto a sus respectivas validaciones.
-5. Crear el Mapper UserMapper
-    * Implementar el mapeo entre User y UserDTO.  
-6. Crear e implementar un controlador `UserController` para manejar las operaciones CRUD de User a nivel de base de datos.
-7. Probar la implementación con POSTMAN.
+5. Crear el DTO `User`
+    * Definir el DTO para `User` junto a sus respectivas validaciones.
+6. Crear el Mapper UserMapper
+    * Implementar el mapeo entre `User` y `UserDTO`.  
+7. Crear e implementar un controlador `UserController` 
+    * Manejar las operaciones CRUD de `User` a nivel de base de datos.
+8. Probar la implementación con POSTMAN.
 
 Finalmente, probar la implementación realizando las siguientes operaciones con POSTMAN:
 

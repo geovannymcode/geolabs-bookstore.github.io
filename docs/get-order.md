@@ -131,6 +131,79 @@ public class SalesOrderItemEntity {
     - **`@ManyToOne(fetch = FetchType.LAZY)`**: Indica una relación de muchos a uno con `SalesOrderEntity`. La propiedad `fetch = FetchType.LAZY` indica que la relación se cargará de manera perezosa.
     - **`@JoinColumn(name = "order_id", referencedColumnName = "id")`**: Especifica la columna de unión para la relación con `SalesOrderEntity`. La columna `order_id` en `SalesOrderItemEntity` se refiere a la columna `id` en `SalesOrderEntity`.
 
+## **Creación de Schemas**
+
+### 1. **Crear la secuencia y tabla sales_orders**
+    
+- **Crear la Secuencia sales_order_id_seq**
+
+```sql
+CREATE SEQUENCE sales_order_id_seq
+    START WITH 1
+    INCREMENT BY 50;
+```
+
+- **`CREATE SEQUENCE sales_order_id_seq`**: Crea una nueva secuencia llamada `sales_order_id_seq`.
+START WITH 1: La secuencia comienza en 1.
+- **`INCREMENT BY 50`**: La secuencia incrementa en 50 cada vez que se solicita un nuevo valor.
+
+### 2. **Crear la Tabla `sales_orders`**
+
+```sql
+CREATE TABLE sales_orders (
+    id BIGINT PRIMARY KEY DEFAULT nextval('sales_order_id_seq') NOT NULL,
+    total NUMERIC NOT NULL,
+    payment_status VARCHAR(255),
+    created_at TIMESTAMP NOT NULL,
+    customer_id BIGINT,
+    FOREIGN KEY (customer_id) REFERENCES users(id)
+);
+```
+
+- **`id BIGINT PRIMARY KEY DEFAULT nextval('sales_order_id_seq') NOT NULL`**:
+    - **`id BIGINT PRIMARY KEY`**: Define la columna `id` como la clave primaria de tipo BIGINT.
+    - **`DEFAULT nextval('sales_order_id_seq')`**: El valor por defecto se obtiene de la secuencia `sales_order_id_seq`.
+    - **`NOT NULL`**: El campo no puede ser nulo.
+- **`total NUMERIC NOT NULL`**: Define la columna `total` como `NUMERIC` y no puede ser nula.
+- **`payment_status VARCHAR(255)`**: Define la columna `payment_status` como `VARCHAR(255)`.
+- **`created_at TIMESTAMP NOT NULL`**: Define la columna `created_at` como `TIMESTAMP` y no puede ser nula.
+- **`customer_id BIGINT`**: Define la columna `customer_id` como `BIGINT`.
+- **`FOREIGN KEY (customer_id) REFERENCES users(id)`**: Define `customer_id` como una clave foránea que referencia a `id` en la tabla `users`.
+
+### 3. **Crear la secuencia y `tabla sales_order_items`**
+
+- **Crear la Secuencia sales_order_items_id_seq**
+
+```sql
+CREATE SEQUENCE sales_order_items_id_seq
+    START WITH 1
+    INCREMENT BY 50;
+```
+
+- **Crear la Tabla sales_order_items**
+
+```sql
+CREATE TABLE sales_order_items (
+    id INT DEFAULT nextval('sales_order_items_id_seq') PRIMARY KEY,
+    price NUMERIC,
+    downloads_available INT,
+    book_id BIGINT,
+    order_id BIGINT,
+    FOREIGN KEY (book_id) REFERENCES books(id),
+    FOREIGN KEY (order_id) REFERENCES sales_orders(id)
+);
+```
+
+- **`id INT DEFAULT nextval('sales_order_items_id_seq') PRIMARY KEY`**:
+    - **`id INT PRIMARY KEY`**: Define la columna id como la clave primaria de tipo INT.
+    - **`DEFAULT nextval('sales_order_items_id_seq')`**: El valor por defecto se obtiene de la secuencia `sales_order_items_id_seq`.
+    - **`price NUMERIC`**: Define la columna price como NUMERIC.
+    - **`downloads_available INT`**: Define la columna downloads_available como INT.
+    - **`book_id BIGINT`**: Define la columna book_id como BIGINT.
+    - **`order_id BIGINT`**: Define la columna order_id como BIGINT.
+    - **`FOREIGN KEY (book_id) REFERENCES books(id)`**: Define book_id como una clave foránea que referencia a id en la tabla books.
+    - **`FOREIGN KEY (order_id) REFERENCES sales_orders(id)`**: Define order_id como una clave foránea que referencia a id en la tabla sales_orders.
+
 ## **Creación de Repositorios**
 
 En esta sección, vamos a detallar los repositorios `SalesOrderRepository` y `SalesOrderItemRepository` que proporcionan la interfaz para realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) en las entidades `SalesOrderEntity` y `SalesOrderItemEntity`.
