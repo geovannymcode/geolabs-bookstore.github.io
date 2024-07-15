@@ -1,3 +1,5 @@
+# **Anotaciones con Spring AOP**
+
 ## **¿Qué es AOP?**
 
 La Programación Orientada a Aspectos (**AOP**, por sus siglas en inglés) es un paradigma de programación que busca extraer funcionalidades transversales, como el registro de logs, en lo que se conoce como "Aspectos".
@@ -35,21 +37,35 @@ Un Pointcut es una expresión que define en qué JoinPoints se debe aplicar un A
 
 Aspect es una clase en la que definimos Pointcuts y Advices.
 
-### **Ejemplo de Spring AOP**
+### **Creación y Uso de Anotaciones con Spring AOP**
 
-Ahora pongamos esas definiciones en un ejemplo de código donde creamos una anotación Log que registra un mensaje en la consola antes de que comience la ejecución del método.
+En esta sección, vamos a mostrar cómo simplificar la gestión de errores creando anotaciones personalizadas y utilizando Spring AOP.
 
-Primero, incluyamos las dependencias de los starters de AOP y test de Spring.
+### **Paso 1: Código Inicial Sin AOP**
+
+Supongamos que tenemos el siguiente método en nuestra clase `BookService`:
+
+```java title="Log.java" linenums="1"
+public Optional<Book> getBookByCode(String code) {
+        logger.info("Starting book by code validations before getting the information", code);
+        try {
+            return bookRepository.findByCode(code).map(BookMapper::toBook);
+        } catch (Exception e) {
+            logger.error("Error accessing data for book with code: {}", code, e);
+            throw new BookNotFoundException("Book not found with code: " + code);
+        }
+    }
+```
+
+Estamos registrando manualmente mensajes de log antes y después de la ejecución del método, así como en caso de error. Vamos a simplificar y centralizar este comportamiento utilizando AOP.
+
+### **Paso 2: Incluir Dependencias en el pom.xml**
+
+Primero, incluimos las dependencias necesarias para AOP en nuestro archivo `pom.xml`.
 
 ```yml title="pom.xml" linenums="1"
 
-<dependencies>  
-	 <dependency> 
-		 <groupId>org.springframework.boot</groupId>  
-		 <artifactId>spring-boot-starter-test</artifactId>  
-		 <scope>test</scope>  
-	 </dependency>  
-	 
+<dependencies> 
 	 <dependency> 
 		 <groupId>org.springframework.boot</groupId>  
 		 <artifactId>spring-boot-starter-aop</artifactId>  
@@ -58,7 +74,11 @@ Primero, incluyamos las dependencias de los starters de AOP y test de Spring.
  </dependencies>
 ```
 
-Ahora, vamos a crear la anotación Log que queremos utilizar:
+- **`spring-boot-starter-aop`**: Incluye las dependencias necesarias para utilizar Aspect-Oriented Programming (AOP) en Spring Boot.
+
+### **Paso 3: Crear la Anotación Log**
+
+Creamos una anotación llamada `Log` que será utilizada para interceptar métodos y registrar mensajes en la consola.
 
 ```java title="Log.java" linenums="1"
 import java.lang.annotation.ElementType;  
@@ -72,75 +92,15 @@ public @interface Log {
 }
 ```
 
-Lo que esto hace es crear una anotación que sólo es aplicable a los métodos y se procesa en tiempo de ejecución.
+- **`@interface`**: Utilizado para definir una anotación personalizada en Java. Las anotaciones son un mecanismo para agregar metadatos a tu código. En este caso, estamos creando una anotación llamada Log.
+- **`@Target(ElementType.METHOD)`**: Indica que esta anotación solo se puede aplicar a métodos.
+- **`@Retention(RetentionPolicy.RUNTIME)`**: Indica que la anotación estará disponible en tiempo de ejecución, permitiendo que los aspectos de AOP la intercepten.
 
-El siguiente paso es crear la clase Aspect con un Pointcut y un Advice:
+### **Paso 4: Implementar un Aspecto para Manejar la Anotación**
+
+En este paso, vamos a implementar un aspecto que maneje la anotación `Log` y registre mensajes personalizados antes, después y en caso de una excepción durante la ejecución del método. Este aspecto permitirá centralizar el logging de manera que no tengamos que repetir código en cada método.
 
 ```java title="LogginAspect.java" linenums="1"
-import org.aspectj.lang.annotation.Aspect;  
-import org.aspectj.lang.annotation.Before;  
-import org.aspectj.lang.annotation.Pointcut;  
-import org.springframework.stereotype.Component;  
-  
-@Component  
-@Aspect  
-public class LoggingAspect {  
-    
-    @Pointcut("@annotation(Log)")  
-    public void logPointcut(){  
-    }  
-    
-    @Before("logPointcut()")  
-    public void logAllMethodCallsAdvice(){  
-        System.out.println("In Aspect");  
-    }  
-}
-```
-
-Vinculando esto con las definiciones que presentamos arriba, notamos la anotación ```@Aspect``` que marca la clase ```LoggingAspect``` como una fuente para ```@Pointcut``` y ```Advice (@Before)```. También observe que anotamos la clase como un ```@Component``` para permitir que Spring gestione esta clase como un Bean.
-
-Además, usamos la expresión ```@Pointcut("@annotation(Log)")``` para describir qué métodos potenciales ```(JoinPoints)``` se ven afectados por el método Advice correspondiente. En este caso, queremos agregar el advice a todos los métodos que están anotados con nuestra anotación ```@Log```.
-
-Esto nos lleva a ```@Before("logPointcut()")``` que ejecuta el método anotado ```logAllMethodCallsAdvice``` antes de la ejecución de cualquier método anotado con ```@Log```.
-
-### **Creación y Uso de Anotaciones con Spring AOP**
-Simplifica la gestión de errores creando anotaciones personalizadas y utilizando Spring AOP:
-
-- Creación de anotaciones personalizadas.
-- Uso de AOP para interceptar anotaciones.
-- Crear una anotación personalizada:
-
-Suponiendo que tenemos en nuestra clase de BookService el método getBookByCode tenemos esto.
-```java title="Log.java" linenums="1"
-public Optional<Book> getBookByCode(String code) {
-        logger.info("Starting book by code validations before getting the information", code);
-        try {
-            return bookRepository.findByCode(code).map(BookMapper::toBook);
-        } catch (Exception e) {
-            logger.error("Error accessing data for book with code: {}", code, e);
-            throw new BookNotFoundException("Book not found with code: " + code);
-        }
-    }
-```
-
-```java title="Loggable .java" linenums="1"
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Loggable {
-    String startMessage() default "Entering";
-    String endMessage() default "Exiting";
-    String errorMessage() default "Exception";
-}
-```
-
-- Implementar un aspecto para manejar la anotación:
-  
-```java title="LoggingAspect.java" linenums="1"
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -186,7 +146,88 @@ public class LoggingAspect {
 }
 ```
 
-- Implementar un aspecto para manejar la anotación:
+- **Anotaciones y Componentes**
+    - **@Component**: Indica que esta clase es un componente gestionado por Spring, permitiendo que sea detectada y registrada como un bean en el contexto de Spring.
+    - **@Aspect**: Indica que esta clase define un aspecto, que es una modularización de una preocupación transversal (como el logging) que puede aplicarse a varios puntos de la aplicación.
+
+- **Línea 15**: 
+```java
+private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
+```
+- **`Logger logger`**: Utiliza SLF4J y Logback para registrar mensajes de log. `LoggerFactory.getLogger(LoggingAspect.class)` crea una instancia de logger específica para esta clase.
+
+**Advice `@Around`**
+
+```java
+@Around("@annotation(com.jconfdominicana.bookstore.aspect.Loggable)")
+public Object logExecution(ProceedingJoinPoint joinPoint) throws Throwable {
+```
+
+- **@Around("@annotation(com.jconfdominicana.bookstore.aspect.Loggable)")**: Define un advice que se ejecuta alrededor de la ejecución de métodos 
+anotados con @Loggable. Esto significa que el advice se ejecutará antes, durante y después de la ejecución del método.
+- **ProceedingJoinPoint joinPoint**: Representa el punto de ejecución del método interceptado, permitiendo ejecutar el método y obtener información sobre él.
+
+**Obtener la Anotación Loggable**
+
+```java
+Loggable loggable = getLoggableAnnotation(joinPoint);
+```
+
+- **Loggable loggable**: Obtiene la instancia de la anotación Loggable del método interceptado para acceder a sus valores.
+Obtener Información del Método
+
+```java
+String className = joinPoint.getSignature().toShortString();
+MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+String[] parameterNames = methodSignature.getParameterNames();
+Object[] arguments = joinPoint.getArgs();
+String argsString = IntStream.range(0, arguments.length)
+        .mapToObj(i -> parameterNames[i] + "=" + arguments[i])
+        .collect(Collectors.joining(", "));
+```
+
+- **className**: Obtiene el nombre del método interceptado.
+- **MethodSignature methodSignature**: Convierte la firma del punto de ejecución en una firma de método para obtener más detalles.
+- **parameterNames**: Obtiene los nombres de los parámetros del método.
+- **arguments**: Obtiene los valores de los argumentos del método.
+- **argsString**: Convierte los nombres y valores de los parámetros en una cadena para su registro.
+
+**Registro de Mensajes y Ejecución del Método**
+
+```java
+try {
+    logger.info("{} from {} with arguments {}", loggable.startMessage(), className, argsString);
+    Object response = joinPoint.proceed();
+    logger.info("{} from {} with result: {}", loggable.endMessage(), className, response);
+    return response;
+} catch (Throwable e) {
+    logger.error("{} error=[{}] thrown from {} with arguments {}", loggable.errorMessage(), e.getMessage(), className, argsString);
+    throw e;
+}
+```
+
+- **logger.info**: Registra el mensaje de inicio con los argumentos del método.
+- **Object response = joinPoint.proceed()**: Ejecuta el método interceptado y obtiene su resultado.
+- **logger.info**: Registra el mensaje de finalización con el resultado del método.
+- **catch (Throwable e)**: Captura cualquier excepción lanzada durante la ejecución del método.
+- **logger.error**: Registra el mensaje de error con la excepción lanzada.
+- **throw e**: Vuelve a lanzar la excepción para que el flujo de control original no se vea alterado.
+
+**Método Auxiliar `getLoggableAnnotation`**
+
+```java
+private Loggable getLoggableAnnotation(ProceedingJoinPoint joinPoint) {
+    MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+    return methodSignature.getMethod().getAnnotation(Loggable.class);
+}
+```
+
+- **MethodSignature methodSignature**: Convierte la firma del punto de ejecución en una firma de método.
+- **methodSignature.getMethod().getAnnotation(Loggable.class)**: Obtiene la anotación Loggable del método interceptado.
+
+### **Paso 5: Crear Mensajes de Servicio**
+
+Esta clase contiene constantes con mensajes utilizados en el logging.
   
 ```java title="LoggingAspect.java" linenums="1"
 public class BookServiceMessages {
@@ -198,7 +239,9 @@ public class BookServiceMessages {
 }
 ```
 
-- Implementar un aspecto para manejar la anotación:
+### **Paso 6: Aplicar la Anotación Loggable en el Servicio**
+
+Finalmente, aplicamos la anotación `Loggable` en el método `getBookByCode` del servicio `BookService`.
   
 ```java title="LoggingAspect.java" linenums="1"
 @Loggable(startMessage = BookServiceMessages.STARTING_BOOK_BY_CODE_VALIDATIONS,
@@ -213,4 +256,8 @@ public Optional<Book> getBookByCode(String code) {
 }
 ```
 
+- **@Loggable(startMessage = ..., endMessage = ..., errorMessage = ...)**: Aplica la anotación `Loggable` al método, especificando los mensajes personalizados para inicio, fin y error.
+
 ### **Conclusiones**
+
+En esta sesión, hemos mostrado cómo configurar Spring AOP para crear una anotación personalizada `Loggable` que intercepta métodos y registra mensajes personalizados antes, después y en caso de una excepción durante la ejecución del método. Esta configuración facilita el registro de logs detallados y consistentes, mejorando la capacidad de depuración y monitoreo de la aplicación.
