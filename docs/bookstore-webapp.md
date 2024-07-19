@@ -1,4 +1,4 @@
-# **FronEnd WebApp**
+# **FrontEnd WebApp**
 
 ## **Introducción al Frontend con Thymeleaf**
 
