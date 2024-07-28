@@ -1,12 +1,4 @@
-# **Obtener BookStore**
-
-1. Crear Proyecto de Spring
-2. Crear Entidad JPA para Bookstore
-3. Crear Repositorio con Spring Data JPA
-4. Crear Bookstore Service
-5. Crear los EndPoint GET & POST para Bookstore
-
-## **Crear Proyecto de Spring**
+# **Crear Proyecto de Spring**
 
 Para empezar, accedemos a [Spring initialzr](https://start.spring.io/) y configuramos el proyecto de la siguiente manera:
 
@@ -14,7 +6,7 @@ Para empezar, accedemos a [Spring initialzr](https://start.spring.io/) y configu
 - **Language:** Java
 - **Spring Boot:** 3.+ (la última versión estable)
 - **Project Metadata:**
-      - **Group:** com.jconfdominicana
+      - **Group:** com.geovannycodfigue
       - **Artifact:** bookstore
       - **Name:** bookstore
 - **Packaging:** Jar
@@ -149,7 +141,8 @@ Primero, creamos los paquetes necesarios en el proyecto para organizar nuestro c
 * ```dto```
 * ```mapper```
 
-- **Paso 1:** Crear la clase `BookEntity`
+#### **Paso 1:** Crear la clase `BookEntity`
+
 Dentro del paquete `model`, creamos una clase llamada `BookEntity` con los siguientes campos: `id`, `code`, `name`, `description`, `price`, `imageUrl`, `filePath`, `createdAt`, y `updatedAt`.
 
 ```java title="BookEntity.java" linenums="1"
@@ -199,10 +192,10 @@ public class BookEntity {
     @Column(name = "file_path")
     private String filePath;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(name = "update_at")
+    @Column(name = "modified")
     private LocalDateTime updatedAt;
 }
 ```
@@ -266,6 +259,11 @@ private BigDecimal price;
 
 Configura el campo `price` como una columna no nula.
 
+- **Nota**: En Java, `BigDecimal` es recomendado sobre `double` o `float` para representar valores numéricos de precisión arbitraria, especialmente en aplicaciones que requieren una alta precisión en cálculos numéricos, como es el caso de aplicaciones financieras y de comercio electrónico. Acá te explico las razones principales:
+    - Con `BigDecimal`, puedes realizar operaciones aritméticas (suma, resta, multiplicación, división) con precisión garantizada. En double y float, las operaciones aritméticas pueden resultar en pérdida de precisión debido a la naturaleza del almacenamiento en punto flotante.
+    - En aplicaciones financieras, los valores monetarios deben ser exactos. Un error de redondeo puede tener consecuencias significativas en cálculos de intereses, balances, precios, etc.
+    - `BigDecimal` es la elección natural para estos contextos debido a su capacidad para manejar valores precisos y realizar cálculos sin errores de redondeo.
+
 - **Línea 41-42**:
 
 ```java
@@ -287,7 +285,7 @@ Configura el campo `filePath` como una columna opcional con un nombre específic
 - **Líneas 47-48**:
 
 ```java
-@Column(name = "created_at", nullable = false, updatable = false)
+@Column(name = "created", nullable = false, updatable = false)
 private LocalDateTime createdAt = LocalDateTime.now();
 ```
 
@@ -296,13 +294,13 @@ Configura el campo `createdAt` como una columna no nula que no se puede actualiz
 - **Líneas 50-51**:
 
 ```java
-@Column(name = "update_at")
+@Column(name = "modified")
 private LocalDateTime updatedAt;
 ```
 
 Configura el campo `updatedAt` como una columna opcional con un nombre específico en la base de datos.
 
-### **Validación de la Entidad**
+#### **Paso 2: Validación de la Entidad**
 
 Para validar el modelo `BookEntity`, se ha añadido la siguiente anotacion de validación:
 
@@ -312,7 +310,8 @@ Con esta configuración, la clase `BookEntity` está lista para ser utilizada co
 
 ### **Creacion Repositorio**
 
-- **Paso 1: Crear el Repositorio para la Entidad `BookEntity`**
+#### **Paso 1: Crear el Repositorio para la Entidad `BookEntity`**
+
 Dentro del paquete `repository`, creamos una interfaz llamada `BookRepository` que hereda de `JpaRepository<BookEntity, Long>`. Añadimos un método personalizado para encontrar un libro por su código.
 
 ```java title="BookRepository.java" linenums="1"
@@ -351,7 +350,7 @@ Optional<BookEntity> findByCode(String code);
 
 Declara un método personalizado para encontrar un libro por su código.
 
-### **¿Qué es JpaRepository?**
+#### **¿Qué es JpaRepository?**
 
 `JpaRepository` es una interfaz de Spring Data JPA que extiende `CrudRepository` y `PagingAndSortingRepository`. Proporciona métodos adicionales para trabajar con la persistencia de datos de una manera más avanzada y eficiente.
 
@@ -397,7 +396,7 @@ Un record es una nueva clase en Java introducida en la `versión 14` como una ca
 - **Concisión**: Se generan automáticamente métodos como `equals`, `hashCode`, y `toString`. Esto reduce la cantidad de código que el desarrollador necesita escribir, ya que estas implementaciones suelen ser estándar y repetitivas.
 - **Utilidad**: Facilitan la creación de clases de datos con menos código. Los records son especialmente útiles para definir objetos simples que solo contienen datos, sin lógica adicional.
 
-**Paso 2: Crear el DTO**
+#### **Paso 1: Crear el DTO**
 
 - Dentro del paquete `dto`, creamos un `record` Java llamado `Book` con los campos `id`, `code`, `name`, `description`, `price`, `imageUrl`, y `filePath` de la entidad `BookEntity`. Añadimos validaciones a estos campos.
 
@@ -452,7 +451,7 @@ Define el campo `price` y añade las validaciones `@NotNull` y `@DecimalMin`.
 
 Define el campo `imageUrl` y añade la validación `@NotBlank`.
 
-### **Validación del DTO**
+#### **Paso 2: Validación del DTO**
 
 Para validar el modelo `Book`, se han añadido las siguientes anotaciones de validación:
 
@@ -500,7 +499,7 @@ Con esta configuración, tanto la clase `BookEntity` como el DTO `Book` están l
   
 ### **Creacion Servicio**
 
-**Paso 1: Crear las Dependencias Necesarias**
+#### **Paso 1: Crear las Dependencias Necesarias**
 
 **Creación de `ApplicationProperties`**
 
@@ -517,7 +516,9 @@ public record ApplicationProperties(@DefaultValue("10") @Min(1) int pageSize) {}
 @ConfigurationProperties(prefix = "book")
 ```
 
-Define el prefijo para las propiedades de configuración.
+ - Esta anotación indica que las propiedades de configuración de este `record` estarán prefijadas con `book` en el archivo `application.properties` o `application.yml`. 
+     - Por ejemplo:
+         - `book.pageSize=10`
 
 - **Líneas 2**:
 
@@ -529,7 +530,7 @@ Define el `record` `ApplicationProperties` que encapsula las propiedades de conf
 
 **Anotación en la Clase Principal**
 
-Adicionamos la anotación `@ConfigurationPropertiesScan` en la clase principal `BookstoreApplication` para escanear las propiedades de configuración.
+Para habilitar el escaneo y la configuración automática de las propiedades, añadimos la anotación `@ConfigurationPropertiesScan` en la clase principal `BookstoreApplication`.
 
 ```java title="BookstoreApplication.java" linenums="1"
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
@@ -545,7 +546,11 @@ public class BookstoreApplication {
 }
 ```
 
-### **Creacion de `BookMapper`**
+- **Anotación** `@ConfigurationPropertiesScan`:
+
+    - Habilita el escaneo de las clases anotadas con `@ConfigurationProperties` en el paquete y sus subpaquetes. Esto es necesario para que Spring Boot detecte y configure las propiedades automáticamente.
+
+#### **Paso 2: Creacion de `BookMapper`**
 
 Dentro del paquete `mapper`, creamos una clase llamada `BookMapper` que contiene métodos para convertir entre `BookEntity` y `Book`.
 
@@ -630,7 +635,7 @@ Define el método `toEntity` que convierte un `Book` en un `BookEntity`.
 
 - **Evita Exposición de Entidades**: No se recomienda exponer directamente las entidades (`@Entity`) a las capas superiores de la aplicación (como la capa de presentación). Esto protege las entidades de cambios accidentales y asegura que solo los datos necesarios se transfieran entre las capas.
 
-### **Paso 3: Crear la Clase del Servicio**
+#### **Paso 3: Crear la Clase del Servicio**
 
 Dentro del paquete `service`, creamos una clase llamada `BookService`. Usamos las anotaciones `@Service` y `@Transactional` para indicar que esta clase es un servicio de Spring y que las transacciones deben ser manejadas automáticamente.
 
@@ -684,7 +689,7 @@ public class BookService {
 
     public Book getBookByCode(String code) {
         BookEntity bookEntity = bookRepository.findByCode(code)
-                .orElseThrow(() -> new ResourceNotFoundException("Book not found with code: " + code));
+                .orElseThrow(() -> new RuntimeException ("Book not found with code: " + code));
         return BookMapper.toBook(bookEntity);
     }
 
@@ -752,7 +757,7 @@ public PagedResult<Book> getBooks(int pageNo) {
 ```java
 public Book getBookByCode(String code) {
     BookEntity bookEntity = bookRepository.findByCode(code)
-            .orElseThrow(() -> new ResourceNotFoundException("Book not found with code: " + code));
+            .orElseThrow(() -> new RuntimeException ("Book not found with code: " + code));
     return BookMapper.toBook(bookEntity);
 }
 ```
@@ -871,9 +876,9 @@ public record PagedResult<T>(
 
 El `PagedResult` se utiliza en el servicio para encapsular los resultados de la paginación y devolverlos al cliente de una manera estructurada y fácil de usar.
 
-## **Creación Controlador**
+### **Creación Controlador**
 
-### **Descripción del Controlador**
+#### **Descripción del Controlador**
 
 El controlador es la capa de la aplicación encargada de manejar las solicitudes HTTP, procesarlas y devolver las respuestas apropiadas. Utilizamos la anotación `@RestController` para definir un controlador RESTful en Spring Boot.
 
@@ -884,7 +889,7 @@ El controlador es la capa de la aplicación encargada de manejar las solicitudes
 | `PUT`       | :material-check-all: Actualiza recursos |
 | `DELETE`    | :material-close:     Elimina recursos |
 
-### **Creación de la Clase `BookController`**
+#### **Paso 1: Creación de la Clase `BookController`**
 
 1. **Definir la Clase del Controlador**: En el paquete `controller` de la aplicación, crear una clase llamada `BookController`.
 2. **Anotar la Clase como un Controlador REST**: Utilizar la anotación `@RestController` para convertir la clase en un controlador REST.
@@ -904,7 +909,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/books")
+@RequestMapping("/api/books")
 public class BookController {
 
     private final BookService bookService;
@@ -914,11 +919,6 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @GetMapping("/hello")
-    public String sayHello(@RequestParam(value = "name", defaultValue = "mundo") String name) {
-        return "Hola " + name + "!";
-    }
-
     @GetMapping
     public PagedResult<Book> getBooks(@RequestParam(name = "page", defaultValue = "1") int pageNo) {
         return bookService.getBooks(pageNo);
@@ -926,9 +926,8 @@ public class BookController {
 
     @GetMapping("/{code}")
     public ResponseEntity<Book> getBookByCode(@PathVariable String code) {
-        return bookService.getBookByCode(code)
-                .map(ResponseEntity::ok)
-                .orElseThrow(() -> BookNotFoundException.forCode(code));
+        Book book = bookService.getBookByCode(code);
+        return ResponseEntity.ok(book);
     }
 
     @PostMapping
@@ -941,26 +940,10 @@ public class BookController {
 
 **Descripción de los Métodos**
 
-**Método `sayHello`**
-
-- **Propósito**: Devuelve un saludo personalizado.
-- **Ruta**: `/hello`
-- **Método HTTP**: **`GET`**
-- **Anotación**: **`@GetMapping`** indica que este método manejará solicitudes GET a la ruta `/hello`.
-- **Parámetro**: `name` (opcional, valor por defecto: "mundo"). Utiliza `@RequestParam` para capturar el parámetro de la solicitud HTTP.
-- **Retorno**: `String` con el saludo.
-
-```java
-@GetMapping("/hello")
-public String sayHello(@RequestParam(value = "name", defaultValue = "mundo") String name) {
-    return "Hola " + name + "!";
-}
-```
-
 **Método `getBooks`**
 
 - **Propósito**: Recupera una lista paginada de libros.
-- **Ruta**: `/books`
+- **Ruta**: `/api/books`
 - **Método HTTP**: **`GET`**
 - **Anotación**: **`@GetMapping`** indica que este método manejará solicitudes GET a la ruta `/books`.
 - **Parámetro**: `page` (opcional, valor por defecto: 1). Utiliza `@RequestParam` para capturar el parámetro de la solicitud HTTP.
@@ -976,25 +959,24 @@ public PagedResult<Book> getBooks(@RequestParam(name = "page", defaultValue = "1
 **Método `getBookByCode`**
 
 - **Propósito**: Recupera un libro por su código.
-- **Ruta**: `/books/{code}`
+- **Ruta**: `/api/books/{code}`
 - **Método HTTP**: **`GET`**
 - **Anotación**: `@GetMapping` indica que este método manejará solicitudes GET a la ruta `/books/{code}`.
 - **Parámetro**: `code` (obligatorio). Utiliza `@PathVariable` para capturar el parámetro de la ruta.
-- **Retorno**: `ResponseEntity<Book>` con el libro encontrado o una excepción BookNotFoundException si no se encuentra.
+- **Retorno**: `ResponseEntity<Book>` con el libro encontrado.
 
 ```java
 @GetMapping("/{code}")
 public ResponseEntity<Book> getBookByCode(@PathVariable String code) {
-    return bookService.getBookByCode(code)
-            .map(ResponseEntity::ok)
-            .orElseThrow(() -> BookNotFoundException.forCode(code));
+    Book book = bookService.getBookByCode(code);
+    return ResponseEntity.ok(book);
 }
 ```
 
 **Método `createBook`**
 
 - **Propósito**: Crea un nuevo libro.
-- **Ruta**: `/books`
+- **Ruta**: `/api/books`
 - **Método HTTP**: **`POST`**
 - **Anotación**: `@PostMapping` indica que este método manejará solicitudes POST a la ruta `/books`.
 - **Parámetro**: `Book` (en el cuerpo de la solicitud). Utiliza `@RequestBody` para capturar el cuerpo de la solicitud HTTP.
@@ -1008,127 +990,6 @@ public ResponseEntity<Book> createBook(@RequestBody Book book) {
     return new ResponseEntity<>(createdBook, HttpStatus.CREATED);
 }
 ```
-
-### **Manejo de Excepciones de la API**
-
-El manejo de excepciones en una API es crucial para proporcionar mensajes de error claros y útiles cuando algo sale mal. Esto ayuda a los clientes de la API a entender por qué una solicitud falló y cómo pueden corregirla. Vamos a crear una excepción personalizada `BookNotFoundException` y un manejador global de excepciones para nuestra API.
-
-#### **Excepción Personalizada `BookNotFoundException`**
-
-#### **Propósito**
-
-La excepción `BookNotFoundException` se utiliza para manejar la situación en la que no se encuentra un libro con el código especificado en la base de datos. Esta excepción permite devolver un código de estado HTTP 404 (Not Found) con un mensaje claro que indica el problema.
-
-```java title="BookNotFoundException.java"
-public class BookNotFoundException extends RuntimeException {
-    public BookNotFoundException(String message) {
-        super(message);
-    }
-
-    public static BookNotFoundException forCode(String code) {
-        return new BookNotFoundException("Book with code " + code + " not found");
-    }
-}
-```
-
-### **Implementación**
-
-1. **Crear la Clase de Excepción**: Dentro del paquete `exception`, crear una clase llamada `BookNotFoundException`.
-
-```java
-package com.jconfdominicana.bookstore.exception;
-
-/**
- * Excepción personalizada para manejar el caso en el que un libro no se encuentra
- * en la base de datos.
- */
-public class BookNotFoundException extends RuntimeException {
-    /**
-     * Constructor que acepta un mensaje de error.
-     *
-     * @param message El mensaje de error.
-     */
-    public BookNotFoundException(String message) {
-        super(message);
-    }
-
-    /**
-     * Método estático para crear una excepción con un mensaje específico
-     * para el código del libro.
-     *
-     * @param code El código del libro no encontrado.
-     * @return Una nueva instancia de BookNotFoundException.
-     */
-    public static BookNotFoundException forCode(String code) {
-        return new BookNotFoundException("Book with code " + code + " not found");
-    }
-}
-```
-
-**Descripción del Código**
-
-- **Clase `BookNotFoundException`**:
-    - **Propósito**: Manejar la situación en la que un libro no se encuentra en la base de datos.
-    - **Herencia**: Extiende `RuntimeException` para ser utilizada como una excepción no verificada.
-
-- **Constructor**:
-    - Acepta un mensaje de error como parámetro y lo pasa a la clase base `RuntimeException`.
-
-- **Método estático forCode**:
-    - Facilita la creación de una instancia de `BookNotFoundException` con un mensaje específico que incluye el código del libro no encontrado.
-
-### **Manejando Excepciones de Forma Global**
-
-Para manejar las excepciones de forma global y devolver respuestas HTTP apropiadas, podemos crear un manejador global de excepciones usando @ControllerAdvice.
-
-### **Implementación**
-
-- **Crear la Clase de Manejador Global de Excepciones**: Dentro del paquete `exception`, crear una clase llamada `GlobalExceptionHandler`.
-
-```java
-package com.jconfdominicana.bookstore.exception;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-/**
- * Manejador global de excepciones para la aplicación.
- */
-@RestControllerAdvice
-public class GlobalExceptionHandler {
-
-    /**
-     * Maneja la excepción BookNotFoundException.
-     *
-     * @param ex La excepción capturada.
-     * @return Una respuesta HTTP con el mensaje de error y el estado 404.
-     */
-    @ExceptionHandler(BookNotFoundException.class)
-    public ResponseEntity<String> handleBookNotFoundException(BookNotFoundException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-    // Otros manejadores de excepciones pueden ser añadidos aquí
-}
-```
-
-**Descripción del Código**
-
-- **Clase `GlobalExceptionHandler`**:
-    - **Propósito**: Manejar excepciones de forma global en la aplicación.
-    - **Anotación `@RestControllerAdvice`**: Indica que esta clase proporciona consejos globales para los controladores y maneja excepciones arrojadas por los métodos de controlador.
-
-- **Método `handleBookNotFoundException`**:
-    - **Propósito**: Manejar la excepción `BookNotFoundException`.
-    - **Anotación `@ExceptionHandler(BookNotFoundException.class)`**: Indica que este método manejará excepciones de tipo BookNotFoundException.
-    - **Parámetro `ex`**: La excepción capturada.
-    - **Retorno**: Devuelve una respuesta HTTP con el mensaje de error y el estado 404 (Not Found).
-
-### **Enlace a Código HTTP**
-
-Para ver los detalles los código más usado en HTTP, consulta el siguiente enlace [Código HTTP](get-code-http.md).
 
 ### **Adicionar configuracion Properties**
 
@@ -1216,6 +1077,219 @@ insert into books(code, name, description, price, cover_path, file_path,created)
 ('P101','To Kill a Mockingbird','The unforgettable novel of a childhood in a sleepy Southern town and the crisis of conscience that rocked it...', 45.40,'','', current_timestamp),
 ('P102','The Chronicles of Narnia','Journeys to the end of the world, fantastic creatures, and epic battles between good and evil—what more could any reader ask for in one book?...', 44.50,'','', current_timestamp);
 ```
+
+### **Probar el Endpoint**
+
+#### **Probando el Endpoint General**
+
+Esta es la url que vamos a probar:
+
+```bash
+curl --location 'http://localhost:8081/api/books'
+```
+
+El resultado esperado es el siguiente:
+
+En esta respuesta, podemos observar que se obtiene una lista de libros disponibles en nuestra base de datos. Cada libro contiene información detallada como `id`, `código`, `nombre`, `descripción`, `precio`, entre otros.
+
+Para realizar esta prueba en Postman:
+
+   1. **Configurar la Solicitud**:
+      - Método: GET
+      - URL: `http://localhost:8081/api/books`
+   2. **Ejecutar la Prueba**:
+      - Hacer clic en el botón **"Send"** y observar el resultado en la pestaña **"Body"**.
+
+El resultado esperado en Postman es similar a la imagen proporcionada.
+
+![GeoLabs BookStore](./files/figura2.png "GeoLabs BookStore")
+
+#### **Probando el Endpoint por Código de Libro**
+
+Vamos a probar el segundo endpoint, donde realizaremos una búsqueda específica por el código del libro. La URL que utilizaremos es:
+
+```bash
+curl --location 'http://localhost:8081/api/books/P101'
+```
+
+El resultado esperado es el siguiente:
+
+Aquí, podemos observar la información detallada de un libro específico identificado por el código `P101`.
+
+Para realizar esta prueba en Postman:
+
+   1. **Configurar la Solicitud**:
+      - Método: GET
+      - URL: `http://localhost:8081/api/books/P101`
+
+   2. **Ejecutar la Prueba**:
+      - Hacer clic en el botón **"Send"** y observar el resultado en la pestaña **"Body"**.
+
+El resultado esperado en Postman es similar a la imagen proporcionada.
+
+![GeoLabs BookStore](./files/figura3.png "GeoLabs BookStore")
+
+#### **Manejo de Errores para Códigos No Existentes**
+
+Nos preguntamos qué pasa si en esta consulta le enviamos un código de libro que no existe. Vamos a probar con el código `P103`:
+
+```bash
+curl --location 'http://localhost:8081/api/books/P103'
+```
+
+El resultado obtenido es el siguiente:
+
+![GeoLabs BookStore](./files/figura4.png "GeoLabs BookStore")
+
+En este caso, observamos que el resultado no es el esperado, ya que se retorna un estado `500 Internal Server Error` en lugar de un `404 Not Found`. Esto indica que el servidor no manejó adecuadamente la ausencia del libro con el código proporcionado.
+
+#### **Corrigiendo el Manejo de Errores**
+
+Para manejar este tipo de errores de manera adecuada y proporcionar una respuesta más descriptiva, vamos a realizar las siguientes correcciones en nuestro código:
+
+1. **Actualizar el Servicio**:
+      - Modificar el método de servicio para lanzar una excepción controlada en lugar de una excepción genérica.
+2. **Controlador de Excepciones Globales**:
+      - Implementar un controlador de excepciones globales en nuestro proyecto Spring Boot para manejar los errores de manera centralizada.
+
+Con estas modificaciones, lograremos que el sistema retorne un estado `404 Not Found` cuando se busque un libro que no existe en la base de datos, detallando mejor los errores que nos encontremos y mejorando la experiencia del usuario.
+
+### **Manejo de Excepciones de la API**
+
+El manejo de excepciones en una API es crucial para proporcionar mensajes de error claros y útiles cuando algo sale mal. Esto ayuda a los clientes de la API a entender por qué una solicitud falló y cómo pueden corregirla. Vamos a crear una excepción personalizada `BookNotFoundException` y un manejador global de excepciones para nuestra API.
+
+#### **Excepción Personalizada `BookNotFoundException`**
+
+La excepción `BookNotFoundException` se utiliza para manejar la situación en la que no se encuentra un libro con el código especificado en la base de datos. Esta excepción permite devolver un código de estado `HTTP 404 (Not Found)` con un mensaje claro que indica el problema.
+
+```java title="BookNotFoundException.java"
+public class BookNotFoundException extends RuntimeException {
+    public BookNotFoundException(String message) {
+        super(message);
+    }
+
+    public static BookNotFoundException forCode(String code) {
+        return new BookNotFoundException("Book with code " + code + " not found");
+    }
+}
+```
+
+#### **Implementación Excepciones de la API**
+
+1. **Crear la Clase de Excepción**: Dentro del paquete `exception`, crear una clase llamada `BookNotFoundException`.
+
+```java
+package com.jconfdominicana.bookstore.exception;
+
+/**
+ * Excepción personalizada para manejar el caso en el que un libro no se encuentra
+ * en la base de datos.
+ */
+public class BookNotFoundException extends RuntimeException {
+    /**
+     * Constructor que acepta un mensaje de error.
+     *
+     * @param message El mensaje de error.
+     */
+    public BookNotFoundException(String message) {
+        super(message);
+    }
+
+    /**
+     * Método estático para crear una excepción con un mensaje específico
+     * para el código del libro.
+     *
+     * @param code El código del libro no encontrado.
+     * @return Una nueva instancia de BookNotFoundException.
+     */
+    public static BookNotFoundException forCode(String code) {
+        return new BookNotFoundException("Book with code " + code + " not found");
+    }
+}
+```
+
+**Descripción del Código**
+
+- **Clase `BookNotFoundException`**:
+    - **Propósito**: Manejar la situación en la que un libro no se encuentra en la base de datos.
+    - **Herencia**: Extiende `RuntimeException` para ser utilizada como una excepción no verificada.
+
+- **Constructor**:
+    - Acepta un mensaje de error como parámetro y lo pasa a la clase base `RuntimeException`.
+
+- **Método estático forCode**:
+    - Facilita la creación de una instancia de `BookNotFoundException` con un mensaje específico que incluye el código del libro no encontrado.
+
+#### **Manejando Excepciones de Forma Global**
+
+Para manejar las excepciones de forma global y devolver respuestas HTTP apropiadas, podemos crear un manejador global de excepciones usando @ControllerAdvice.
+
+#### **Implementación Excepciones de Forma Global**
+
+- **Crear la Clase de Manejador Global de Excepciones**: Dentro del paquete `exception`, crear una clase llamada `GlobalExceptionHandler`.
+
+```java
+package com.jconfdominicana.bookstore.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+/**
+ * Manejador global de excepciones para la aplicación.
+ */
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    /**
+     * Maneja la excepción BookNotFoundException.
+     *
+     * @param ex La excepción capturada.
+     * @return Una respuesta HTTP con el mensaje de error y el estado 404.
+     */
+    @ExceptionHandler(BookNotFoundException.class)
+    public ResponseEntity<String> handleBookNotFoundException(BookNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    // Otros manejadores de excepciones pueden ser añadidos aquí
+}
+```
+
+**Descripción del Código**
+
+- **Clase `GlobalExceptionHandler`**:
+    - **Propósito**: Manejar excepciones de forma global en la aplicación.
+    - **Anotación `@RestControllerAdvice`**: Indica que esta clase proporciona consejos globales para los controladores y maneja excepciones arrojadas por los métodos de controlador.
+
+- **Método `handleBookNotFoundException`**:
+    - **Propósito**: Manejar la excepción `BookNotFoundException`.
+    - **Anotación `@ExceptionHandler(BookNotFoundException.class)`**: Indica que este método manejará excepciones de tipo BookNotFoundException.
+    - **Parámetro `ex`**: La excepción capturada.
+    - **Retorno**: Devuelve una respuesta HTTP con el mensaje de error y el estado `404 (Not Found)`.
+
+#### **Implementando las Excepciones en el Servicio**
+
+Modificamos en la clase de servicio el método getBookByCode para usar la nueva clase `BookNotFoundException`:
+
+```java
+public Book getBookByCode(String code) {
+    BookEntity bookEntity = bookRepository.findByCode(code)
+            .orElseThrow(() -> new BookNotFoundException("Book not found with code: " + code));
+    return BookMapper.toBook(bookEntity);
+}
+```
+
+Después de realizar estas modificaciones, volvemos a ejecutar la prueba y este es el nuevo resultado, como se puede observar en la imagen:
+
+En este caso, el sistema retorna correctamente un estado `404 Not Found` cuando no se encuentra un libro con el código especificado, con un mensaje claro que indica que el libro no fue encontrado.
+
+![GeoLabs BookStore](./files/figura5.png "GeoLabs BookStore")
+
+### **Enlace a Código HTTP**
+
+Si quieres saber más sobre los código más usado en HTTP, te comparto el siguiente enlace [Código HTTP](get-code-http.md).
 
 ## **Subida de Archivos**
 
@@ -1315,9 +1389,73 @@ public class FileSystemStorageService {
     - **`Path file = load(filename);`**: Obtiene la ruta del archivo.
     - **`FileSystemUtils.deleteRecursively(file);`**: Elimina el archivo y lanza una excepción si falla.
 
-## **Controlador para la Subida y Recuperación de Archivos**
+### **Excepción Personalizada ResourceNotFoundException**
 
-### **Crear la Clase FileController**
+La clase `ResourceNotFoundException` es una excepción personalizada que se utiliza para indicar que un recurso solicitado no fue encontrado. Esta clase extiende `RuntimeException` y está anotada con `@ResponseStatus` para que, cuando sea lanzada, el servidor retorne un estado `HTTP 404 Not Found`.
+
+#### **Implementación de ResourceNotFoundException**
+
+```java title="ResourceNotFoundException.java" linenums="1"
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class ResourceNotFoundException extends RuntimeException {
+    // Constructor sin argumentos
+    public ResourceNotFoundException() {
+        super();
+    }
+
+    // Constructor que acepta un mensaje
+    public ResourceNotFoundException(String message) {
+        super(message);
+    }
+
+    // Constructor que acepta un mensaje y una causa
+    public ResourceNotFoundException(String message, Throwable throwable) {
+        super(message, throwable);
+    }
+}
+```
+
+#### **Descripción de la Implementación**
+  
+  1. **Anotación @ResponseStatus(HttpStatus.NOT_FOUND)**:
+     - Esta anotación indica que cuando esta excepción es lanzada, el servidor debe responder con un estado `HTTP 404 Not Found`. Es una forma conveniente de asociar un código de estado HTTP específico con una excepción.
+
+  2. **Extensión de RuntimeException**:
+     - La clase extiende `RuntimeException`, lo que la convierte en una excepción no comprobada (unchecked exception). Esto significa que no es obligatorio manejarla explícitamente en el código mediante bloques `try-catch`.
+
+**Línea 4-6**:
+
+```java
+public ResourceNotFoundException() {
+    super();
+}
+```
+
+- Este es un constructor por defecto que llama al constructor sin argumentos de la clase `RuntimeException`. Se utiliza cuando no se desea proporcionar un mensaje o causa específica para la excepción.
+
+**Línea 9-11**:
+
+```java
+public ResourceNotFoundException(String message) {
+    super(message);
+}
+```
+
+- Este constructor permite crear una instancia de la excepción con un mensaje descriptivo que proporciona más información sobre el motivo de la excepción. El mensaje se pasa al constructor de la superclase `RuntimeException`.
+ 
+**Línea 14-16**:
+
+```java
+public ResourceNotFoundException(String message, Throwable throwable) {
+    super(message, throwable);
+}
+```
+
+- Este constructor permite crear una instancia de la excepción con un mensaje descriptivo y una causa subyacente (`Throwable`). La causa representa la excepción original que provocó esta excepción y se pasa junto con el mensaje al constructor de la superclase `RuntimeException`.
+
+### **Controlador para la Subida y Recuperación de Archivos**
+
+#### **Crear la Clase FileController**
 
 La clase `FileController` maneja las solicitudes HTTP relacionadas con la subida y recuperación de archivos.
 
@@ -1408,11 +1546,29 @@ public ResponseEntity<Resource> getResource(@PathVariable String filename) throw
 - **`String contentType = Files.probeContentType(resource.getFile().toPath());`**: Determina el tipo de contenido del archivo.
 - **`return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, contentType).body(resource);`**: Devuelve el recurso en la respuesta HTTP con el tipo de contenido adecuado.
 
-## **Incrementar el Tamaño Máximo de los Archivos Subidos**
+### **Probar Endpoint Subir Archivo**
 
-Para permitir la subida de archivos más grandes, configuramos el tamaño máximo de los archivos en `application.properties`.
+#### Problema Inicial
 
-**Configuración para el Tamaño Máximo de los Archivos Subidos**
+Al intentar subir un archivo utilizando el endpoint `upload`, observamos que el archivo no se puede subir debido a una limitación de tamaño.
+
+En la imagen siguiente, podemos ver que se obtiene un estado `413 Request Entity Too Large` al intentar subir el archivo:
+
+![GeoLabs BookStore](./files/figura6.png "GeoLabs BookStore")
+
+#### **Diagnóstico del Problema**
+
+El error `413 Request Entity Too Large` indica que el tamaño del archivo excede el límite permitido por el servidor. Podemos confirmar esto revisando la consola del IDE, donde se muestra un mensaje que hace referencia a que el tamaño máximo permitido ha sido excedido:
+
+![GeoLabs BookStore](./files/figura7.png "GeoLabs BookStore")
+
+#### **Solución**
+
+Para resolver este problema, necesitamos incrementar el tamaño máximo permitido para los archivos subidos. Esto se puede hacer configurando las propiedades en el archivo `application.properties` de nuestro proyecto Spring Boot.
+
+### **Incrementar el Tamaño Máximo de los Archivos Subidos**
+
+Para permitir la subida de archivos más grandes, configuramos el tamaño máximo de los archivos en `application.properties` de la siguiente manera:
 
 ```properties title="application.properties"
 spring.servlet.multipart.max-file-size=100MB
@@ -1422,7 +1578,48 @@ spring.servlet.multipart.max-request-size=100MB
 - **`spring.servlet.multipart.max-file-size=100MB`**: Establece el tamaño máximo permitido para un archivo subido a 100MB.
 - **`spring.servlet.multipart.max-request-size=100MB`**: Establece el tamaño máximo permitido para una solicitud multipart a 100MB.
 
-### **Conlusión**
+#### **Resultado Final**
+
+#### **Prueba del Endpoint POST**
+
+Volvemos a realizar la prueba del endpoint para subir archivos después de agregar la configuración en `application.properties`.
+
+1. **Configuración de la Solicitud en Postman**:
+    - Método: POST
+    - URL: `http://localhost:8081/api/files/upload`
+    - Body:
+        - Selecciona la opción `form-data`.
+        - Añade un campo con la clave `file`.
+        - En el valor, selecciona el archivo que deseas subir desde tu sistema local.
+
+Al enviar la solicitud, si todo está configurado correctamente, obtendrás una respuesta con el estado `200 OK` y un JSON que indica la ruta donde se ha guardado el archivo. El resultado se ve así en Postman:
+
+![GeoLabs BookStore](./files/figura8.png "GeoLabs BookStore")
+
+- Insercion de la imagen de la portada para el libro en formato `.jpg`
+
+![GeoLabs BookStore](./files/figura9.png "GeoLabs BookStore")
+
+- **Explicación del Uso de form-data**:
+    - **form-data**: Esta opción se utiliza para subir archivos y datos mixtos en una solicitud multipart. Es adecuada cuando necesitas enviar archivos junto con otros datos de formulario en una misma solicitud.
+    - **Campo `file`**: Este campo representa el archivo que se desea subir. En Postman, puedes seleccionar un archivo de tu sistema local para enviarlo con la solicitud.
+
+#### **Prueba del Endpoint GET**
+
+Para asegurarnos de que el archivo se ha subido correctamente, realizamos una prueba para consultar el archivo subido.
+
+1. Configuración de la Solicitud en Postman:
+    - Método: GET
+    - URL: `http://localhost:8081/api/files/{fileName}`
+        - Reemplaza `{fileName}` con el nombre del archivo devuelto en la respuesta del endpoint de subida. Por ejemplo: `8700404e-404e-429f-a3f1-fb029be470a.pdf`.
+
+Al enviar la solicitud, si el archivo existe, obtendrás una respuesta con el estado `200 OK` y el archivo se mostrará en el cuerpo de la respuesta. El resultado se ve así en Postman:
+
+![GeoLabs BookStore](./files/figura10.png "GeoLabs BookStore")
+
+Con estas pruebas, hemos verificado que los endpoints para subir y consultar archivos funcionan correctamente, y hemos explicado detalladamente cómo configurar y ejecutar estas pruebas en Postman.
+
+## **Conlusión**
 
 En esta sesión, hemos recorrido los pasos necesarios para crear una aplicación completa de Spring Boot con funcionalidades avanzadas y buenas prácticas. Desde la creación del proyecto, adicionar dependencias, configuración del entorno de desarrollo con Docker Compose, creación de la entidad, validación de la entidad, creación del repositorio, creación del DTO, validaciones, creación del servicio, creación de mapper, creación del controlador, entre otros.
 

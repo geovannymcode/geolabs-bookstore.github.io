@@ -60,9 +60,10 @@ No voy a escribir tests para otros métodos porque simplemente están delegando 
 
 ### **Uso de Anotaciones para Crear Mocks**
 
-Si prefieres utilizar la magia de las anotaciones para crear un mock de UserRepository e inyectarlo en UserService, puedes utilizar mockito-junit-jupiter de la siguiente manera:
+Si prefieres utilizar la magia de las anotaciones para crear un mock de `UserRepository` e inyectarlo en `UserService`, puedes utilizar `mockito-junit-jupiter` de la siguiente manera:
 
-Añade la dependencia mockito-junit-jupiter
+**Añade la dependencia mockito-junit-jupiter**
+
 ```yaml
 <dependency>
     <groupId>org.mockito</groupId>
@@ -70,7 +71,8 @@ Añade la dependencia mockito-junit-jupiter
     <scope>test</scope>
 </dependency>
 ```
-Utilice @Mock y @InjectMocks para crear e inyectar objetos simulados como se indica a continuación:
+
+Utilice `@Mock` y `@InjectMocks` para crear e inyectar objetos simulados como se indica a continuación:
 
 ```java title="UserServiceAnnotatedTest.java" linenums="1"
 @ExtendWith(MockitoExtension.class)
@@ -88,18 +90,17 @@ class UserServiceAnnotatedTest {
 
 ```
 
-### **¿Qué pasa con las pruebas unitarias para el Controlador?**
+### **Pruebas Unitarias para el Controlador**
 
 Sí, quiero escribir pruebas unitarias para el controlador y quiero comprobar si el punto final REST está dando el ResponseCode HTTP adecuado o no, devolviendo el JSON esperado o no, etc.
 
-SpringBoot proporciona la anotación @WebMvcTest para probar los controladores MVC de Spring. Además, las pruebas basadas en @WebMvcTest se ejecutan más rápido, ya que cargarán únicamente el controlador especificado y sus dependencias sin cargar toda la aplicación.
+SpringBoot proporciona la anotación `@WebMvcTest` para probar los controladores MVC de Spring. Además, las pruebas basadas en `@WebMvcTest` se ejecutan más rápido, ya que cargarán únicamente el controlador especificado y sus dependencias sin cargar toda la aplicación.
 
-Ahora podemos escribir tests para UserController inyectando un bean Mock UserService e invocar los endpoints de la API usando MockMvc.
+Ahora podemos escribir tests para `UserController` inyectando un bean Mock `UserService` e invocar los endpoints de la API usando `MockMvc`.
 
-Como SpringBoot está creando la instancia UserController, estamos creando un mock bean UserService utilizando @MockBean de Spring en lugar de @Mock de Mockito.
+Como SpringBoot está creando la instancia `UserController`, estamos creando un mock bean UserService utilizando `@MockBean` de Spring en lugar de `@Mock` de Mockito.
 
 ```java title="UserControllerTest.java" linenums="1"
-
 @WebMvcTest(UserController.class)
 public class UserControllerTest {
     @Autowired
@@ -146,9 +147,9 @@ Por lo tanto, escribamos Pruebas de Integración para tener más confianza en qu
 
 ### **Pruebas de integración con TestContainer**
 
-SpringBoot proporciona un excelente soporte para las pruebas de integración. Podemos utilizar la anotación @SpringBootTest para cargar el contexto de la aplicación y probar varios componentes.
+SpringBoot proporciona un excelente soporte para las pruebas de integración. Podemos utilizar la anotación `@SpringBootTest` para cargar el contexto de la aplicación y probar varios componentes.
 
-Empecemos escribiendo pruebas de integración para UserController. Como he mencionado antes, queremos probar el uso de la base de datos Postgres en lugar de la base de datos en memoria.
+Empecemos escribiendo pruebas de integración para `UserController`. Como he mencionado antes, queremos probar el uso de la base de datos Postgres en lugar de la base de datos en memoria.
 
 Añade las siguientes dependencias.
 
@@ -175,9 +176,9 @@ Añade las siguientes dependencias.
 		</dependency>
 ```
 
-Podemos utilizar el soporte TestContainers para JUnit 5 como se menciona aquí https://www.testcontainers.org/test_framework_integration/junit_5/. Sin embargo, iniciar y detener los contenedores docker para cada prueba o cada clase de prueba podría causar que las pruebas se ejecuten lentamente. Por lo tanto, vamos a utilizar el enfoque de Singleton Containers mencionado en https://www.testcontainers.org/test_framework_integration/manual_lifecycle_control/#singleton-containers.
+Podemos utilizar el soporte TestContainers para JUnit 5 como se menciona aquí (https://www.testcontainers.org/test_framework_integration/junit_5/). Sin embargo, iniciar y detener los contenedores docker para cada prueba o cada clase de prueba podría causar que las pruebas se ejecuten lentamente. Por lo tanto, vamos a utilizar el enfoque de Singleton Containers mencionado en (https://www.testcontainers.org/test_framework_integration/manual_lifecycle_control/#singleton-containers).
 
-Vamos a crear una clase base AbstractIT para que todos nuestros tests de integración puedan extenderse sin repetir la configuración común.
+Vamos a crear una clase base `AbstractIT` para que todos nuestros tests de integración puedan extenderse sin repetir la configuración común.
 
 ```java title="AbstractIT.java" linenums="1"
 @SpringBootTest(webEnvironment = RANDOM_PORT)
@@ -203,7 +204,7 @@ class BookstoreApplicationTests extends AbstractIT {
 }
 ```
 
-Hemos utilizado @AutoConfigureMockMvc para autoconfigurar MockMvc, y @SpringBootTest(webEnvironment = RANDOM_PORT) para iniciar el servidor en un puerto disponible aleatorio.
+Hemos utilizado `@AutoConfigureMockMvc` para autoconfigurar `MockMvc`, y `@SpringBootTest`(webEnvironment = RANDOM_PORT) para iniciar el servidor en un puerto disponible aleatorio.
 
 Hemos arrancado PostgreSQLContainer y utilizado @ContextConfiguration(initializers={AbstractIntegrationTest.Initializer.class}) para configurar las propiedades de conexión dinámica a la base de datos.
 
