@@ -1,0 +1,1478 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="GeoLabs BookStore Docs">
+      
+      
+        <meta name="author" content="Geovanny Mendoza">
+      
+      
+        <link rel="canonical" href="https://geovannymcode.github.io/geolabs-bookstore.github.io/get-order/">
+      
+      
+        <link rel="prev" href="../get-user/">
+      
+      
+        <link rel="next" href="../integration-paypal/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.30">
+    
+    
+      
+        <title>Creacion Order e Item - GeoLabs BookStore</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.3cba04c6.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#creacion-de-entidades-order-e-item" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="GeoLabs BookStore" class="md-header__button md-logo" aria-label="GeoLabs BookStore" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            GeoLabs BookStore
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Creacion Order e Item
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://geovannymcode.github.io/geolabs-bookstore.github.io" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    /geovannymcode/geolabs-bookstore.github.io
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="GeoLabs BookStore" class="md-nav__button md-logo" aria-label="GeoLabs BookStore" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    GeoLabs BookStore
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://geovannymcode.github.io/geolabs-bookstore.github.io" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    /geovannymcode/geolabs-bookstore.github.io
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../get-book/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Creacion Book
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../get-user/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Creacion User
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Creacion Order e Item
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Creacion Order e Item
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introducción
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introducción">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-entidad-sales-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Entidad Sales Order
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Entidad Sales Order">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#descripcion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Descripción
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-enumerado-paymentstatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Enumerado PaymentStatus
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Enumerado PaymentStatus">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#descripcion_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Descripción
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-entidad-sales-order-item" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Entidad Sales Order Item
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Entidad Sales Order Item">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#descripcion_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Descripción
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creacion-de-schemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creación de Schemas
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Creación de Schemas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-crear-la-secuencia-y-tabla-sales_orders" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Crear la secuencia y tabla sales_orders
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-crear-la-tabla-sales_orders" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Crear la Tabla sales_orders
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-crear-la-secuencia-y-tabla-sales_order_items" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Crear la secuencia y tabla sales_order_items
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creacion-de-repositorios" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creación de Repositorios
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Creación de Repositorios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-repositorio-salesorderrepository" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Repositorio SalesOrderRepository
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-repositorio-salesorderitemrepository" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Repositorio SalesOrderItemRepository
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creacion-del-servicio-salesorderservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creación del Servicio SalesOrderService
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Creación del Servicio SalesOrderService">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#conlusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conlusión
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../integration-paypal/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Integración con PayPal API
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cache-redis/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cache con Redis
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spring-aop/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Anotaciones con Spring AOP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bookstore-webapp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Frontend WebApp
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing-book/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Testing BookStore
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../good-practice/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tips de Desarrollo
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../referencia/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Referencias
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introducción
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introducción">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-entidad-sales-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Entidad Sales Order
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Entidad Sales Order">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#descripcion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Descripción
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-enumerado-paymentstatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Enumerado PaymentStatus
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Enumerado PaymentStatus">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#descripcion_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Descripción
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-entidad-sales-order-item" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Entidad Sales Order Item
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Entidad Sales Order Item">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#descripcion_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Descripción
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creacion-de-schemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creación de Schemas
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Creación de Schemas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-crear-la-secuencia-y-tabla-sales_orders" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Crear la secuencia y tabla sales_orders
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-crear-la-tabla-sales_orders" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Crear la Tabla sales_orders
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-crear-la-secuencia-y-tabla-sales_order_items" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Crear la secuencia y tabla sales_order_items
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creacion-de-repositorios" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creación de Repositorios
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Creación de Repositorios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-repositorio-salesorderrepository" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Repositorio SalesOrderRepository
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-repositorio-salesorderitemrepository" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Repositorio SalesOrderItemRepository
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creacion-del-servicio-salesorderservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creación del Servicio SalesOrderService
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Creación del Servicio SalesOrderService">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#conlusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conlusión
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="creacion-de-entidades-order-e-item"><strong>Creación de Entidades Order e Item</strong></h1>
+<h2 id="introduccion"><strong>Introducción</strong></h2>
+<p>En esta sección del taller, vamos a crear tres clases fundamentales para gestionar órdenes de venta y los ítems asociados a estas órdenes en nuestro sistema: <code>SalesOrderEntity</code>, <code>SalesOrderItemEntity</code>, y <code>PaymentStatus</code>. Estas clases nos permitirán manejar de forma estructurada y eficiente la información relacionada con las ventas y sus detalles.</p>
+<h3 id="1-entidad-sales-order">1. <strong>Entidad Sales Order</strong></h3>
+<h4 id="descripcion"><strong>Descripción</strong></h4>
+<p>La clase <code>SalesOrderEntity</code> representa una orden en nuestro sistema, que incluye el total de la orden, el estado del pago y los ítems asociados a esa orden. Esta entidad es esencial para mantener un registro completo y detallado de cada venta realizada.</p>
+<ul>
+<li>
+<p><strong>Propiedades de SalesOrderEntity</strong></p>
+<ul>
+<li><strong>ID</strong>: Identificador único de la orden.</li>
+<li><strong>Total</strong>: Monto total de la orden.</li>
+<li><strong>Estado del Pago</strong>: Indica si el pago ha sido completado, está pendiente, etc.</li>
+<li><strong>Fecha de Creación</strong>: Fecha en la que se creó la orden.</li>
+<li><strong>Cliente</strong>: Referencia a la entidad UserEntity que representa al cliente que realizó la orden.</li>
+<li><strong>Ítems</strong>: Lista de ítems incluidos en la orden.</li>
+</ul>
+</li>
+<li>
+<p><strong>Importancia</strong>
+La entidad <code>SalesOrderEntity</code> es crucial porque nos permite:</p>
+<ul>
+<li><strong>Rastrear Ventas</strong>: Registrar cada venta realizada, incluyendo detalles como el monto total y el estado del pago.</li>
+<li><strong>Generar Informes</strong>: Proporcionar datos que pueden ser utilizados para generar informes de ventas y análisis financieros.</li>
+<li><strong>Gestionar Pedidos</strong>: Facilitar la gestión de pedidos, permitiendo a los administradores ver el estado y los detalles de cada orden.</li>
+</ul>
+</li>
+</ul>
+<div class="language-java highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">SalesOrderEntity.java</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-0-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-0-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-0-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-0-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-0-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-0-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-0-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-0-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-0-10">10</a></span>
+<span class="normal"><a href="#__codelineno-0-11">11</a></span>
+<span class="normal"><a href="#__codelineno-0-12">12</a></span>
+<span class="normal"><a href="#__codelineno-0-13">13</a></span>
+<span class="normal"><a href="#__codelineno-0-14">14</a></span>
+<span class="normal"><a href="#__codelineno-0-15">15</a></span>
+<span class="normal"><a href="#__codelineno-0-16">16</a></span>
+<span class="normal"><a href="#__codelineno-0-17">17</a></span>
+<span class="normal"><a href="#__codelineno-0-18">18</a></span>
+<span class="normal"><a href="#__codelineno-0-19">19</a></span>
+<span class="normal"><a href="#__codelineno-0-20">20</a></span>
+<span class="normal"><a href="#__codelineno-0-21">21</a></span>
+<span class="normal"><a href="#__codelineno-0-22">22</a></span>
+<span class="normal"><a href="#__codelineno-0-23">23</a></span>
+<span class="normal"><a href="#__codelineno-0-24">24</a></span>
+<span class="normal"><a href="#__codelineno-0-25">25</a></span>
+<span class="normal"><a href="#__codelineno-0-26">26</a></span>
+<span class="normal"><a href="#__codelineno-0-27">27</a></span>
+<span class="normal"><a href="#__codelineno-0-28">28</a></span>
+<span class="normal"><a href="#__codelineno-0-29">29</a></span>
+<span class="normal"><a href="#__codelineno-0-30">30</a></span>
+<span class="normal"><a href="#__codelineno-0-31">31</a></span>
+<span class="normal"><a href="#__codelineno-0-32">32</a></span>
+<span class="normal"><a href="#__codelineno-0-33">33</a></span>
+<span class="normal"><a href="#__codelineno-0-34">34</a></span>
+<span class="normal"><a href="#__codelineno-0-35">35</a></span>
+<span class="normal"><a href="#__codelineno-0-36">36</a></span>
+<span class="normal"><a href="#__codelineno-0-37">37</a></span>
+<span class="normal"><a href="#__codelineno-0-38">38</a></span>
+<span class="normal"><a href="#__codelineno-0-39">39</a></span>
+<span class="normal"><a href="#__codelineno-0-40">40</a></span>
+<span class="normal"><a href="#__codelineno-0-41">41</a></span>
+<span class="normal"><a href="#__codelineno-0-42">42</a></span>
+<span class="normal"><a href="#__codelineno-0-43">43</a></span>
+<span class="normal"><a href="#__codelineno-0-44">44</a></span>
+<span class="normal"><a href="#__codelineno-0-45">45</a></span>
+<span class="normal"><a href="#__codelineno-0-46">46</a></span>
+<span class="normal"><a href="#__codelineno-0-47">47</a></span>
+<span class="normal"><a href="#__codelineno-0-48">48</a></span>
+<span class="normal"><a href="#__codelineno-0-49">49</a></span>
+<span class="normal"><a href="#__codelineno-0-50">50</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">com.jconfdominicana.bookstore.model.enums.PaymentStatus</span><span class="p">;</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.CascadeType</span><span class="p">;</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.Entity</span><span class="p">;</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.EnumType</span><span class="p">;</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.Enumerated</span><span class="p">;</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.FetchType</span><span class="p">;</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.GeneratedValue</span><span class="p">;</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.GenerationType</span><span class="p">;</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9"></a><span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.Id</span><span class="p">;</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.JoinColumn</span><span class="p">;</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11"></a><span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.ManyToOne</span><span class="p">;</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.OneToMany</span><span class="p">;</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.SequenceGenerator</span><span class="p">;</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="kn">import</span><span class="w"> </span><span class="nn">jakarta.persistence.Table</span><span class="p">;</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.math.BigDecimal</span><span class="p">;</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.time.LocalDateTime</span><span class="p">;</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.List</span><span class="p">;</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="kn">import</span><span class="w"> </span><span class="nn">lombok.AllArgsConstructor</span><span class="p">;</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Builder</span><span class="p">;</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Getter</span><span class="p">;</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="kn">import</span><span class="w"> </span><span class="nn">lombok.NoArgsConstructor</span><span class="p">;</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="kn">import</span><span class="w"> </span><span class="nn">lombok.Setter</span><span class="p">;</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23"></a>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24"></a><span class="nd">@Entity</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="nd">@Table</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;sales_orders&quot;</span><span class="p">)</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="nd">@Getter</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="nd">@Setter</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="nd">@AllArgsConstructor</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29"></a><span class="nd">@NoArgsConstructor</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="nd">@Builder</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">SalesOrderEntity</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32"></a><span class="w">    </span><span class="nd">@Id</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="w">    </span><span class="nd">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="na">SEQUENCE</span><span class="p">,</span><span class="w"> </span><span class="n">generator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;sales_order_id_generator&quot;</span><span class="p">)</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="w">    </span><span class="nd">@SequenceGenerator</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;sales_order_id_generator&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">sequenceName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;sales_order_id_seq&quot;</span><span class="p">)</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36"></a>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">total</span><span class="p">;</span>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38"></a>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="w">    </span><span class="nd">@Enumerated</span><span class="p">(</span><span class="n">EnumType</span><span class="p">.</span><span class="na">STRING</span><span class="p">)</span>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">PaymentStatus</span><span class="w"> </span><span class="n">paymentStatus</span><span class="p">;</span>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41"></a>
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">LocalDateTime</span><span class="w"> </span><span class="n">createdAt</span><span class="p">;</span>
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43"></a>
+</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="w">    </span><span class="nd">@ManyToOne</span><span class="p">(</span><span class="n">fetch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FetchType</span><span class="p">.</span><span class="na">LAZY</span><span class="p">)</span>
+</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="w">    </span><span class="nd">@JoinColumn</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;customer_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">referencedColumnName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;id&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">nullable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">UserEntity</span><span class="w"> </span><span class="n">customer</span><span class="p">;</span>
+</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47"></a>
+</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48"></a><span class="w">    </span><span class="nd">@OneToMany</span><span class="p">(</span><span class="n">mappedBy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;salesOrderEntity&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">cascade</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CascadeType</span><span class="p">.</span><span class="na">ALL</span><span class="p">,</span><span class="w"> </span><span class="n">fetch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FetchType</span><span class="p">.</span><span class="na">LAZY</span><span class="p">)</span>
+</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">SalesOrderItemEntity</span><span class="o">&gt;</span><span class="w"> </span><span class="n">items</span><span class="p">;</span>
+</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="p">}</span>
+</span></code></pre></div></td></tr></table></div>
+<ul>
+<li>
+<p><strong>Línea 39</strong>:</p>
+<ul>
+<li><strong><code>@Enumerated(EnumType.STRING)</code></strong>: Especifica que el campo paymentStatus es un enumerado y se almacenará como una cadena en la base de datos.</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 44-46</strong>:</p>
+<ul>
+<li><strong><code>@ManyToOne</code></strong>: Esta anotación indica que existe una relación de muchos a uno entre <code>OrderEntity</code> y <code>User</code>. En términos de base de datos, esto significa que muchas órdenes pueden estar asociadas con un solo usuario. Esta relación permite que una orden esté vinculada a un único cliente.</li>
+<li><strong><code>@JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)</code></strong>: Especifica la columna de unión para la relación con <code>UserEntity</code>. La columna <code>customer_id</code> en <code>SalesOrderEntity</code> se refiere a la columna <code>id</code> en <code>UserEntity</code> y es obligatoria (<code>nullable = false</code>).</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 48-49</strong>:</p>
+<ul>
+<li><strong><code>@OneToMany(mappedBy = "salesOrderEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)</code></strong>: Indica una relación de uno a muchos con <code>SalesOrderItemEntity</code>. La propiedad <code>mappedBy</code> se refiere al campo <code>salesOrderEntity</code> en <code>SalesOrderItemEntity</code>, <code>cascade = CascadeType.ALL</code> indica que todas las operaciones de persistencia se propagarán a los elementos relacionados, y <code>fetch = FetchType.LAZY</code> indica que la relación se cargará de manera perezosa.</li>
+</ul>
+</li>
+<li>
+<p><strong>Lombok Annotations</strong>:</p>
+<ul>
+<li><strong><code>@Getter</code></strong>: Genera automáticamente métodos getter para todos los campos.</li>
+<li><strong><code>@Setter</code></strong>: Genera automáticamente métodos setter para todos los campos.</li>
+<li><strong><code>@AllArgsConstructor</code></strong>: Genera un constructor con un argumento para cada campo en la clase.</li>
+<li><strong><code>@NoArgsConstructor</code></strong>: Genera un constructor sin argumentos.</li>
+<li><strong><code>@Builder</code></strong>: Permite construir objetos de esta clase de manera fluida.</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-enumerado-paymentstatus">2. <strong>Enumerado PaymentStatus</strong></h3>
+<h4 id="descripcion_1"><strong>Descripción</strong></h4>
+<p>La enumeración <code>PaymentStatus</code> define los posibles estados de pago para una orden. Esto nos permite estandarizar y controlar los valores que representan el estado del pago.</p>
+<p>Valores de <code>PaymentStatus</code></p>
+<ul>
+<li><strong>PENDING</strong>: El pago está pendiente.</li>
+<li><strong>PAID</strong>: El pago ha sido completado.</li>
+</ul>
+<div class="language-java highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">PaymentStatus.java</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1">1</a></span>
+<span class="normal"><a href="#__codelineno-1-2">2</a></span>
+<span class="normal"><a href="#__codelineno-1-3">3</a></span>
+<span class="normal"><a href="#__codelineno-1-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">enum</span><span class="w"> </span><span class="n">PaymentStatus</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="w">    </span><span class="n">PENDING</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="w">    </span><span class="n">PAID</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="p">}</span>
+</span></code></pre></div></td></tr></table></div>
+<h3 id="3-entidad-sales-order-item">3. <strong>Entidad Sales Order Item</strong></h3>
+<h4 id="descripcion_2"><strong>Descripción</strong></h4>
+<p>La clase <code>SalesOrderItemEntity</code> representa un ítem individual dentro de una orden de venta. Cada ítem está asociado a un producto específico y tiene propiedades como la cantidad y el precio.</p>
+<p><strong>Propiedades de <code>SalesOrderItemEntity</code></strong></p>
+<ul>
+<li><strong>ID</strong>: Identificador único del ítem, generado mediante una secuencia.</li>
+<li><strong>Precio</strong>: Precio del ítem en la orden.</li>
+<li><strong>Descargas Disponibles</strong>: Número de descargas disponibles para el ítem, si aplica.</li>
+<li><strong>Libro</strong>: Referencia a la entidad BookEntity que representa el libro asociado a este ítem.</li>
+<li><strong>Orden de Venta</strong>: Referencia a la orden de venta (SalesOrderEntity) a la que pertenece este ítem.</li>
+</ul>
+<p><strong>Importancia</strong>
+La entidad <code>SalesOrderItemEntity</code> es fundamental porque nos permite:</p>
+<ul>
+<li><strong>Desglosar Ventas</strong>: Ver los detalles específicos de cada producto vendido en una orden.</li>
+<li><strong>Calcular Totales</strong>: Calcular el total de la orden sumando los precios de cada ítem.</li>
+<li><strong>Analizar Productos</strong>: Analizar qué productos se venden más y ajustar inventarios y estrategias de marketing en consecuencia.</li>
+</ul>
+<div class="language-java highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">SalesOrderItemEntity.java</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-2-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-2-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-2-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-2-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-2-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-2-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-2-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-2-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-2-10">10</a></span>
+<span class="normal"><a href="#__codelineno-2-11">11</a></span>
+<span class="normal"><a href="#__codelineno-2-12">12</a></span>
+<span class="normal"><a href="#__codelineno-2-13">13</a></span>
+<span class="normal"><a href="#__codelineno-2-14">14</a></span>
+<span class="normal"><a href="#__codelineno-2-15">15</a></span>
+<span class="normal"><a href="#__codelineno-2-16">16</a></span>
+<span class="normal"><a href="#__codelineno-2-17">17</a></span>
+<span class="normal"><a href="#__codelineno-2-18">18</a></span>
+<span class="normal"><a href="#__codelineno-2-19">19</a></span>
+<span class="normal"><a href="#__codelineno-2-20">20</a></span>
+<span class="normal"><a href="#__codelineno-2-21">21</a></span>
+<span class="normal"><a href="#__codelineno-2-22">22</a></span>
+<span class="normal"><a href="#__codelineno-2-23">23</a></span>
+<span class="normal"><a href="#__codelineno-2-24">24</a></span>
+<span class="normal"><a href="#__codelineno-2-25">25</a></span>
+<span class="normal"><a href="#__codelineno-2-26">26</a></span>
+<span class="normal"><a href="#__codelineno-2-27">27</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="nd">@Entity</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="nd">@Table</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;sales_order_items&quot;</span><span class="p">)</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="nd">@Getter</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="nd">@Setter</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="nd">@AllArgsConstructor</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="nd">@NoArgsConstructor</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7"></a><span class="nd">@Builder</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">SalesOrderItemEntity</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9"></a><span class="w">    </span><span class="nd">@Id</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10"></a><span class="w">    </span><span class="nd">@GeneratedValue</span><span class="p">(</span><span class="n">strategy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GenerationType</span><span class="p">.</span><span class="na">SEQUENCE</span><span class="p">,</span><span class="w"> </span><span class="n">generator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;sales_order_items_id_generator&quot;</span><span class="p">)</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11"></a><span class="w">    </span><span class="nd">@SequenceGenerator</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;sales_order_items_id_generator&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">sequenceName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;sales_order_items_id_seq&quot;</span><span class="p">)</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13"></a>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">price</span><span class="p">;</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15"></a>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16"></a><span class="w">    </span><span class="nd">@Column</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;downloads_available&quot;</span><span class="p">)</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">downloadsAvailable</span><span class="p">;</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18"></a>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19"></a><span class="w">    </span><span class="nd">@ManyToOne</span><span class="p">(</span><span class="n">fetch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FetchType</span><span class="p">.</span><span class="na">LAZY</span><span class="p">)</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20"></a><span class="w">    </span><span class="nd">@JoinColumn</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;book_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">referencedColumnName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;id&quot;</span><span class="p">)</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">BookEntity</span><span class="w"> </span><span class="n">bookEntity</span><span class="p">;</span>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22"></a>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23"></a><span class="w">    </span><span class="nd">@JsonIgnore</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24"></a><span class="w">    </span><span class="nd">@ManyToOne</span><span class="p">(</span><span class="n">fetch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FetchType</span><span class="p">.</span><span class="na">LAZY</span><span class="p">)</span>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25"></a><span class="w">    </span><span class="nd">@JoinColumn</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;order_id&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">referencedColumnName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;id&quot;</span><span class="p">)</span>
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">SalesOrderEntity</span><span class="w"> </span><span class="n">salesOrderEntity</span><span class="p">;</span>
+</span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27"></a><span class="p">}</span>
+</span></code></pre></div></td></tr></table></div>
+<ul>
+<li>
+<p><strong>Línea 19-21</strong>:</p>
+<ul>
+<li><strong><code>@ManyToOne(fetch = FetchType.LAZY)</code></strong>: Indica una relación de muchos a uno con <code>BookEntity</code>. La propiedad <code>fetch = FetchType.LAZY</code> indica que la relación se cargará de manera perezosa.</li>
+<li><strong><code>@JoinColumn(name = "book_id", referencedColumnName = "id")</code></strong>: Especifica la columna de unión para la relación con <code>BookEntity</code>. La columna <code>book_id</code> en <code>SalesOrderItemEntity</code> se refiere a la columna <code>id</code> en <code>BookEntity</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 23-26</strong>:</p>
+<ul>
+<li><strong><code>@JsonIgnore</code></strong>: Anotación de Jackson para ignorar esta propiedad durante la serialización y deserialización <code>JSON</code>, evitando posibles problemas de recursión infinita.</li>
+<li><strong><code>@ManyToOne(fetch = FetchType.LAZY)</code></strong>: Indica una relación de muchos a uno con <code>SalesOrderEntity</code>. La propiedad <code>fetch = FetchType.LAZY</code> indica que la relación se cargará de manera perezosa.</li>
+<li><strong><code>@JoinColumn(name = "order_id", referencedColumnName = "id")</code></strong>: Especifica la columna de unión para la relación con <code>SalesOrderEntity</code>. La columna <code>order_id</code> en <code>SalesOrderItemEntity</code> se refiere a la columna <code>id</code> en <code>SalesOrderEntity</code>.</li>
+</ul>
+</li>
+</ul>
+<h2 id="creacion-de-schemas"><strong>Creación de Schemas</strong></h2>
+<h3 id="1-crear-la-secuencia-y-tabla-sales_orders">1. <strong>Crear la secuencia y tabla sales_orders</strong></h3>
+<ul>
+<li><strong>Crear la Secuencia sales_order_id_seq</strong></li>
+</ul>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">SEQUENCE</span><span class="w"> </span><span class="n">sales_order_id_seq</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="k">START</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="mi">1</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="k">INCREMENT</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">50</span><span class="p">;</span>
+</span></code></pre></div>
+<ul>
+<li><strong><code>CREATE SEQUENCE sales_order_id_seq</code></strong>: Crea una nueva secuencia llamada <code>sales_order_id_seq</code>.
+START WITH 1: La secuencia comienza en 1.</li>
+<li><strong><code>INCREMENT BY 50</code></strong>: La secuencia incrementa en 50 cada vez que se solicita un nuevo valor.</li>
+</ul>
+<h3 id="2-crear-la-tabla-sales_orders">2. <strong>Crear la Tabla <code>sales_orders</code></strong></h3>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">sales_orders</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">BIGINT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">nextval</span><span class="p">(</span><span class="s1">&#39;sales_order_id_seq&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="n">total</span><span class="w"> </span><span class="nb">NUMERIC</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="n">payment_status</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="n">created_at</span><span class="w"> </span><span class="k">TIMESTAMP</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="n">customer_id</span><span class="w"> </span><span class="nb">BIGINT</span><span class="p">,</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">customer_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="p">);</span>
+</span></code></pre></div>
+<ul>
+<li><strong><code>id BIGINT PRIMARY KEY DEFAULT nextval('sales_order_id_seq') NOT NULL</code></strong>:<ul>
+<li><strong><code>id BIGINT PRIMARY KEY</code></strong>: Define la columna <code>id</code> como la clave primaria de tipo BIGINT.</li>
+<li><strong><code>DEFAULT nextval('sales_order_id_seq')</code></strong>: El valor por defecto se obtiene de la secuencia <code>sales_order_id_seq</code>.</li>
+<li><strong><code>NOT NULL</code></strong>: El campo no puede ser nulo.</li>
+</ul>
+</li>
+<li><strong><code>total NUMERIC NOT NULL</code></strong>: Define la columna <code>total</code> como <code>NUMERIC</code> y no puede ser nula.</li>
+<li><strong><code>payment_status VARCHAR(255)</code></strong>: Define la columna <code>payment_status</code> como <code>VARCHAR(255)</code>.</li>
+<li><strong><code>created_at TIMESTAMP NOT NULL</code></strong>: Define la columna <code>created_at</code> como <code>TIMESTAMP</code> y no puede ser nula.</li>
+<li><strong><code>customer_id BIGINT</code></strong>: Define la columna <code>customer_id</code> como <code>BIGINT</code>.</li>
+<li><strong><code>FOREIGN KEY (customer_id) REFERENCES users(id)</code></strong>: Define <code>customer_id</code> como una clave foránea que referencia a <code>id</code> en la tabla <code>users</code>.</li>
+</ul>
+<h3 id="3-crear-la-secuencia-y-tabla-sales_order_items">3. <strong>Crear la secuencia y <code>tabla sales_order_items</code></strong></h3>
+<ul>
+<li><strong>Crear la Secuencia sales_order_items_id_seq</strong></li>
+</ul>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="n">SEQUENCE</span><span class="w"> </span><span class="n">sales_order_items_id_seq</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="k">START</span><span class="w"> </span><span class="k">WITH</span><span class="w"> </span><span class="mi">1</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="k">INCREMENT</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">50</span><span class="p">;</span>
+</span></code></pre></div>
+<ul>
+<li><strong>Crear la Tabla sales_order_items</strong></li>
+</ul>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">sales_order_items</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="nb">INT</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">nextval</span><span class="p">(</span><span class="s1">&#39;sales_order_items_id_seq&#39;</span><span class="p">)</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="n">price</span><span class="w"> </span><span class="nb">NUMERIC</span><span class="p">,</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="n">downloads_available</span><span class="w"> </span><span class="nb">INT</span><span class="p">,</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="n">book_id</span><span class="w"> </span><span class="nb">BIGINT</span><span class="p">,</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="n">order_id</span><span class="w"> </span><span class="nb">BIGINT</span><span class="p">,</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">book_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">books</span><span class="p">(</span><span class="n">id</span><span class="p">),</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">order_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">sales_orders</span><span class="p">(</span><span class="n">id</span><span class="p">)</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="p">);</span>
+</span></code></pre></div>
+<ul>
+<li><strong><code>id INT DEFAULT nextval('sales_order_items_id_seq') PRIMARY KEY</code></strong>:<ul>
+<li><strong><code>id INT PRIMARY KEY</code></strong>: Define la columna id como la clave primaria de tipo INT.</li>
+<li><strong><code>DEFAULT nextval('sales_order_items_id_seq')</code></strong>: El valor por defecto se obtiene de la secuencia <code>sales_order_items_id_seq</code>.</li>
+<li><strong><code>price NUMERIC</code></strong>: Define la columna price como NUMERIC.</li>
+<li><strong><code>downloads_available INT</code></strong>: Define la columna downloads_available como INT.</li>
+<li><strong><code>book_id BIGINT</code></strong>: Define la columna book_id como BIGINT.</li>
+<li><strong><code>order_id BIGINT</code></strong>: Define la columna order_id como BIGINT.</li>
+<li><strong><code>FOREIGN KEY (book_id) REFERENCES books(id)</code></strong>: Define book_id como una clave foránea que referencia a id en la tabla books.</li>
+<li><strong><code>FOREIGN KEY (order_id) REFERENCES sales_orders(id)</code></strong>: Define order_id como una clave foránea que referencia a id en la tabla sales_orders.</li>
+</ul>
+</li>
+</ul>
+<h2 id="creacion-de-repositorios"><strong>Creación de Repositorios</strong></h2>
+<p>En esta sección, vamos a detallar los repositorios <code>SalesOrderRepository</code> y <code>SalesOrderItemRepository</code> que proporcionan la interfaz para realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) en las entidades <code>SalesOrderEntity</code> y <code>SalesOrderItemEntity</code>.</p>
+<h3 id="1-repositorio-salesorderrepository">1. <strong>Repositorio SalesOrderRepository</strong></h3>
+<p>El repositorio <code>SalesOrderRepository</code> proporciona métodos para realizar operaciones CRUD en la entidad <code>SalesOrderEntity</code></p>
+<div class="language-java highlight"><span class="filename">SalesOrderRepository.java</span><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.jpa.repository.JpaRepository</span><span class="p">;</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">SalesOrderRepository</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">JpaRepository</span><span class="o">&lt;</span><span class="n">SalesOrderEntity</span><span class="p">,</span><span class="w"> </span><span class="n">Long</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="p">}</span>
+</span></code></pre></div>
+<ul>
+<li><strong><code>public interface SalesOrderRepository extends JpaRepository&lt;SalesOrderEntity, Long&gt;</code></strong>: Define una interfaz de repositorio que extiende <code>JpaRepository</code>. Esto proporciona automáticamente métodos para realizar operaciones CRUD en la entidad <code>SalesOrderEntity</code>.<ul>
+<li><strong><code>JpaRepository&lt;SalesOrderEntity, Long&gt;</code></strong>: Especifica que el repositorio trabaja con la entidad SalesOrderEntity y utiliza Long como tipo de dato para la clave primaria.</li>
+<li>Los métodos CRUD estándar que proporciona <code>JpaRepository</code> incluyen:<ul>
+<li><strong><code>save(S entity)</code></strong>: Guarda una entidad.</li>
+<li><strong><code>findById(ID id)</code></strong>: Encuentra una entidad por su ID.</li>
+<li><strong><code>findAll()</code></strong>: Encuentra todas las entidades.</li>
+<li><strong><code>deleteById(ID id)</code></strong>: Elimina una entidad por su ID.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-repositorio-salesorderitemrepository">2. <strong>Repositorio SalesOrderItemRepository</strong></h3>
+<p>El repositorio <code>SalesOrderItemRepository</code> proporciona métodos para realizar operaciones CRUD en la entidad <code>SalesOrderItemEntity</code>, así como un método adicional para encontrar un ítem de una orden específica.</p>
+<div class="language-java highlight"><span class="filename">SalesOrderItemRepository.java</span><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.data.jpa.repository.JpaRepository</span><span class="p">;</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Optional</span><span class="p">;</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">SalesOrderItemRepository</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">JpaRepository</span><span class="o">&lt;</span><span class="n">SalesOrderItemEntity</span><span class="p">,</span><span class="w"> </span><span class="n">Long</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">SalesOrderItemEntity</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">findByIdAndSalesOrderEntity</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">SalesOrderEntity</span><span class="w"> </span><span class="n">salesOrderEntity</span><span class="p">);</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="p">}</span>
+</span></code></pre></div>
+<ul>
+<li><strong><code>Optional&lt;SalesOrderItemEntity&gt; findByIdAndSalesOrderEntity(Long id, SalesOrderEntity salesOrderEntity)</code></strong>: Método adicional definido en el repositorio para encontrar un ítem de una orden específica.<ul>
+<li><strong><code>Optional&lt;SalesOrderItemEntity&gt; findByIdAndSalesOrderEntity(Long id, SalesOrderEntity salesOrderEntity)</code></strong>: Encuentra un ítem de una orden específica por su ID y la entidad de la orden a la que pertenece. Retorna un <code>Optional</code> que puede contener el ítem encontrado o estar vacío si no se encuentra ningún ítem que coincida con los criterios.<ul>
+<li><strong><code>Long id</code></strong>: El ID del ítem de la orden.</li>
+<li><strong><code>SalesOrderEntity salesOrderEntity</code></strong>: La entidad de la orden a la que pertenece el ítem.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="creacion-del-servicio-salesorderservice"><strong>Creación del Servicio SalesOrderService</strong></h2>
+<p>El servicio <code>SalesOrderService</code> se encarga de la lógica de negocio relacionada con las órdenes de venta en la aplicación. Proporciona métodos para crear una nueva orden y para recuperar órdenes existentes.</p>
+<ul>
+<li><strong>Servicio <code>SalesOrderService</code></strong></li>
+</ul>
+<div class="language-java highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">SalesOrderService.java</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-9-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-9-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-9-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-9-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-9-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-9-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-9-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-9-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-9-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-9-10">10</a></span>
+<span class="normal"><a href="#__codelineno-9-11">11</a></span>
+<span class="normal"><a href="#__codelineno-9-12">12</a></span>
+<span class="normal"><a href="#__codelineno-9-13">13</a></span>
+<span class="normal"><a href="#__codelineno-9-14">14</a></span>
+<span class="normal"><a href="#__codelineno-9-15">15</a></span>
+<span class="normal"><a href="#__codelineno-9-16">16</a></span>
+<span class="normal"><a href="#__codelineno-9-17">17</a></span>
+<span class="normal"><a href="#__codelineno-9-18">18</a></span>
+<span class="normal"><a href="#__codelineno-9-19">19</a></span>
+<span class="normal"><a href="#__codelineno-9-20">20</a></span>
+<span class="normal"><a href="#__codelineno-9-21">21</a></span>
+<span class="normal"><a href="#__codelineno-9-22">22</a></span>
+<span class="normal"><a href="#__codelineno-9-23">23</a></span>
+<span class="normal"><a href="#__codelineno-9-24">24</a></span>
+<span class="normal"><a href="#__codelineno-9-25">25</a></span>
+<span class="normal"><a href="#__codelineno-9-26">26</a></span>
+<span class="normal"><a href="#__codelineno-9-27">27</a></span>
+<span class="normal"><a href="#__codelineno-9-28">28</a></span>
+<span class="normal"><a href="#__codelineno-9-29">29</a></span>
+<span class="normal"><a href="#__codelineno-9-30">30</a></span>
+<span class="normal"><a href="#__codelineno-9-31">31</a></span>
+<span class="normal"><a href="#__codelineno-9-32">32</a></span>
+<span class="normal"><a href="#__codelineno-9-33">33</a></span>
+<span class="normal"><a href="#__codelineno-9-34">34</a></span>
+<span class="normal"><a href="#__codelineno-9-35">35</a></span>
+<span class="normal"><a href="#__codelineno-9-36">36</a></span>
+<span class="normal"><a href="#__codelineno-9-37">37</a></span>
+<span class="normal"><a href="#__codelineno-9-38">38</a></span>
+<span class="normal"><a href="#__codelineno-9-39">39</a></span>
+<span class="normal"><a href="#__codelineno-9-40">40</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="nd">@Service</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2"></a><span class="nd">@Transactional</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">SalesOrderService</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4"></a>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">BookRepository</span><span class="w"> </span><span class="n">bookRepository</span><span class="p">;</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6"></a>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">SalesOrderRepository</span><span class="w"> </span><span class="n">orderRepository</span><span class="p">;</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8"></a>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">SalesOrderService</span><span class="p">(</span><span class="n">BookRepository</span><span class="w"> </span><span class="n">bookRepository</span><span class="p">,</span><span class="w"> </span><span class="n">SalesOrderRepository</span><span class="w"> </span><span class="n">orderRepository</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10"></a><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">bookRepository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bookRepository</span><span class="p">;</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11"></a><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">orderRepository</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">orderRepository</span><span class="p">;</span>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13"></a>
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">SalesOrderEntity</span><span class="w"> </span><span class="nf">createOrder</span><span class="p">(</span><span class="n">List</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span><span class="w"> </span><span class="n">bookIds</span><span class="p">){</span>
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15"></a><span class="w">        </span><span class="n">SalesOrderEntity</span><span class="w"> </span><span class="n">salesOrderEntity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SalesOrderEntity</span><span class="p">();</span>
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16"></a><span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">SalesOrderItemEntity</span><span class="o">&gt;</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17"></a><span class="w">        </span><span class="n">BigDecimal</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BigDecimal</span><span class="p">.</span><span class="na">ZERO</span><span class="p">;</span>
+</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18"></a><span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">bookId</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">bookIds</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-19"><a id="__codelineno-9-19" name="__codelineno-9-19"></a><span class="w">            </span><span class="n">BookEntity</span><span class="w"> </span><span class="n">book</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bookRepository</span>
+</span><span id="__span-9-20"><a id="__codelineno-9-20" name="__codelineno-9-20"></a><span class="w">                    </span><span class="p">.</span><span class="na">findById</span><span class="p">(</span><span class="n">bookId</span><span class="p">)</span>
+</span><span id="__span-9-21"><a id="__codelineno-9-21" name="__codelineno-9-21"></a><span class="w">                    </span><span class="p">.</span><span class="na">orElseThrow</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BookNotFoundException</span><span class="p">(</span><span class="s">&quot;Book not found with id: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">bookId</span><span class="p">));</span>
+</span><span id="__span-9-22"><a id="__codelineno-9-22" name="__codelineno-9-22"></a>
+</span><span id="__span-9-23"><a id="__codelineno-9-23" name="__codelineno-9-23"></a><span class="w">            </span><span class="n">SalesOrderItemEntity</span><span class="w"> </span><span class="n">salesOrderItem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SalesOrderItemEntity</span><span class="p">();</span>
+</span><span id="__span-9-24"><a id="__codelineno-9-24" name="__codelineno-9-24"></a><span class="w">            </span><span class="n">salesOrderItem</span><span class="p">.</span><span class="na">setBookEntity</span><span class="p">(</span><span class="n">book</span><span class="p">);</span>
+</span><span id="__span-9-25"><a id="__codelineno-9-25" name="__codelineno-9-25"></a><span class="w">            </span><span class="n">salesOrderItem</span><span class="p">.</span><span class="na">setPrice</span><span class="p">(</span><span class="n">book</span><span class="p">.</span><span class="na">getPrice</span><span class="p">());</span>
+</span><span id="__span-9-26"><a id="__codelineno-9-26" name="__codelineno-9-26"></a><span class="w">            </span><span class="n">salesOrderItem</span><span class="p">.</span><span class="na">setDownloadsAvailable</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</span><span id="__span-9-27"><a id="__codelineno-9-27" name="__codelineno-9-27"></a><span class="w">            </span><span class="n">salesOrderItem</span><span class="p">.</span><span class="na">setSalesOrderEntity</span><span class="p">(</span><span class="n">salesOrderEntity</span><span class="p">);</span>
+</span><span id="__span-9-28"><a id="__codelineno-9-28" name="__codelineno-9-28"></a>
+</span><span id="__span-9-29"><a id="__codelineno-9-29" name="__codelineno-9-29"></a><span class="w">            </span><span class="n">items</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">salesOrderItem</span><span class="p">);</span>
+</span><span id="__span-9-30"><a id="__codelineno-9-30" name="__codelineno-9-30"></a><span class="w">            </span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">total</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">salesOrderItem</span><span class="p">.</span><span class="na">getPrice</span><span class="p">());</span>
+</span><span id="__span-9-31"><a id="__codelineno-9-31" name="__codelineno-9-31"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-9-32"><a id="__codelineno-9-32" name="__codelineno-9-32"></a><span class="w">        </span><span class="n">salesOrderEntity</span><span class="p">.</span><span class="na">setPaymentStatus</span><span class="p">(</span><span class="n">PaymentStatus</span><span class="p">.</span><span class="na">PENDING</span><span class="p">);</span>
+</span><span id="__span-9-33"><a id="__codelineno-9-33" name="__codelineno-9-33"></a><span class="w">        </span><span class="n">salesOrderEntity</span><span class="p">.</span><span class="na">setCreatedAt</span><span class="p">(</span><span class="n">LocalDateTime</span><span class="p">.</span><span class="na">now</span><span class="p">());</span>
+</span><span id="__span-9-34"><a id="__codelineno-9-34" name="__codelineno-9-34"></a><span class="w">        </span><span class="n">salesOrderEntity</span><span class="p">.</span><span class="na">setTotal</span><span class="p">(</span><span class="n">total</span><span class="p">);</span>
+</span><span id="__span-9-35"><a id="__codelineno-9-35" name="__codelineno-9-35"></a><span class="w">        </span><span class="n">salesOrderEntity</span><span class="p">.</span><span class="na">setItems</span><span class="p">(</span><span class="n">items</span><span class="p">);</span>
+</span><span id="__span-9-36"><a id="__codelineno-9-36" name="__codelineno-9-36"></a>
+</span><span id="__span-9-37"><a id="__codelineno-9-37" name="__codelineno-9-37"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">orderRepository</span><span class="p">.</span><span class="na">save</span><span class="p">(</span><span class="n">salesOrderEntity</span><span class="p">);</span>
+</span><span id="__span-9-38"><a id="__codelineno-9-38" name="__codelineno-9-38"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-9-39"><a id="__codelineno-9-39" name="__codelineno-9-39"></a>
+</span><span id="__span-9-40"><a id="__codelineno-9-40" name="__codelineno-9-40"></a><span class="p">}</span>
+</span></code></pre></div></td></tr></table></div>
+<ul>
+<li>
+<p><strong>Línea 2</strong>:</p>
+<ul>
+<li><strong><code>@Transactional</code></strong>: Asegura que todos los métodos en esta clase se ejecuten dentro de una transacción. Si alguna parte del método falla, se realiza un rollback de todas las operaciones de la base de datos realizadas en ese método.</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 14-38</strong>:</p>
+<ul>
+<li><strong><code>createOrder(List&lt;Long&gt; bookIds)</code></strong>: Método para crear una nueva orden de venta.</li>
+<li><strong><code>SalesOrderEntity salesOrderEntity = new SalesOrderEntity();</code></strong>: Crea una nueva instancia de <code>SalesOrderEntity</code>.</li>
+<li><strong><code>List&lt;SalesOrderItemEntity&gt; items = new ArrayList&lt;&gt;();</code></strong>: Inicializa una lista de ítems de la orden.</li>
+<li><strong><code>BigDecimal total = BigDecimal.ZERO;</code></strong>: Inicializa el total de la orden en cero.</li>
+<li><strong><code>Bucle for</code></strong>: Itera sobre los IDs de los libros proporcionados para crear ítems de la orden.<ul>
+<li><strong><code>BookEntity book = bookRepository.findById(bookId).orElseThrow(...);</code></strong>: Busca el libro por su <code>ID</code> o lanza una excepción si no se encuentra.</li>
+<li><strong><code>SalesOrderItemEntity salesOrderItem = new SalesOrderItemEntity();</code></strong>: Crea una nueva instancia de <code>SalesOrderItemEntity</code>.</li>
+<li><strong><code>Setters</code></strong>: Asigna los valores correspondientes al ítem de la orden.</li>
+<li><strong><code>items.add(salesOrderItem);</code></strong>: Añade el ítem a la lista de ítems.</li>
+<li><strong><code>total = total.add(salesOrderItem.getPrice());</code></strong>: Actualiza el total de la orden.</li>
+</ul>
+</li>
+<li><strong><code>Setters</code></strong>: Asigna valores a la orden de venta.</li>
+<li><strong><code>return orderRepository.save(salesOrderEntity);</code></strong>: Guarda la orden en la base de datos y retorna la entidad guardada.</li>
+</ul>
+</li>
+</ul>
+<h3 id="conlusion"><strong>Conlusión</strong></h3>
+<p>En esta sesión, hemos desarrollado una funcionalidad completa para la gestión de órdenes de venta en una aplicación Spring Boot. Desde la creación de las entidades, la implementación de repositorios y servicios, hasta la configuración del controlador, hemos cubierto todos los componentes necesarios para una solución robusta y bien estructurada. Con estos componentes, hemos construido una aplicación Spring Boot sólida y preparada para gestionar órdenes de venta de manera eficaz, asegurando una arquitectura modular y escalable.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2024 Geovanny Mendoza
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/geovannymcode" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1zM480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2zm-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3zm-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/geovannycode" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/in/geovannycode/" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.fe8b6f2b.min.js"></script>
+      
+        <script src="https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js"></script>
+      
+        <script src="../javascripts/tablesort.js"></script>
+      
+    
+  </body>
+</html>

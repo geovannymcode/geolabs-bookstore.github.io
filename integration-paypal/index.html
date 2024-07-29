@@ -1,0 +1,2277 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="GeoLabs BookStore Docs">
+      
+      
+        <meta name="author" content="Geovanny Mendoza">
+      
+      
+        <link rel="canonical" href="https://geovannymcode.github.io/geolabs-bookstore.github.io/integration-paypal/">
+      
+      
+        <link rel="prev" href="../get-order/">
+      
+      
+        <link rel="next" href="../cache-redis/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.30">
+    
+    
+      
+        <title>Integración con PayPal API - GeoLabs BookStore</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.3cba04c6.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#integracion-con-paypal-api" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="GeoLabs BookStore" class="md-header__button md-logo" aria-label="GeoLabs BookStore" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            GeoLabs BookStore
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Integración con PayPal API
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://geovannymcode.github.io/geolabs-bookstore.github.io" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    /geovannymcode/geolabs-bookstore.github.io
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="GeoLabs BookStore" class="md-nav__button md-logo" aria-label="GeoLabs BookStore" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    GeoLabs BookStore
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://geovannymcode.github.io/geolabs-bookstore.github.io" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    /geovannymcode/geolabs-bookstore.github.io
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../get-book/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Creacion Book
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../get-user/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Creacion User
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../get-order/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Creacion Order e Item
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Integración con PayPal API
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Integración con PayPal API
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduccion-a-la-integracion-con-paypal-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introducción a la Integración con PayPal API
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introducción a la Integración con PayPal API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#beneficios-de-integrar-paypal-en-tu-aplicacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Beneficios de Integrar PayPal en tu Aplicación
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diseno-del-flujo-de-pago" class="md-nav__link">
+    <span class="md-ellipsis">
+      Diseño del Flujo de Pago
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datos-de-las-credenciales-de-paypal-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      Datos de las credenciales de PayPal App
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datos-de-la-cuenta-personal-de-pruebas-paypal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Datos de la cuenta personal de pruebas PayPal:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guia-de-paypal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Guía de PayPal
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Guía de PayPal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creacion-de-venta" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creación De Venta
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-creacion-del-token-de-acceso" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Creación del Token de Acceso
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1solicitud-de-token-de-acceso" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.Solicitud de Token de Acceso
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-creacion-de-la-orden-de-pago" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Creación de la Orden de Pago
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-solicitud-para-crear-una-orden" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Solicitud para Crear una Orden
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-respuesta-de-paypal" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Respuesta de PayPal
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1solicitud-para-capturar-la-orden" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.Solicitud para Capturar la Orden
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-respuesta-de-paypal_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Respuesta de PayPal
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#detalle-de-la-integracion-con-paypal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Detalle de la Integración con PayPal
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-crear-los-dtos-para-paypal" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Crear los DTOs para PayPal
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-configuracion-en-applicationproperties" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Configuración en application.properties
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-crear-un-servicio-llamado-paypalservice-con-los-siguientes-atributos" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Crear un servicio llamado PaypalService con los siguientes atributos.
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-crear-un-metodo-en-el-servicio-que-obtenga-el-access-token-de-paypal" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Crear un método en el servicio que obtenga el access token de paypal.
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-crear-un-metodo-para-crear-la-orden-de-compra-en-paypal" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Crear un método para crear la orden de compra en paypal.
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-crear-un-metodo-para-capturar-la-orden-de-compra-consultar-el-estado-de-pago-de-paypal" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Crear un método para capturar la orden de compra (consultar el estado de pago) de paypal.
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-implementacion-del-controlador" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Implementación del Controlador
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#endpoint-de-crear-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      Endpoint de crear order
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clase-createorderrequest" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clase CreateOrderRequest
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#propiedades-de-createorderrequest" class="md-nav__link">
+    <span class="md-ellipsis">
+      Propiedades de CreateOrderRequest
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#endpoint-de-capture-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      Endpoint de Capture order
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusión
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cache-redis/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Cache con Redis
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spring-aop/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Anotaciones con Spring AOP
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bookstore-webapp/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Frontend WebApp
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing-book/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Testing BookStore
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../good-practice/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tips de Desarrollo
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../referencia/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Referencias
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduccion-a-la-integracion-con-paypal-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introducción a la Integración con PayPal API
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Introducción a la Integración con PayPal API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#beneficios-de-integrar-paypal-en-tu-aplicacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Beneficios de Integrar PayPal en tu Aplicación
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diseno-del-flujo-de-pago" class="md-nav__link">
+    <span class="md-ellipsis">
+      Diseño del Flujo de Pago
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datos-de-las-credenciales-de-paypal-app" class="md-nav__link">
+    <span class="md-ellipsis">
+      Datos de las credenciales de PayPal App
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datos-de-la-cuenta-personal-de-pruebas-paypal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Datos de la cuenta personal de pruebas PayPal:
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guia-de-paypal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Guía de PayPal
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Guía de PayPal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creacion-de-venta" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creación De Venta
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-creacion-del-token-de-acceso" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Creación del Token de Acceso
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1solicitud-de-token-de-acceso" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.Solicitud de Token de Acceso
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-creacion-de-la-orden-de-pago" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Creación de la Orden de Pago
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-solicitud-para-crear-una-orden" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Solicitud para Crear una Orden
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-respuesta-de-paypal" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Respuesta de PayPal
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1solicitud-para-capturar-la-orden" class="md-nav__link">
+    <span class="md-ellipsis">
+      1.Solicitud para Capturar la Orden
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-respuesta-de-paypal_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Respuesta de PayPal
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#detalle-de-la-integracion-con-paypal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Detalle de la Integración con PayPal
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-crear-los-dtos-para-paypal" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Crear los DTOs para PayPal
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-configuracion-en-applicationproperties" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Configuración en application.properties
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-crear-un-servicio-llamado-paypalservice-con-los-siguientes-atributos" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Crear un servicio llamado PaypalService con los siguientes atributos.
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-crear-un-metodo-en-el-servicio-que-obtenga-el-access-token-de-paypal" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Crear un método en el servicio que obtenga el access token de paypal.
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-crear-un-metodo-para-crear-la-orden-de-compra-en-paypal" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Crear un método para crear la orden de compra en paypal.
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-crear-un-metodo-para-capturar-la-orden-de-compra-consultar-el-estado-de-pago-de-paypal" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Crear un método para capturar la orden de compra (consultar el estado de pago) de paypal.
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-implementacion-del-controlador" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Implementación del Controlador
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#endpoint-de-crear-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      Endpoint de crear order
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clase-createorderrequest" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clase CreateOrderRequest
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#propiedades-de-createorderrequest" class="md-nav__link">
+    <span class="md-ellipsis">
+      Propiedades de CreateOrderRequest
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#endpoint-de-capture-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      Endpoint de Capture order
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusión
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="integracion-con-paypal-api"><strong>Integración con Paypal API</strong></h1>
+<h2 id="introduccion-a-la-integracion-con-paypal-api"><strong>Introducción a la Integración con PayPal API</strong></h2>
+<p>En esta sección, exploraremos cómo integrar la <strong>API</strong> de <strong>PayPal</strong> en una aplicación desarrollada con Spring Boot.</p>
+<p>PayPal es uno de los proveedores de servicios de pago más populares y confiables a nivel mundial, ofreciendo una solución segura y fácil de usar para procesar pagos en línea.</p>
+<p>El objetivo de esta integración es proporcionar una experiencia de pago fluida y segura para los usuarios de nuestra aplicación. A lo largo de esta guía, cubriremos los pasos necesarios para configurar y utilizar la API de PayPal, desde la creación de una orden de pago hasta la captura del pago final.</p>
+<h3 id="beneficios-de-integrar-paypal-en-tu-aplicacion"><strong>Beneficios de Integrar PayPal en tu Aplicación</strong></h3>
+<ul>
+<li><strong>Seguridad</strong>: PayPal maneja la seguridad y protección de los datos de pago del usuario.</li>
+<li><strong>Confiabilidad</strong>: Con millones de usuarios en todo el mundo, PayPal es una plataforma probada y confiable para procesar pagos.</li>
+<li><strong>Facilidad de Uso</strong>: La API de PayPal es fácil de integrar y proporciona una experiencia de usuario intuitiva y eficiente.</li>
+<li><strong>Compatibilidad Global</strong>: Permite aceptar pagos de clientes en diferentes países y en múltiples monedas.</li>
+</ul>
+<h3 id="diseno-del-flujo-de-pago"><strong>Diseño del Flujo de Pago</strong></h3>
+<p><img alt="GeoLabs BookStore" src="../files/Paypal_completo.png" title="GeoLabs BookStore" /></p>
+<p>El diagrama adjunto ilustra el flujo de pago completo utilizando PayPal, destacando las interacciones entre el cliente, el servidor y PayPal. A continuación, detallamos los pasos clave del proceso:</p>
+<ul>
+<li>
+<p><strong>1. Inicio del Proceso de Pago</strong></p>
+<ul>
+<li><strong>Cliente</strong>: El usuario inicia el proceso de pago desde el cliente (por ejemplo, un navegador web).</li>
+<li><strong>Acción</strong>: El cliente envía una solicitud al servidor para iniciar el proceso de pago.</li>
+</ul>
+</li>
+<li>
+<p><strong>2. Creación de la Orden de Pago</strong></p>
+<ul>
+<li><strong>Servidor</strong>: El servidor recibe la solicitud de inicio de pago y procede a crear una orden de pago en PayPal.</li>
+<li><strong>Acción</strong>: El servidor envía una solicitud a la API de PayPal para crear una orden de pago.</li>
+<li><strong>Encabezado (Header)</strong>: H: Bearer Token - La solicitud incluye un token de autorización (Bearer Token) que autentica la solicitud en PayPal.</li>
+</ul>
+</li>
+<li><strong>3. Respuesta de Creación de la Orden</strong><ul>
+<li><strong>PayPal</strong>: PayPal recibe la solicitud de creación de la orden de pago y procesa la solicitud.</li>
+<li><strong>Acción</strong>: PayPal responde al servidor con los detalles de la orden creada, incluyendo una URL de redirección para la aprobación del pago por parte del usuario.</li>
+</ul>
+</li>
+<li><strong>4. URL de Redirección hacia la Página de Aprobación de Pago</strong><ul>
+<li><strong>Servidor</strong>: El servidor recibe la respuesta de PayPal y extrae la URL de redirección para la aprobación del pago.</li>
+<li><strong>Acción</strong>: El servidor envía esta URL de redirección al cliente.</li>
+</ul>
+</li>
+<li><strong>5. Confirmación del Pago</strong><ul>
+<li><strong>Cliente</strong>: El cliente recibe la URL de redirección y redirige al usuario a la página de aprobación de pago de PayPal.</li>
+<li><strong>Acción</strong>: El usuario revisa y confirma el pago en la página de PayPal.</li>
+</ul>
+</li>
+<li><strong>6. Redirección a la Página de Éxito</strong><ul>
+<li><strong>PayPal</strong>: Una vez que el usuario aprueba el pago, PayPal redirige al usuario de vuelta al servidor utilizando una URL de redirección proporcionada por el servidor.</li>
+<li><strong>Acción</strong>: PayPal incluye un token en la URL de redirección que permite al servidor identificar y verificar el pago.</li>
+</ul>
+</li>
+<li><strong>7. Comprobación del Pago</strong><ul>
+<li><strong>Servidor</strong>: El servidor recibe la redirección desde PayPal con el token incluido en la URL.</li>
+<li><strong>Acción</strong>: El servidor envía una solicitud a la API de PayPal para comprobar el estado del pago utilizando el token recibido.</li>
+<li><strong>Parámetro (Query Parameter)</strong>: ?Token - El token incluido en la URL permite verificar la transacción.</li>
+</ul>
+</li>
+<li><strong>8. Captura del Pago</strong><ul>
+<li><strong>Servidor</strong>: Si el pago es confirmado, el servidor procede a capturar el pago.</li>
+<li><strong>Acción</strong>: El servidor envía una solicitud a la API de PayPal para capturar el pago.</li>
+<li><strong>Encabezado (Header)</strong>: H: Bearer Token - La solicitud incluye un token de autorización (Bearer Token) que autentica la solicitud en PayPal.</li>
+</ul>
+</li>
+<li><strong>9. Respuesta de Captura del Pago</strong><ul>
+<li><strong>PayPal</strong>: PayPal procesa la captura del pago y envía una respuesta al servidor con los detalles de la transacción capturada.</li>
+<li><strong>Acción</strong>: PayPal confirma al servidor que el pago ha sido capturado exitosamente.</li>
+</ul>
+</li>
+<li><strong>10. Respuesta Final</strong><ul>
+<li><strong>Servidor</strong>: El servidor recibe la respuesta de captura del pago y procesa la información.</li>
+<li><strong>Acción</strong>: El servidor responde al cliente, indicando que el pago ha sido completado exitosamente.</li>
+</ul>
+</li>
+</ul>
+<h3 id="datos-de-las-credenciales-de-paypal-app"><strong>Datos de las credenciales de PayPal App</strong></h3>
+<p>Para integrar PayPal en tu aplicación, necesitarás las credenciales de tu aplicación PayPal. Estas credenciales son necesarias para autenticar las solicitudes que tu servidor hará a la API de PayPal.</p>
+<ol>
+<li><strong>Client ID:</strong> Este es el identificador público de tu aplicación. Ejemplo: <code>Aa-dr-NstbDTv_lE7bGEH7eJRJdxo1CHmoiTUM5qX_F8XoXIHTn-26YuMiHTSVld5XwjPs0OUe7o67Z2</code></li>
+<li><strong>Secret Key:</strong> Esta es la clave secreta de tu aplicación, usada para autenticar tus solicitudes junto con el Client ID. Ejemplo: <code>EGFt988GJmVa4a_2BUEMXPZkygOJgY96dER0p_UxIc5UvCI-tVEnUbH-gSJ1t8NTkq7Rjklj6UbbF6gt</code></li>
+<li><strong>Sandbox URL:</strong> Utiliza esta URL para realizar pruebas con PayPal en el entorno sandbox. URL: <code>https://api-m.sandbox.paypal.com</code></li>
+</ol>
+<h3 id="datos-de-la-cuenta-personal-de-pruebas-paypal"><strong>Datos de la cuenta personal de pruebas PayPal:</strong></h3>
+<p>Para realizar pruebas de integración, puedes utilizar una cuenta de pruebas en el entorno sandbox de PayPal. Aquí tienes un ejemplo de los datos de una cuenta de pruebas:</p>
+<ol>
+<li><strong>Email:</strong> <code>geovanny-test@personal.example.com</code></li>
+<li><strong>Contraseña:</strong> <code>ow#)_R8w</code></li>
+</ol>
+<h2 id="guia-de-paypal"><strong>Guía de PayPal</strong></h2>
+<p>En esta sección, aprenderás a implementar la creación de ventas utilizando la API de PayPal. Esto incluye la creación de órdenes de pago, la captura de pagos y la gestión de descargas de archivos comprados.</p>
+<h3 id="creacion-de-venta"><strong>Creación De Venta</strong></h3>
+<ol>
+<li>Crear un servicio llamado <code>SalesOrderService</code> que se encargue de crear una venta a partir de una lista de ID's de libros.</li>
+<li>Crear los Endpoints en <code>OrderController</code>
+   Define los endpoints que permitirán realizar solicitudes HTTP relacionadas con el proceso de compra y gestión de ventas.<ul>
+<li><strong>Endpoint 1</strong>: Crear Orden de PayPal<ul>
+<li><strong>Descripción</strong>: Crea una orden de paypal y retorna el enlace de pago.</li>
+<li><strong>HTTP</strong>: Method: <code>POST</code></li>
+<li><strong>URL</strong>: <code>/api/checkout/paypal/create</code></li>
+<li><strong>Body</strong>: lista de IDs de libros a comprar</li>
+<li><strong>Query Param</strong>: <code>returnUrl</code> - una URL de retorno en caso suceda un éxito o error cuando se realice el pago con paypal.</li>
+<li><strong>Response</strong>: <code>{"approveUrl": "el enlace de pago de paypal"}</code></li>
+</ul>
+</li>
+<li><strong>Endpoint 2</strong>: Capturar Pago de PayPal<ul>
+<li><strong>Descripción</strong>: Consulta si el pago se ha realizado correctamente y devuelve su estado.</li>
+<li><strong>HTTP Method</strong>: <code>POST</code></li>
+<li><strong>URL</strong>: <code>/checkout/paypal/capture</code></li>
+<li><strong>Query Param</strong>: <code>token</code> - El token que retorna PayPal e identifica una orden de compra.</li>
+<li><strong>Response</strong>: <code>{"completed": "verdadero si el pago fue completado", "orderId": "el id de la venta"}</code></li>
+</ul>
+</li>
+<li><strong>Endpoint 3</strong>: Descargar Libro<ul>
+<li><strong>Descripción</strong>: Retorna el archivo PDF de un libro y disminuye el número de descargas disponibles.</li>
+<li><strong>HTTP Method</strong>: <code>GET</code></li>
+<li><strong>URL</strong>: <code>/orders/{orderId}/items/{itemId}/book/download</code></li>
+<li><strong>Variables</strong>: orderId - ID de la venta, itemId - ID del ítem de venta.</li>
+<li><strong>Response</strong>: El archivo como un Resource de Spring.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="1-creacion-del-token-de-acceso"><strong>1. Creación del Token de Acceso</strong></h3>
+<p><img alt="GeoLabs BookStore" src="../files/Paypal_1.png" title="GeoLabs BookStore" /></p>
+<p align="center"><strong>Figura #1</strong></p>
+
+<h3 id="1solicitud-de-token-de-acceso"><strong>1.Solicitud de Token de Acceso</strong></h3>
+<ul>
+<li><strong>Cliente (BookStoreApi)</strong> envía una solicitud POST a la URL /v1/oauth2/token en PayPal.</li>
+<li><strong>Encabezados (Headers)</strong>:</li>
+<li><strong>ContentType</strong>: application/x-www-form-urlencoded</li>
+<li><strong>BasicAuth</strong>: ClientId:ClientSecret</li>
+<li><strong>Cuerpo (Body)</strong>:<ul>
+<li><strong>grant_type</strong>: client_credentials</li>
+</ul>
+</li>
+<li><strong>Respuesta de PayPal</strong><ul>
+<li><strong>PayPal</strong> responde con un token de acceso.</li>
+<li>El token de acceso tiene la siguiente estructura en JSON:
+<img alt="GeoLabs BookStore" src="../files/Paypal_2.png" title="GeoLabs BookStore" /></li>
+</ul>
+</li>
+</ul>
+<p>Este token de acceso se utilizará para autenticar todas las solicitudes posteriores a la API de PayPal.</p>
+<h3 id="2-creacion-de-la-orden-de-pago"><strong>2. Creación de la Orden de Pago</strong></h3>
+<p><img alt="GeoLabs BookStore" src="../files/Paypal_3.png" title="GeoLabs BookStore" /></p>
+<p align="center"><strong>Figura #2</strong></p>
+
+<h3 id="1-solicitud-para-crear-una-orden"><strong>1. Solicitud para Crear una Orden</strong></h3>
+<ul>
+<li><strong>Cliente (BookStoreApi)</strong> envía una solicitud POST a la URL /v2/checkout/orders en PayPal.</li>
+<li><strong>Encabezados (Headers)</strong>:<ul>
+<li><strong>ContentType</strong>: application/json</li>
+<li><strong>Authentication</strong>: Bearer Token</li>
+</ul>
+</li>
+<li><strong>Cuerpo (Body)</strong>:
+Figura #2 </li>
+</ul>
+<h3 id="2-respuesta-de-paypal"><strong>2. Respuesta de PayPal</strong></h3>
+<ul>
+<li>PayPal responde con los detalles de la orden creada.</li>
+<li>La respuesta tiene la siguiente estructura en JSON:
+<img alt="GeoLabs BookStore" src="../files/Paypal_4.png" title="GeoLabs BookStore" /></li>
+</ul>
+<p>El enlace con rel: "approve" es el que el cliente debe seguir para aprobar la orden de pago.</p>
+<ol>
+<li>Captura de la Orden de Pago
+<img alt="GeoLabs BookStore" src="../files/Paypal_5.png" title="GeoLabs BookStore" /></li>
+</ol>
+<p align="center"><strong>Figura #3</strong></p>
+
+<h3 id="1solicitud-para-capturar-la-orden"><strong>1.Solicitud para Capturar la Orden</strong></h3>
+<ul>
+<li><strong>Cliente (BookStoreApi)</strong> envía una solicitud <code>POST</code> a la URL <code>/v2/checkout/orders/{orderId}/capture</code> en PayPal, donde <code>{orderId}</code> es el ID de la orden creada en el paso anterior.</li>
+<li><strong>Encabezados (Headers)</strong>:<ul>
+<li><strong><code>ContentType</code></strong>: <code>application/json</code></li>
+<li><strong><code>Authentication</code></strong>: <code>Bearer Token</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="2-respuesta-de-paypal_1"><strong>2. Respuesta de PayPal</strong></h3>
+<ul>
+<li>PayPal responde con los detalles de la orden capturada.</li>
+<li>La respuesta tiene la siguiente estructura en JSON:
+<img alt="GeoLabs BookStore" src="../files/Paypal_6.png" title="GeoLabs BookStore" /></li>
+</ul>
+<p><strong>En Resumen</strong></p>
+<ol>
+<li><strong>Creación del Token de Acceso</strong>: Autenticar las solicitudes a la API de PayPal obteniendo un token de acceso.</li>
+<li><strong>Creación de la Orden de Pago</strong>: Crear una orden de pago en PayPal y obtener el enlace para que el cliente apruebe el pago.</li>
+<li><strong>Captura de la Orden de Pago</strong>: Capturar la orden de pago aprobada y confirmar la transacción.</li>
+</ol>
+<h3 id="detalle-de-la-integracion-con-paypal"><strong>Detalle de la Integración con PayPal</strong></h3>
+<p>En esta sección, explicaremos cómo integrar PayPal en una aplicación Spring Boot, detallando la creación de DTOs, el servicio de PayPal, y los controladores necesarios para manejar el flujo de pago. La conclusión resumirá todo lo que hemos hecho.</p>
+<h3 id="1-crear-los-dtos-para-paypal"><strong>1. Crear los DTOs para PayPal</strong></h3>
+<p>Los DTOs (Data Transfer Objects) son necesarios para estructurar los datos que enviaremos y recibiremos desde la API de PayPal.</p>
+<p><strong>TokenResponse</strong></p>
+<div class="language-java highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">TokenResponse.java</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1">1</a></span>
+<span class="normal"><a href="#__codelineno-0-2">2</a></span>
+<span class="normal"><a href="#__codelineno-0-3">3</a></span>
+<span class="normal"><a href="#__codelineno-0-4">4</a></span>
+<span class="normal"><a href="#__codelineno-0-5">5</a></span>
+<span class="normal"><a href="#__codelineno-0-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">record</span> <span class="nc">TokenResponse</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="w">    </span><span class="nd">@JsonProperty</span><span class="p">(</span><span class="s">&quot;access_token&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">accessToken</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="w">    </span><span class="nd">@JsonProperty</span><span class="p">(</span><span class="s">&quot;token_type&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">tokenType</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="w">    </span><span class="nd">@JsonProperty</span><span class="p">(</span><span class="s">&quot;app_id&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">appId</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="w">    </span><span class="nd">@JsonProperty</span><span class="p">(</span><span class="s">&quot;expires_in&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">Long</span><span class="w"> </span><span class="n">expiresIn</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+</span></code></pre></div></td></tr></table></div>
+<ul>
+<li><strong>TokenResponse</strong>: Estructura de datos para manejar la respuesta del token de acceso de PayPal.</li>
+</ul>
+<p><strong>ApplicationContext</strong></p>
+<div class="language-java highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">ApplicationContext.java</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1">1</a></span>
+<span class="normal"><a href="#__codelineno-1-2">2</a></span>
+<span class="normal"><a href="#__codelineno-1-3">3</a></span>
+<span class="normal"><a href="#__codelineno-1-4">4</a></span>
+<span class="normal"><a href="#__codelineno-1-5">5</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">record</span> <span class="nc">ApplicationContext</span><span class="p">(</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="w">        </span><span class="nd">@JsonProperty</span><span class="p">(</span><span class="s">&quot;brand_name&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">brandName</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="w">        </span><span class="nd">@JsonProperty</span><span class="p">(</span><span class="s">&quot;return_url&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">returnUrl</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="w">        </span><span class="nd">@JsonProperty</span><span class="p">(</span><span class="s">&quot;cancel_url&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">cancelUrl</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5"></a><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span>
+</span></code></pre></div></td></tr></table></div>
+<ul>
+<li><strong>ApplicationContext</strong>: Estructura de datos para manejar el contexto de la aplicación en PayPal.</li>
+</ul>
+<p><strong>Amount y CurrencyCode</strong></p>
+<div class="language-java highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Amount.java & CurrencyCode.java</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-2-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-2-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-2-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-2-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-2-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-2-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-2-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-2-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-2-10">10</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">record</span> <span class="nc">Amount</span><span class="p">(</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="w">        </span><span class="nd">@JsonProperty</span><span class="p">(</span><span class="s">&quot;currency_code&quot;</span><span class="p">)</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="w">        </span><span class="n">CurrencyCode</span><span class="w"> </span><span class="n">currencyCode</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">value</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="w">        </span><span class="n">Breakdown</span><span class="w"> </span><span class="n">breakdown</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7"></a>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8"></a><span class="kd">public</span><span class="w"> </span><span class="kd">enum</span><span class="w"> </span><span class="n">CurrencyCode</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9"></a><span class="w">    </span><span class="n">USD</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10"></a><span class="p">}</span>
+</span></code></pre></div></td></tr></table></div>
+<ul>
+<li><strong>Amount</strong>: Estructura de datos para manejar el monto y la moneda de la transacción.</li>
+<li><strong>CurrencyCode</strong>: Enum para manejar los códigos de moneda.</li>
+</ul>
+<p><strong>Breakdown</strong></p>
+<div class="language-java highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Breakdown.java</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-3-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-3-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-3-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-3-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-3-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-3-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-3-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-3-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-3-10">10</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="nd">@Getter</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="nd">@Setter</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="nd">@NoArgsConstructor</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4"></a><span class="nd">@Builder</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5"></a><span class="nd">@RequiredArgsConstructor</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Breakdown</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7"></a><span class="w">    </span><span class="nd">@NonNull</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8"></a><span class="w">    </span><span class="nd">@JsonProperty</span><span class="p">(</span><span class="s">&quot;item_total&quot;</span><span class="p">)</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Amount</span><span class="w"> </span><span class="n">itemTotal</span><span class="p">;</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10"></a><span class="p">}</span>
+</span></code></pre></div></td></tr></table></div>
+<ul>
+<li><strong>Breakdown</strong>: Estructura de datos para manejar el desglose del monto de la transacción.</li>
+</ul>
+<p><strong>OrderItem</strong></p>
+<div class="language-java highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">OrderItem.java</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1">1</a></span>
+<span class="normal"><a href="#__codelineno-4-2">2</a></span>
+<span class="normal"><a href="#__codelineno-4-3">3</a></span>
+<span class="normal"><a href="#__codelineno-4-4">4</a></span>
+<span class="normal"><a href="#__codelineno-4-5">5</a></span>
+<span class="normal"><a href="#__codelineno-4-6">6</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">record</span> <span class="nc">OrderItem</span><span class="p">(</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">sku</span><span class="p">,</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">quantity</span><span class="p">,</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="w">        </span><span class="nd">@JsonProperty</span><span class="p">(</span><span class="s">&quot;unit_amount&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">Amount</span><span class="w"> </span><span class="n">unitAmount</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6"></a><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span>
+</span></code></pre></div></td></tr></table></div>
+<ul>
+<li><strong>OrderItem</strong>: Estructura de datos para manejar los ítems de la orden.</li>
+</ul>
+<p><strong>PurchaseUnit</strong></p>
+<div class="language-java highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">PurchaseUnit.java</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-5-1">1</a></span>
+<span class="normal"><a href="#__codelineno-5-2">2</a></span>
+<span class="normal"><a href="#__codelineno-5-3">3</a></span>
+<span class="normal"><a href="#__codelineno-5-4">4</a></span>
+<span class="normal"><a href="#__codelineno-5-5">5</a></span>
+<span class="normal"><a href="#__codelineno-5-6">6</a></span>
+<span class="normal"><a href="#__codelineno-5-7">7</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">record</span> <span class="nc">PurchaseUnit</span><span class="p">(</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2"></a><span class="w">        </span><span class="nd">@JsonProperty</span><span class="p">(</span><span class="s">&quot;reference_id&quot;</span><span class="p">)</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">referenceId</span><span class="p">,</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4"></a><span class="w">        </span><span class="n">Amount</span><span class="w"> </span><span class="n">amount</span><span class="p">,</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5"></a><span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">OrderItem</span><span class="o">&gt;</span><span class="w"> </span><span class="n">items</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6"></a><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7"></a><span class="p">}</span>
+</span></code></pre></div></td></tr></table></div>
+<ul>
+<li><strong>PurchaseUnit</strong>: Estructura de datos para manejar las unidades de compra.</li>
+</ul>
+<p><strong>OrderRequest, Intent y OrderResponse</strong></p>
+<div class="language-java highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">OrderRequest.java, OrderResponse.java & Intent.java</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-6-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-6-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-6-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-6-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-6-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-6-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-6-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-6-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-6-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-6-10">10</a></span>
+<span class="normal"><a href="#__codelineno-6-11">11</a></span>
+<span class="normal"><a href="#__codelineno-6-12">12</a></span>
+<span class="normal"><a href="#__codelineno-6-13">13</a></span>
+<span class="normal"><a href="#__codelineno-6-14">14</a></span>
+<span class="normal"><a href="#__codelineno-6-15">15</a></span>
+<span class="normal"><a href="#__codelineno-6-16">16</a></span>
+<span class="normal"><a href="#__codelineno-6-17">17</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">record</span> <span class="nc">OrderRequest</span><span class="p">(</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2"></a><span class="w">        </span><span class="nd">@JsonProperty</span><span class="p">(</span><span class="s">&quot;application_context&quot;</span><span class="p">)</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3"></a><span class="w">        </span><span class="n">ApplicationContext</span><span class="w"> </span><span class="n">applicationContext</span><span class="p">,</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4"></a><span class="w">        </span><span class="n">Intent</span><span class="w"> </span><span class="n">intent</span><span class="p">,</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5"></a><span class="w">        </span><span class="nd">@JsonProperty</span><span class="p">(</span><span class="s">&quot;purchase_units&quot;</span><span class="p">)</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6"></a><span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">PurchaseUnit</span><span class="o">&gt;</span><span class="w"> </span><span class="n">purchaseUnits</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7"></a><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8"></a>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9"></a><span class="kd">public</span><span class="w"> </span><span class="kd">record</span> <span class="nc">OrderResponse</span><span class="p">(</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">id</span><span class="p">,</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">status</span><span class="p">,</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12"></a><span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Link</span><span class="o">&gt;</span><span class="w"> </span><span class="n">links</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13"></a><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14"></a>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15"></a><span class="kd">public</span><span class="w"> </span><span class="kd">enum</span><span class="w"> </span><span class="n">Intent</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16"></a><span class="w">    </span><span class="n">CAPTURE</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17"></a><span class="p">}</span>
+</span></code></pre></div></td></tr></table></div>
+<ul>
+<li><strong>OrderRequest</strong>: Estructura de datos para enviar la solicitud de creación de una orden.</li>
+<li><strong>OrderResponse</strong>: Estructura de datos para manejar la respuesta de la creación de una orden.</li>
+<li><strong>Intent</strong>: Define el propósito o la intención de una operación específica en nuestro sistema. En este caso, la única intención disponible es <code>CAPTURE</code>.<ul>
+<li><code>CAPTURE</code>: Este valor indica que la operación tiene la intención de capturar una transacción, como un pago o una autorización en un sistema de procesamiento de pagos.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Link y OrderCaptureResponse</strong></p>
+<div class="language-java highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Link.java & OrderCaptureResponse.java</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-7-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-7-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-7-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-7-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-7-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-7-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-7-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-7-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-7-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-7-10">10</a></span>
+<span class="normal"><a href="#__codelineno-7-11">11</a></span>
+<span class="normal"><a href="#__codelineno-7-12">12</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">record</span> <span class="nc">Link</span><span class="p">(</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">href</span><span class="p">,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">rel</span><span class="p">,</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">method</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5"></a><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6"></a>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7"></a><span class="kd">public</span><span class="w"> </span><span class="kd">record</span> <span class="nc">OrderCaptureResponse</span><span class="p">(</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">id</span><span class="p">,</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">status</span><span class="p">,</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10"></a><span class="w">        </span><span class="nd">@JsonProperty</span><span class="p">(</span><span class="s">&quot;purchase_units&quot;</span><span class="p">)</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11"></a><span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">PurchaseUnit</span><span class="o">&gt;</span><span class="w"> </span><span class="n">purchaseUnits</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12"></a><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span>
+</span></code></pre></div></td></tr></table></div>
+<ul>
+<li><strong>Link</strong>: Estructura de datos para manejar los enlaces proporcionados por PayPal.</li>
+<li><strong>OrderCaptureResponse</strong>: Estructura de datos para manejar la respuesta de captura de una orden.</li>
+</ul>
+<h3 id="2-configuracion-en-applicationproperties"><strong>2. Configuración en <code>application.properties</code></strong></h3>
+<div class="language-properties highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">application.properties</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-8-1">1</a></span>
+<span class="normal"><a href="#__codelineno-8-2">2</a></span>
+<span class="normal"><a href="#__codelineno-8-3">3</a></span>
+<span class="normal"><a href="#__codelineno-8-4">4</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1"></a><span class="c1">######## Paypal Configuration  #########</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2"></a><span class="na">paypal.api.base</span><span class="o">=</span><span class="s">https://api-m.sandbox.paypal.com</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3"></a><span class="na">paypal.client.id</span><span class="o">=</span><span class="s">Aa-dr-NstbDTv_lE7bGEH7eJRJdxo1CHmoiTUM5qX_F8XoXIHTn-26YuMiHTSVld5XwjPs0OUe7o67Z2</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4"></a><span class="na">paypal.client.secret</span><span class="o">=</span><span class="s">EGFt988GJmVa4a_2BUEMXPZkygOJgY96dER0p_UxIc5UvCI-tVEnUbH-gSJ1t8NTkq7Rjklj6UbbF6gt</span>
+</span></code></pre></div></td></tr></table></div>
+<ul>
+<li><strong>paypal.api.base</strong>: URL base de la API de PayPal.</li>
+<li><strong>paypal.client.id</strong>: ID del cliente de PayPal.</li>
+<li><strong>paypal.client.secret</strong>: Secreto del cliente de PayPal.</li>
+</ul>
+<h3 id="3-crear-un-servicio-llamado-paypalservice-con-los-siguientes-atributos"><strong>3. Crear un servicio llamado PaypalService con los siguientes atributos.</strong></h3>
+<ul>
+<li><strong>Atributos del Servicio</strong></li>
+</ul>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="w">    </span><span class="nd">@Value</span><span class="p">(</span><span class="s">&quot;${paypal.api.base}&quot;</span><span class="p">)</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">    </span><span class="kd">private</span><span class="w">  </span><span class="n">String</span><span class="w"> </span><span class="n">paypalApiBase</span><span class="p">;</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span><span class="nd">@Value</span><span class="p">(</span><span class="s">&quot;${paypal.client.id}&quot;</span><span class="p">)</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">paypalClientId</span><span class="p">;</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="nd">@Value</span><span class="p">(</span><span class="s">&quot;${paypal.client.secret}&quot;</span><span class="p">)</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">paypalClientSecret</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Utilizamos la anotación <code>@Value</code> para inyectar las propiedades de configuración desde <code>application.properties</code>, incluyendo la URL base de la API de PayPal, el ID del cliente y el secreto del cliente.</p>
+<h3 id="4-crear-un-metodo-en-el-servicio-que-obtenga-el-access-token-de-paypal"><strong>4. Crear un método en el servicio que obtenga el access token de paypal</strong>.</h3>
+<p>Este método <code>getAccessToken</code> construye la URL para obtener el token de acceso utilizando la URL base de la API de PayPal. Configura los encabezados HTTP para que el contenido sea <code>application/x-www-form-urlencoded</code> y añade autenticación básica con el ID y el secreto del cliente. Luego, construye un formulario HTTP con el tipo de concesión <code>client_credentials</code>. Finalmente, realiza una solicitud POST a PayPal y devuelve el token de acceso de la respuesta.</p>
+<div class="language-java highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">PaypalService.java</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-10-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-10-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-10-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-10-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-10-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-10-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-10-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-10-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-10-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-10-10">10</a></span>
+<span class="normal"><a href="#__codelineno-10-11">11</a></span>
+<span class="normal"><a href="#__codelineno-10-12">12</a></span>
+<span class="normal"><a href="#__codelineno-10-13">13</a></span>
+<span class="normal"><a href="#__codelineno-10-14">14</a></span>
+<span class="normal"><a href="#__codelineno-10-15">15</a></span>
+<span class="normal"><a href="#__codelineno-10-16">16</a></span>
+<span class="normal"><a href="#__codelineno-10-17">17</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="w">   </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getAccessToken</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">String</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="s">&quot;%s/v1/oauth2/token&quot;</span><span class="p">,</span><span class="n">paypalApiBase</span><span class="p">);</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3"></a><span class="w">        </span><span class="n">RestTemplate</span><span class="w"> </span><span class="n">restTemplate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RestTemplate</span><span class="p">();</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4"></a>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5"></a><span class="w">        </span><span class="n">HttpHeaders</span><span class="w"> </span><span class="n">headers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HttpHeaders</span><span class="p">();</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6"></a><span class="w">        </span><span class="n">headers</span><span class="p">.</span><span class="na">setContentType</span><span class="p">(</span><span class="n">MediaType</span><span class="p">.</span><span class="na">APPLICATION_FORM_URLENCODED</span><span class="p">);</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7"></a><span class="w">        </span><span class="n">headers</span><span class="p">.</span><span class="na">setBasicAuth</span><span class="p">(</span><span class="n">paypalClientId</span><span class="p">,</span><span class="w"> </span><span class="n">paypalClientSecret</span><span class="p">);</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8"></a>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9"></a><span class="w">        </span><span class="c1">// FormHttpMessageConverter is configured by default</span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10"></a><span class="w">        </span><span class="n">MultiValueMap</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">form</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LinkedMultiValueMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11"></a><span class="w">        </span><span class="n">form</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;grant_type&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;client_credentials&quot;</span><span class="p">);</span>
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12"></a>
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13"></a><span class="w">        </span><span class="n">HttpEntity</span><span class="o">&lt;</span><span class="n">MultiValueMap</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">entity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HttpEntity</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">form</span><span class="p">,</span><span class="w"> </span><span class="n">headers</span><span class="p">);</span>
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14"></a><span class="w">        </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">TokenResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">restTemplate</span><span class="p">.</span><span class="na">postForEntity</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="n">entity</span><span class="p">,</span><span class="w"> </span><span class="n">TokenResponse</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15"></a>
+</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">response</span><span class="p">.</span><span class="na">getBody</span><span class="p">().</span><span class="na">accessToken</span><span class="p">();</span>
+</span><span id="__span-10-17"><a id="__codelineno-10-17" name="__codelineno-10-17"></a><span class="w">    </span><span class="p">}</span>
+</span></code></pre></div></td></tr></table></div>
+<ul>
+<li>
+<p><strong>Línea 2:</strong></p>
+<ul>
+<li>
+<p><strong>Construcción de la URL:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">String</span><span class="w"> </span><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">String</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="s">&quot;%s/v1/oauth2/token&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">paypalApiBase</span><span class="p">);</span>
+</span></code></pre></div>
+</li>
+<li>
+<p>Se construye la URL para la solicitud de token de acceso usando la URL base de la API de PayPal (<code>paypalApiBase</code>).</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 3:</strong></p>
+<ul>
+<li>
+<p><strong>Creación de RestTemplate:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">RestTemplate</span><span class="w"> </span><span class="n">restTemplate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RestTemplate</span><span class="p">();</span>
+</span></code></pre></div>
+</li>
+<li>
+<p>Se crea una instancia de <code>RestTemplate</code> para realizar la solicitud HTTP.</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 4-7:</strong></p>
+<ul>
+<li>
+<p><strong>Configuración de los Encabezados HTTP:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">HttpHeaders</span><span class="w"> </span><span class="n">headers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HttpHeaders</span><span class="p">();</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="n">headers</span><span class="p">.</span><span class="na">setContentType</span><span class="p">(</span><span class="n">MediaType</span><span class="p">.</span><span class="na">APPLICATION_FORM_URLENCODED</span><span class="p">);</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="n">headers</span><span class="p">.</span><span class="na">setBasicAuth</span><span class="p">(</span><span class="n">paypalClientId</span><span class="p">,</span><span class="w"> </span><span class="n">paypalClientSecret</span><span class="p">);</span>
+</span></code></pre></div>
+</li>
+<li>
+<p>Se configuran los encabezados HTTP:</p>
+<ul>
+<li><strong><code>Content-Type</code></strong> se establece como <code>application/x-www-form-urlencoded</code></li>
+<li><strong><code>BasicAuth</code></strong> se configura con el ID y el secreto del cliente PayPal para la autenticación básica.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 10-11:</strong></p>
+<ul>
+<li>
+<p><strong>Creación del Cuerpo de la Solicitud:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">MultiValueMap</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">form</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LinkedMultiValueMap</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="n">form</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="s">&quot;grant_type&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;client_credentials&quot;</span><span class="p">);</span>
+</span></code></pre></div>
+</li>
+<li>
+<p>Se crea un <code>MultiValueMap</code> para el cuerpo de la solicitud.</p>
+</li>
+<li><code>MultiValueMap</code> es una implementación de mapa que permite almacenar múltiples valores para una sola clave, útil cuando se necesita enviar datos en formato <code>application/x-www-form-urlencoded</code>.</li>
+<li>En este caso, solo se añade un parámetro <code>grant_type</code> con el valor <code>client_credentials</code>. Esto indica que estamos solicitando un token de acceso utilizando las credenciales del cliente.</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 13:</strong></p>
+<ul>
+<li>
+<p><strong>Creación de la Entidad HTTP:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">HttpEntity</span><span class="o">&lt;</span><span class="n">MultiValueMap</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">entity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HttpEntity</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">form</span><span class="p">,</span><span class="w"> </span><span class="n">headers</span><span class="p">);</span>
+</span></code></pre></div>
+<ul>
+<li>Se crea una instancia de <code>HttpEntity</code> que combina los encabezados y el cuerpo de la solicitud. <code>HttpEntity</code> es una clase de Spring que representa la entidad HTTP, la cual incluye los datos del formulario y los encabezados HTTP configurados anteriormente.</li>
+<li><code>HttpEntity&lt;MultiValueMap&lt;String, String&gt;&gt;</code> indica que la entidad contiene un cuerpo de tipo <code>MultiValueMap</code>, el cual es adecuado para enviar datos en formato <code>application/x-www-form-urlencoded</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 14:</strong></p>
+<ul>
+<li>
+<p><strong>Realización de la Solicitud POST:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">TokenResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">restTemplate</span><span class="p">.</span><span class="na">postForEntity</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="n">entity</span><span class="p">,</span><span class="w"> </span><span class="n">TokenResponse</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+</span></code></pre></div>
+<ul>
+<li>Se realiza una solicitud POST a PayPal utilizando <code>RestTemplate</code>, enviando la entidad HTTP y esperando una respuesta de tipo <code>TokenResponse</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 16:</strong></p>
+<ul>
+<li>
+<p><strong>Obtención y Retorno del Token de Acceso:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">return</span><span class="w"> </span><span class="n">response</span><span class="p">.</span><span class="na">getBody</span><span class="p">().</span><span class="na">accessToken</span><span class="p">();</span>
+</span></code></pre></div>
+<ul>
+<li>Se extrae y retorna el token de acceso desde el cuerpo de la respuesta.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Este método <code>getAccessToken</code> permite obtener un token de acceso de PayPal, necesario para autenticar las solicitudes subsecuentes a la API de PayPal.</p>
+<h3 id="5-crear-un-metodo-para-crear-la-orden-de-compra-en-paypal"><strong>5. Crear un método para crear la orden de compra en paypal.</strong></h3>
+<p>El método <code>createOrder</code> crea una orden en PayPal. Primero, construye la URL para la creación de la orden y configura el contexto de la aplicación con las URLs de retorno y cancelación. Luego, construye una lista de ítems de la orden a partir de los ítems de la orden de venta (<code>salesOrder</code>). Calcula el monto total de los ítems y crea la unidad de compra (<code>PurchaseUnit</code>). Construye la solicitud de orden (<code>OrderRequest</code>) y obtiene un token de acceso. Configura los encabezados HTTP con el token de acceso y realiza una solicitud POST a PayPal para crear la orden, devolviendo la respuesta de la orden.</p>
+<div class="language-java highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">PaypalService.java</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-18-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-18-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-18-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-18-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-18-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-18-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-18-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-18-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-18-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-18-10">10</a></span>
+<span class="normal"><a href="#__codelineno-18-11">11</a></span>
+<span class="normal"><a href="#__codelineno-18-12">12</a></span>
+<span class="normal"><a href="#__codelineno-18-13">13</a></span>
+<span class="normal"><a href="#__codelineno-18-14">14</a></span>
+<span class="normal"><a href="#__codelineno-18-15">15</a></span>
+<span class="normal"><a href="#__codelineno-18-16">16</a></span>
+<span class="normal"><a href="#__codelineno-18-17">17</a></span>
+<span class="normal"><a href="#__codelineno-18-18">18</a></span>
+<span class="normal"><a href="#__codelineno-18-19">19</a></span>
+<span class="normal"><a href="#__codelineno-18-20">20</a></span>
+<span class="normal"><a href="#__codelineno-18-21">21</a></span>
+<span class="normal"><a href="#__codelineno-18-22">22</a></span>
+<span class="normal"><a href="#__codelineno-18-23">23</a></span>
+<span class="normal"><a href="#__codelineno-18-24">24</a></span>
+<span class="normal"><a href="#__codelineno-18-25">25</a></span>
+<span class="normal"><a href="#__codelineno-18-26">26</a></span>
+<span class="normal"><a href="#__codelineno-18-27">27</a></span>
+<span class="normal"><a href="#__codelineno-18-28">28</a></span>
+<span class="normal"><a href="#__codelineno-18-29">29</a></span>
+<span class="normal"><a href="#__codelineno-18-30">30</a></span>
+<span class="normal"><a href="#__codelineno-18-31">31</a></span>
+<span class="normal"><a href="#__codelineno-18-32">32</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">OrderResponse</span><span class="w"> </span><span class="nf">createOrder</span><span class="p">(</span><span class="n">SalesOrderEntity</span><span class="w"> </span><span class="n">salesOrder</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">returnUrl</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">cancelUrl</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">String</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="s">&quot;%s/v2/checkout/orders&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">paypalApiBase</span><span class="p">);</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3"></a>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4"></a><span class="w">        </span><span class="n">ApplicationContext</span><span class="w"> </span><span class="n">applicationContext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ApplicationContext</span><span class="p">(</span><span class="s">&quot;JCONF DOMINICANA&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">returnUrl</span><span class="p">,</span><span class="w"> </span><span class="n">cancelUrl</span><span class="p">);</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5"></a>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6"></a><span class="w">        </span><span class="n">List</span><span class="o">&lt;</span><span class="n">OrderItem</span><span class="o">&gt;</span><span class="w"> </span><span class="n">orderItems</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7"></a><span class="w">        </span><span class="n">salesOrder</span><span class="p">.</span><span class="na">getItems</span><span class="p">().</span><span class="na">forEach</span><span class="p">(</span><span class="n">salesItem</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8"></a><span class="w">            </span><span class="n">BookEntity</span><span class="w"> </span><span class="n">book</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">salesItem</span><span class="p">.</span><span class="na">getBookEntity</span><span class="p">();</span>
+</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9"></a><span class="w">            </span><span class="n">Amount</span><span class="w"> </span><span class="n">unitAmount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Amount</span><span class="p">(</span><span class="n">CurrencyCode</span><span class="p">.</span><span class="na">USD</span><span class="p">,</span><span class="w"> </span><span class="n">salesItem</span><span class="p">.</span><span class="na">getPrice</span><span class="p">().</span><span class="na">toString</span><span class="p">(),</span><span class="w"> </span><span class="kc">null</span><span class="p">);</span>
+</span><span id="__span-18-10"><a id="__codelineno-18-10" name="__codelineno-18-10"></a><span class="w">            </span><span class="n">orderItems</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">OrderItem</span><span class="p">(</span><span class="n">book</span><span class="p">.</span><span class="na">getName</span><span class="p">(),</span><span class="w"> </span><span class="n">book</span><span class="p">.</span><span class="na">getId</span><span class="p">().</span><span class="na">toString</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;1&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">unitAmount</span><span class="p">));</span>
+</span><span id="__span-18-11"><a id="__codelineno-18-11" name="__codelineno-18-11"></a><span class="w">        </span><span class="p">});</span>
+</span><span id="__span-18-12"><a id="__codelineno-18-12" name="__codelineno-18-12"></a>
+</span><span id="__span-18-13"><a id="__codelineno-18-13" name="__codelineno-18-13"></a><span class="w">        </span><span class="n">Amount</span><span class="w"> </span><span class="n">itemsAmount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Amount</span><span class="p">(</span><span class="n">CurrencyCode</span><span class="p">.</span><span class="na">USD</span><span class="p">,</span><span class="w"> </span><span class="n">salesOrder</span><span class="p">.</span><span class="na">getTotal</span><span class="p">().</span><span class="na">toString</span><span class="p">(),</span><span class="w"> </span><span class="kc">null</span><span class="p">);</span>
+</span><span id="__span-18-14"><a id="__codelineno-18-14" name="__codelineno-18-14"></a><span class="w">        </span><span class="n">Amount</span><span class="w"> </span><span class="n">purchaseAmount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Amount</span><span class="p">(</span><span class="n">CurrencyCode</span><span class="p">.</span><span class="na">USD</span><span class="p">,</span><span class="w"> </span><span class="n">salesOrder</span><span class="p">.</span><span class="na">getTotal</span><span class="p">().</span><span class="na">toString</span><span class="p">(),</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Breakdown</span><span class="p">(</span><span class="n">itemsAmount</span><span class="p">));</span>
+</span><span id="__span-18-15"><a id="__codelineno-18-15" name="__codelineno-18-15"></a>
+</span><span id="__span-18-16"><a id="__codelineno-18-16" name="__codelineno-18-16"></a><span class="w">        </span><span class="n">PurchaseUnit</span><span class="w"> </span><span class="n">purchaseUnit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PurchaseUnit</span><span class="p">(</span><span class="n">salesOrder</span><span class="p">.</span><span class="na">getId</span><span class="p">().</span><span class="na">toString</span><span class="p">(),</span><span class="w"> </span><span class="n">purchaseAmount</span><span class="p">,</span><span class="w"> </span><span class="n">orderItems</span><span class="p">);</span>
+</span><span id="__span-18-17"><a id="__codelineno-18-17" name="__codelineno-18-17"></a>
+</span><span id="__span-18-18"><a id="__codelineno-18-18" name="__codelineno-18-18"></a><span class="w">        </span><span class="n">OrderRequest</span><span class="w"> </span><span class="n">orderRequest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OrderRequest</span><span class="p">(</span><span class="n">applicationContext</span><span class="p">,</span><span class="w"> </span><span class="n">Intent</span><span class="p">.</span><span class="na">CAPTURE</span><span class="p">,</span><span class="w"> </span><span class="n">Collections</span><span class="p">.</span><span class="na">singletonList</span><span class="p">(</span><span class="n">purchaseUnit</span><span class="p">));</span>
+</span><span id="__span-18-19"><a id="__codelineno-18-19" name="__codelineno-18-19"></a>
+</span><span id="__span-18-20"><a id="__codelineno-18-20" name="__codelineno-18-20"></a><span class="w">        </span><span class="c1">// get access token</span>
+</span><span id="__span-18-21"><a id="__codelineno-18-21" name="__codelineno-18-21"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">accessToken</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getAccessToken</span><span class="p">();</span>
+</span><span id="__span-18-22"><a id="__codelineno-18-22" name="__codelineno-18-22"></a>
+</span><span id="__span-18-23"><a id="__codelineno-18-23" name="__codelineno-18-23"></a><span class="w">        </span><span class="c1">// create http request</span>
+</span><span id="__span-18-24"><a id="__codelineno-18-24" name="__codelineno-18-24"></a><span class="w">        </span><span class="n">HttpHeaders</span><span class="w"> </span><span class="n">headers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HttpHeaders</span><span class="p">();</span>
+</span><span id="__span-18-25"><a id="__codelineno-18-25" name="__codelineno-18-25"></a><span class="w">        </span><span class="n">headers</span><span class="p">.</span><span class="na">setBearerAuth</span><span class="p">(</span><span class="n">accessToken</span><span class="p">);</span>
+</span><span id="__span-18-26"><a id="__codelineno-18-26" name="__codelineno-18-26"></a>
+</span><span id="__span-18-27"><a id="__codelineno-18-27" name="__codelineno-18-27"></a><span class="w">        </span><span class="n">HttpEntity</span><span class="o">&lt;</span><span class="n">OrderRequest</span><span class="o">&gt;</span><span class="w"> </span><span class="n">entity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HttpEntity</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">orderRequest</span><span class="p">,</span><span class="w"> </span><span class="n">headers</span><span class="p">);</span>
+</span><span id="__span-18-28"><a id="__codelineno-18-28" name="__codelineno-18-28"></a><span class="w">        </span><span class="n">RestTemplate</span><span class="w"> </span><span class="n">restTemplate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RestTemplate</span><span class="p">();</span>
+</span><span id="__span-18-29"><a id="__codelineno-18-29" name="__codelineno-18-29"></a><span class="w">        </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">OrderResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">restTemplate</span><span class="p">.</span><span class="na">postForEntity</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="n">entity</span><span class="p">,</span><span class="w"> </span><span class="n">OrderResponse</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+</span><span id="__span-18-30"><a id="__codelineno-18-30" name="__codelineno-18-30"></a>
+</span><span id="__span-18-31"><a id="__codelineno-18-31" name="__codelineno-18-31"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">response</span><span class="p">.</span><span class="na">getBody</span><span class="p">();</span>
+</span><span id="__span-18-32"><a id="__codelineno-18-32" name="__codelineno-18-32"></a><span class="w">    </span><span class="p">}</span>
+</span></code></pre></div></td></tr></table></div>
+<ul>
+<li>
+<p><strong>Línea 2:</strong></p>
+<ul>
+<li>
+<p><strong>Construcción de la URL::</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="n">String</span><span class="w"> </span><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">String</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="s">&quot;%s/v2/checkout/orders&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">paypalApiBase</span><span class="p">);</span>
+</span></code></pre></div>
+<ul>
+<li>Se construye la URL para crear una orden utilizando la URL base de la API de PayPal (<code>paypalApiBase</code>) y concatenando la ruta <code>/v2/checkout/orders</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 4:</strong></p>
+<ul>
+<li>
+<p><strong>Configuración del Contexto de la Aplicación:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="n">ApplicationContext</span><span class="w"> </span><span class="n">applicationContext</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ApplicationContext</span><span class="p">(</span><span class="s">&quot;JCONF DOMINICANA&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">returnUrl</span><span class="p">,</span><span class="w"> </span><span class="n">cancelUrl</span><span class="p">);</span>
+</span></code></pre></div>
+<ul>
+<li>Se crea un <code>ApplicationContext</code> con el nombre de la marca, la URL de retorno y la URL de cancelación. Este contexto se utiliza para configurar la experiencia del usuario en PayPal.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 6-11:</strong></p>
+<ul>
+<li>
+<p><strong>Creación de la Lista de Ítems de la Orden:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="n">List</span><span class="o">&lt;</span><span class="n">OrderItem</span><span class="o">&gt;</span><span class="w"> </span><span class="n">orderItems</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="o">&lt;&gt;</span><span class="p">();</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="n">salesOrder</span><span class="p">.</span><span class="na">getItems</span><span class="p">().</span><span class="na">forEach</span><span class="p">(</span><span class="n">salesItem</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">    </span><span class="n">BookEntity</span><span class="w"> </span><span class="n">book</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">salesItem</span><span class="p">.</span><span class="na">getBookEntity</span><span class="p">();</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">    </span><span class="n">Amount</span><span class="w"> </span><span class="n">unitAmount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Amount</span><span class="p">(</span><span class="n">CurrencyCode</span><span class="p">.</span><span class="na">USD</span><span class="p">,</span><span class="w"> </span><span class="n">salesItem</span><span class="p">.</span><span class="na">getPrice</span><span class="p">().</span><span class="na">toString</span><span class="p">(),</span><span class="w"> </span><span class="kc">null</span><span class="p">);</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">    </span><span class="n">orderItems</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">OrderItem</span><span class="p">(</span><span class="n">book</span><span class="p">.</span><span class="na">getName</span><span class="p">(),</span><span class="w"> </span><span class="n">book</span><span class="p">.</span><span class="na">getId</span><span class="p">().</span><span class="na">toString</span><span class="p">(),</span><span class="w"> </span><span class="s">&quot;1&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">unitAmount</span><span class="p">));</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="p">});</span>
+</span></code></pre></div>
+<ul>
+<li>Se inicializa una lista vacía de <code>OrderItem</code>.</li>
+<li>Para cada ítem en la orden de venta (<code>salesOrder</code>):<ul>
+<li>Se obtiene la entidad del libro asociado.</li>
+<li>Se crea un objeto <code>Amount</code> para representar el precio del ítem en dólares estadounidenses.</li>
+<li>Se crea un objeto <code>OrderItem</code> con el nombre del libro, el ID, la cantidad y el precio unitario, y se agrega a la lista de ítems.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 13:</strong></p>
+<ul>
+<li>
+<p><strong>Creación del Monto Total de los Ítems:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="n">Amount</span><span class="w"> </span><span class="n">itemsAmount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Amount</span><span class="p">(</span><span class="n">CurrencyCode</span><span class="p">.</span><span class="na">USD</span><span class="p">,</span><span class="w"> </span><span class="n">salesOrder</span><span class="p">.</span><span class="na">getTotal</span><span class="p">().</span><span class="na">toString</span><span class="p">(),</span><span class="w"> </span><span class="kc">null</span><span class="p">);</span>
+</span></code></pre></div>
+<ul>
+<li>Se crea un objeto Amount para representar el monto total de los ítems en dólares estadounidenses.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 14:</strong></p>
+<ul>
+<li>
+<p><strong>Creación del Monto Total de la Compra con Desglose:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="n">Amount</span><span class="w"> </span><span class="n">purchaseAmount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Amount</span><span class="p">(</span><span class="n">CurrencyCode</span><span class="p">.</span><span class="na">USD</span><span class="p">,</span><span class="w"> </span><span class="n">salesOrder</span><span class="p">.</span><span class="na">getTotal</span><span class="p">().</span><span class="na">toString</span><span class="p">(),</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Breakdown</span><span class="p">(</span><span class="n">itemsAmount</span><span class="p">));</span>
+</span></code></pre></div>
+<ul>
+<li>Se crea un objeto Amount para representar el monto total de la compra, incluyendo un desglose que muestra el total de los ítems.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 16:</strong></p>
+<ul>
+<li>
+<p><strong>Creación de la Unidad de Compra:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="n">PurchaseUnit</span><span class="w"> </span><span class="n">purchaseUnit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PurchaseUnit</span><span class="p">(</span><span class="n">salesOrder</span><span class="p">.</span><span class="na">getId</span><span class="p">().</span><span class="na">toString</span><span class="p">(),</span><span class="w"> </span><span class="n">purchaseAmount</span><span class="p">,</span><span class="w"> </span><span class="n">orderItems</span><span class="p">);</span>
+</span></code></pre></div>
+<ul>
+<li>Se crea un <code>PurchaseUnit</code> con el <code>ID</code> de la orden de venta, el monto total de la compra y la lista de ítems.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 18:</strong></p>
+<ul>
+<li>
+<p><strong>Creación de la Solicitud de Orden:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="n">OrderRequest</span><span class="w"> </span><span class="n">orderRequest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OrderRequest</span><span class="p">(</span><span class="n">applicationContext</span><span class="p">,</span><span class="w"> </span><span class="n">Intent</span><span class="p">.</span><span class="na">CAPTURE</span><span class="p">,</span><span class="w"> </span><span class="n">Collections</span><span class="p">.</span><span class="na">singletonList</span><span class="p">(</span><span class="n">purchaseUnit</span><span class="p">));</span>
+</span></code></pre></div>
+<ul>
+<li>Se crea un <code>OrderRequest</code> con el contexto de la aplicación, la intención de captura de pagos y una lista que contiene la unidad de compra.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 21:</strong></p>
+<ul>
+<li>
+<p><strong>Obtención del Token de Acceso:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="n">String</span><span class="w"> </span><span class="n">accessToken</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getAccessToken</span><span class="p">();</span>
+</span></code></pre></div>
+<ul>
+<li>Se obtiene el token de acceso utilizando el método <code>getAccessToken</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 24-25:</strong></p>
+<ul>
+<li>
+<p><strong>Configuración de los Encabezados HTTP:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="n">HttpHeaders</span><span class="w"> </span><span class="n">headers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HttpHeaders</span><span class="p">();</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="n">headers</span><span class="p">.</span><span class="na">setBearerAuth</span><span class="p">(</span><span class="n">accessToken</span><span class="p">);</span>
+</span></code></pre></div>
+</li>
+<li>
+<p>Se configuran los encabezados <code>HTTP</code>, estableciendo la autenticación <code>Bearer</code> con el token de acceso.</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 27:</strong></p>
+<ul>
+<li>
+<p><strong>Creación de la Entidad HTTP:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="n">HttpEntity</span><span class="o">&lt;</span><span class="n">OrderRequest</span><span class="o">&gt;</span><span class="w"> </span><span class="n">entity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HttpEntity</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="n">orderRequest</span><span class="p">,</span><span class="w"> </span><span class="n">headers</span><span class="p">);</span>
+</span></code></pre></div>
+<ul>
+<li>Se crea una entidad HTTP (<code>HttpEntity</code>) que combina la solicitud de orden y los encabezados <code>HTTP</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 28-29:</strong></p>
+<ul>
+<li>
+<p><strong>Realización de la Solicitud POST:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="n">RestTemplate</span><span class="w"> </span><span class="n">restTemplate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RestTemplate</span><span class="p">();</span>
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">OrderResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">restTemplate</span><span class="p">.</span><span class="na">postForEntity</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="n">entity</span><span class="p">,</span><span class="w"> </span><span class="n">OrderResponse</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+</span></code></pre></div>
+<ul>
+<li>Se crea una instancia de <code>RestTemplate</code> para realizar la solicitud HTTP.</li>
+<li>Se realiza una solicitud POST a PayPal, enviando la entidad HTTP y esperando una respuesta de tipo <code>OrderResponse</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 31:</strong></p>
+<ul>
+<li>
+<p><strong>Devolución de la Respuesta de la Orden:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="k">return</span><span class="w"> </span><span class="n">response</span><span class="p">.</span><span class="na">getBody</span><span class="p">();</span>
+</span></code></pre></div>
+<ul>
+<li>Se extrae y devuelve el cuerpo de la respuesta de la orden.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Este método <code>createOrder</code> permite crear una orden de pago en PayPal, configurando todos los detalles necesarios y realizando la solicitud correspondiente a la API de PayPal.</p>
+<h3 id="6-crear-un-metodo-para-capturar-la-orden-de-compra-consultar-el-estado-de-pago-de-paypal"><strong>6. Crear un método para capturar la orden de compra (consultar el estado de pago) de paypal.</strong></h3>
+<p>El método <code>captureOrder</code> captura una orden en PayPal. Primero, construye la URL para capturar la orden y obtiene un token de acceso. Configura los encabezados HTTP con el token de acceso y establece el tipo de contenido como JSON. Realiza una solicitud POST a PayPal para capturar la orden y devuelve la respuesta de la captura de la orden. Si hay un error en la solicitud HTTP, maneja la excepción y devuelve <code>null</code>.</p>
+<div class="language-java highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">PaypalService.java</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-31-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-31-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-31-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-31-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-31-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-31-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-31-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-31-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-31-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-31-10">10</a></span>
+<span class="normal"><a href="#__codelineno-31-11">11</a></span>
+<span class="normal"><a href="#__codelineno-31-12">12</a></span>
+<span class="normal"><a href="#__codelineno-31-13">13</a></span>
+<span class="normal"><a href="#__codelineno-31-14">14</a></span>
+<span class="normal"><a href="#__codelineno-31-15">15</a></span>
+<span class="normal"><a href="#__codelineno-31-16">16</a></span>
+<span class="normal"><a href="#__codelineno-31-17">17</a></span>
+<span class="normal"><a href="#__codelineno-31-18">18</a></span>
+<span class="normal"><a href="#__codelineno-31-19">19</a></span>
+<span class="normal"><a href="#__codelineno-31-20">20</a></span>
+<span class="normal"><a href="#__codelineno-31-21">21</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1"></a><span class="kd">public</span><span class="w"> </span><span class="n">OrderCaptureResponse</span><span class="w"> </span><span class="nf">captureOrder</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">orderId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">String</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="s">&quot;%s/v2/checkout/orders/%s/capture&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">paypalApiBase</span><span class="p">,</span><span class="w"> </span><span class="n">orderId</span><span class="p">);</span>
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3"></a>
+</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4"></a><span class="w">        </span><span class="c1">// get access token</span>
+</span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5"></a><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">accessToken</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getAccessToken</span><span class="p">();</span>
+</span><span id="__span-31-6"><a id="__codelineno-31-6" name="__codelineno-31-6"></a>
+</span><span id="__span-31-7"><a id="__codelineno-31-7" name="__codelineno-31-7"></a><span class="w">        </span><span class="c1">// create http request</span>
+</span><span id="__span-31-8"><a id="__codelineno-31-8" name="__codelineno-31-8"></a><span class="w">        </span><span class="n">HttpHeaders</span><span class="w"> </span><span class="n">headers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HttpHeaders</span><span class="p">();</span>
+</span><span id="__span-31-9"><a id="__codelineno-31-9" name="__codelineno-31-9"></a><span class="w">        </span><span class="n">headers</span><span class="p">.</span><span class="na">setBearerAuth</span><span class="p">(</span><span class="n">accessToken</span><span class="p">);</span>
+</span><span id="__span-31-10"><a id="__codelineno-31-10" name="__codelineno-31-10"></a><span class="w">        </span><span class="n">headers</span><span class="p">.</span><span class="na">setContentType</span><span class="p">(</span><span class="n">MediaType</span><span class="p">.</span><span class="na">APPLICATION_JSON</span><span class="p">);</span>
+</span><span id="__span-31-11"><a id="__codelineno-31-11" name="__codelineno-31-11"></a>
+</span><span id="__span-31-12"><a id="__codelineno-31-12" name="__codelineno-31-12"></a><span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-31-13"><a id="__codelineno-31-13" name="__codelineno-31-13"></a><span class="w">            </span><span class="n">HttpEntity</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">entity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HttpEntity</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="n">headers</span><span class="p">);</span>
+</span><span id="__span-31-14"><a id="__codelineno-31-14" name="__codelineno-31-14"></a><span class="w">            </span><span class="n">RestTemplate</span><span class="w"> </span><span class="n">restTemplate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RestTemplate</span><span class="p">();</span>
+</span><span id="__span-31-15"><a id="__codelineno-31-15" name="__codelineno-31-15"></a><span class="w">            </span><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">OrderCaptureResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">restTemplate</span><span class="p">.</span><span class="na">postForEntity</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="n">entity</span><span class="p">,</span><span class="w"> </span><span class="n">OrderCaptureResponse</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+</span><span id="__span-31-16"><a id="__codelineno-31-16" name="__codelineno-31-16"></a>
+</span><span id="__span-31-17"><a id="__codelineno-31-17" name="__codelineno-31-17"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">response</span><span class="p">.</span><span class="na">getBody</span><span class="p">();</span>
+</span><span id="__span-31-18"><a id="__codelineno-31-18" name="__codelineno-31-18"></a><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">HttpClientErrorException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-31-19"><a id="__codelineno-31-19" name="__codelineno-31-19"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+</span><span id="__span-31-20"><a id="__codelineno-31-20" name="__codelineno-31-20"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-31-21"><a id="__codelineno-31-21" name="__codelineno-31-21"></a><span class="w">    </span><span class="p">}</span>
+</span></code></pre></div></td></tr></table></div>
+<ul>
+<li>
+<p><strong>Línea 2:</strong></p>
+<ul>
+<li>
+<p><strong>Construcción de la URL:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="n">String</span><span class="w"> </span><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">String</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="s">&quot;%s/v2/checkout/orders/%s/capture&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">paypalApiBase</span><span class="p">,</span><span class="w"> </span><span class="n">orderId</span><span class="p">);</span>
+</span></code></pre></div>
+<ul>
+<li>Se construye la URL para capturar una orden utilizando la URL base de la API de PayPal (<code>paypalApiBase</code>) y el ID de la orden (<code>orderId</code>). La URL resultante tendrá el formato <code>https://api.paypal.com/v2/checkout/orders/{orderId}/capture</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 5:</strong></p>
+<ul>
+<li>
+<p><strong>Obtención del Token de Acceso:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="n">String</span><span class="w"> </span><span class="n">accessToken</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getAccessToken</span><span class="p">();</span>
+</span></code></pre></div>
+<ul>
+<li>Se obtiene el token de acceso utilizando el método <code>getAccessToken</code>. Este token es necesario para autenticar la solicitud a la API de PayPal.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 8-10:</strong></p>
+<ul>
+<li>
+<p><strong>Configuración de los Encabezados HTTP:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="n">HttpHeaders</span><span class="w"> </span><span class="n">headers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HttpHeaders</span><span class="p">();</span>
+</span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="n">headers</span><span class="p">.</span><span class="na">setBearerAuth</span><span class="p">(</span><span class="n">accessToken</span><span class="p">);</span>
+</span><span id="__span-34-3"><a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a><span class="n">headers</span><span class="p">.</span><span class="na">setContentType</span><span class="p">(</span><span class="n">MediaType</span><span class="p">.</span><span class="na">APPLICATION_JSON</span><span class="p">);</span>
+</span></code></pre></div>
+</li>
+<li>
+<p>Se configuran los encabezados HTTP:**</p>
+<ul>
+<li><code>BearerAuth</code> se configura con el token de acceso obtenido anteriormente.</li>
+<li><code>Content-Type</code> se establece como application/json, ya que la API de PayPal espera recibir y devolver datos en formato JSON.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 13:</strong></p>
+<ul>
+<li>
+<p><strong>Creación de la Entidad HTTP:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="n">HttpEntity</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="n">entity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HttpEntity</span><span class="o">&lt;&gt;</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="n">headers</span><span class="p">);</span>
+</span></code></pre></div>
+<ul>
+<li>Se crea una instancia de <code>HttpEntity</code> que combina los encabezados HTTP configurados. El cuerpo de la solicitud es <code>null</code> ya que no se requiere enviar datos adicionales en el cuerpo de la solicitud de captura.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 14-15:</strong></p>
+<ul>
+<li><strong>Realización de la Solicitud POST:</strong></li>
+</ul>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="n">RestTemplate</span><span class="w"> </span><span class="n">restTemplate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RestTemplate</span><span class="p">();</span>
+</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="n">ResponseEntity</span><span class="o">&lt;</span><span class="n">OrderCaptureResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">restTemplate</span><span class="p">.</span><span class="na">postForEntity</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="n">entity</span><span class="p">,</span><span class="w"> </span><span class="n">OrderCaptureResponse</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+</span></code></pre></div>
+<ul>
+<li>Se crea una instancia de <code>RestTemplate</code> para realizar la solicitud HTTP.</li>
+<li>Se realiza una solicitud POST a la URL de captura de la orden en PayPal, enviando la entidad HTTP. Se espera una respuesta de tipo <code>OrderCaptureResponse</code>.</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 17-19:</strong></p>
+<ul>
+<li>
+<p><strong>Manejo de la Respuesta y Excepciones:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="k">return</span><span class="w"> </span><span class="n">response</span><span class="p">.</span><span class="na">getBody</span><span class="p">();</span>
+</span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">HttpClientErrorException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-37-3"><a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+</span><span id="__span-37-4"><a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a><span class="p">}</span>
+</span></code></pre></div>
+<ul>
+<li>Si la solicitud POST es exitosa, se devuelve el cuerpo de la respuesta (<code>response.getBody()</code>), que contiene los detalles de la captura de la orden.</li>
+<li>Si ocurre una excepción de tipo <code>HttpClientErrorException</code> durante la solicitud, se captura la excepción y se retorna <code>null</code>. Este manejo básico de excepciones indica que la captura de la orden falló.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Este método <code>captureOrder</code> permite capturar una orden de pago en PayPal, realizando la solicitud correspondiente a la API de PayPal y manejando la respuesta o posibles errores de manera adecuada.</p>
+<h3 id="7-implementacion-del-controlador"><strong>7. Implementación del Controlador</strong></h3>
+<p>El controlador <code>CheckoutController</code> maneja las solicitudes HTTP relacionadas con el proceso de pago de PayPal. Aquí se implementan dos endpoints: uno para crear la orden y otro para capturarla.</p>
+<h3 id="endpoint-de-crear-order"><strong>Endpoint de crear order</strong></h3>
+<p>El método <code>createPaypalCheckout</code> crea una orden de venta utilizando el servicio <code>SalesOrderService</code> y luego crea una orden en PayPal utilizando el servicio <code>PaypalService</code>. La URL de aprobación devuelta por PayPal se extrae de la respuesta y se devuelve en un mapa.</p>
+<div class="language-java highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">CheckoutController.java</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-38-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-38-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-38-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-38-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-38-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-38-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-38-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-38-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-38-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-38-10">10</a></span>
+<span class="normal"><a href="#__codelineno-38-11">11</a></span>
+<span class="normal"><a href="#__codelineno-38-12">12</a></span>
+<span class="normal"><a href="#__codelineno-38-13">13</a></span>
+<span class="normal"><a href="#__codelineno-38-14">14</a></span>
+<span class="normal"><a href="#__codelineno-38-15">15</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1"></a><span class="nd">@PostMapping</span><span class="p">(</span><span class="s">&quot;/paypal/create&quot;</span><span class="p">)</span>
+</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2"></a><span class="kd">public</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">createPaypalCheckout</span><span class="p">(</span><span class="nd">@RequestParam</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">returnUrl</span><span class="p">,</span><span class="w"> </span><span class="nd">@RequestBody</span><span class="w"> </span><span class="n">CreateOrderRequest</span><span class="w"> </span><span class="n">createOrderRequest</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-38-3"><a id="__codelineno-38-3" name="__codelineno-38-3"></a><span class="w">    </span><span class="n">SalesOrderEntity</span><span class="w"> </span><span class="n">salesOrder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">salesOrderService</span><span class="p">.</span><span class="na">createOrder</span><span class="p">(</span><span class="n">createOrderRequest</span><span class="p">.</span><span class="na">customerId</span><span class="p">(),</span><span class="w"> </span><span class="n">createOrderRequest</span><span class="p">.</span><span class="na">bookIds</span><span class="p">());</span>
+</span><span id="__span-38-4"><a id="__codelineno-38-4" name="__codelineno-38-4"></a><span class="w">    </span><span class="n">OrderResponse</span><span class="w"> </span><span class="n">orderResponse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">paypalService</span><span class="p">.</span><span class="na">createOrder</span><span class="p">(</span><span class="n">salesOrder</span><span class="p">,</span><span class="w"> </span><span class="n">returnUrl</span><span class="p">,</span><span class="w"> </span><span class="n">returnUrl</span><span class="p">);</span>
+</span><span id="__span-38-5"><a id="__codelineno-38-5" name="__codelineno-38-5"></a>
+</span><span id="__span-38-6"><a id="__codelineno-38-6" name="__codelineno-38-6"></a><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">approveUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">orderResponse</span>
+</span><span id="__span-38-7"><a id="__codelineno-38-7" name="__codelineno-38-7"></a><span class="w">            </span><span class="p">.</span><span class="na">links</span><span class="p">()</span>
+</span><span id="__span-38-8"><a id="__codelineno-38-8" name="__codelineno-38-8"></a><span class="w">            </span><span class="p">.</span><span class="na">stream</span><span class="p">()</span>
+</span><span id="__span-38-9"><a id="__codelineno-38-9" name="__codelineno-38-9"></a><span class="w">            </span><span class="p">.</span><span class="na">filter</span><span class="p">(</span><span class="n">link</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">link</span><span class="p">.</span><span class="na">rel</span><span class="p">().</span><span class="na">equals</span><span class="p">(</span><span class="s">&quot;approve&quot;</span><span class="p">))</span>
+</span><span id="__span-38-10"><a id="__codelineno-38-10" name="__codelineno-38-10"></a><span class="w">            </span><span class="p">.</span><span class="na">findFirst</span><span class="p">()</span>
+</span><span id="__span-38-11"><a id="__codelineno-38-11" name="__codelineno-38-11"></a><span class="w">            </span><span class="p">.</span><span class="na">orElseThrow</span><span class="p">(</span><span class="n">RuntimeException</span><span class="p">::</span><span class="k">new</span><span class="p">)</span>
+</span><span id="__span-38-12"><a id="__codelineno-38-12" name="__codelineno-38-12"></a><span class="w">            </span><span class="p">.</span><span class="na">href</span><span class="p">();</span>
+</span><span id="__span-38-13"><a id="__codelineno-38-13" name="__codelineno-38-13"></a>
+</span><span id="__span-38-14"><a id="__codelineno-38-14" name="__codelineno-38-14"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">Map</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;approveUrl&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">approveUrl</span><span class="p">);</span>
+</span><span id="__span-38-15"><a id="__codelineno-38-15" name="__codelineno-38-15"></a><span class="p">}</span>
+</span></code></pre></div></td></tr></table></div>
+<ul>
+<li>
+<p><strong>Línea 1-2:</strong></p>
+<ul>
+<li>
+<p><strong>Definición del Método createPaypalCheckout:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="nd">@PostMapping</span><span class="p">(</span><span class="s">&quot;/paypal/create&quot;</span><span class="p">)</span>
+</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a><span class="kd">public</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">createPaypalCheckout</span><span class="p">(</span><span class="nd">@RequestParam</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">returnUrl</span><span class="p">,</span><span class="w"> </span><span class="nd">@RequestBody</span><span class="w"> </span><span class="n">CreateOrderRequest</span><span class="w"> </span><span class="n">createOrderRequest</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span></code></pre></div>
+<ul>
+<li><strong><code>@PostMapping("/paypal/create")</code></strong>: Define el endpoint que maneja las solicitudes POST a <code>/paypal/create</code>.</li>
+<li><strong><code>@RequestParam String returnUrl</code></strong>: Captura el parámetro de consulta <code>returnUrl</code> de la solicitud.</li>
+<li><strong><code>@RequestBody CreateOrderRequest createOrderRequest</code></strong>: Captura el cuerpo de la solicitud como un objeto CreateOrderRequest.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 3:</strong></p>
+<ul>
+<li>
+<p><strong>Creación de la Orden de Venta:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="n">SalesOrderEntity</span><span class="w"> </span><span class="n">salesOrder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">salesOrderService</span><span class="p">.</span><span class="na">createOrder</span><span class="p">(</span><span class="n">createOrderRequest</span><span class="p">.</span><span class="na">customerId</span><span class="p">(),</span><span class="w"> </span><span class="n">createOrderRequest</span><span class="p">.</span><span class="na">bookIds</span><span class="p">());</span>
+</span></code></pre></div>
+<ul>
+<li>Se crea una orden de venta utilizando el servicio <code>SalesOrderService</code> con el ID del cliente y la lista de IDs de libros.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 4:</strong></p>
+<ul>
+<li>
+<p><strong>Creación de la Orden en PayPal:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="n">OrderResponse</span><span class="w"> </span><span class="n">orderResponse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">paypalService</span><span class="p">.</span><span class="na">createOrder</span><span class="p">(</span><span class="n">salesOrder</span><span class="p">,</span><span class="w"> </span><span class="n">returnUrl</span><span class="p">,</span><span class="w"> </span><span class="n">returnUrl</span><span class="p">);</span>
+</span></code></pre></div>
+<ul>
+<li>Se crea una orden en PayPal utilizando el servicio <code>PaypalService</code>, pasando la orden de venta y las URLs de retorno y cancelación.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 6-12:</strong></p>
+<ul>
+<li>
+<p><strong>Extracción de la URL de Aprobación:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="n">String</span><span class="w"> </span><span class="n">approveUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">orderResponse</span>
+</span><span id="__span-42-2"><a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a><span class="w">        </span><span class="p">.</span><span class="na">links</span><span class="p">()</span>
+</span><span id="__span-42-3"><a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a><span class="w">        </span><span class="p">.</span><span class="na">stream</span><span class="p">()</span>
+</span><span id="__span-42-4"><a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a><span class="w">        </span><span class="p">.</span><span class="na">filter</span><span class="p">(</span><span class="n">link</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">link</span><span class="p">.</span><span class="na">rel</span><span class="p">().</span><span class="na">equals</span><span class="p">(</span><span class="s">&quot;approve&quot;</span><span class="p">))</span>
+</span><span id="__span-42-5"><a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a><span class="w">        </span><span class="p">.</span><span class="na">findFirst</span><span class="p">()</span>
+</span><span id="__span-42-6"><a id="__codelineno-42-6" name="__codelineno-42-6" href="#__codelineno-42-6"></a><span class="w">        </span><span class="p">.</span><span class="na">orElseThrow</span><span class="p">(</span><span class="n">RuntimeException</span><span class="p">::</span><span class="k">new</span><span class="p">)</span>
+</span><span id="__span-42-7"><a id="__codelineno-42-7" name="__codelineno-42-7" href="#__codelineno-42-7"></a><span class="w">        </span><span class="p">.</span><span class="na">href</span><span class="p">();</span>
+</span></code></pre></div>
+<ul>
+<li>Se extrae la URL de aprobación de la respuesta de PayPal, filtrando los enlaces y buscando el que tiene la relación (<code>rel</code>) "approve".</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 14:</strong></p>
+<ul>
+<li>
+<p><strong>Devolución de la URL de Aprobación:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="k">return</span><span class="w"> </span><span class="n">Map</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;approveUrl&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">approveUrl</span><span class="p">);</span>
+</span></code></pre></div>
+<ul>
+<li>Se devuelve la URL de aprobación en un mapa.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="clase-createorderrequest"><strong>Clase CreateOrderRequest</strong></h3>
+<p>La clase CreateOrderRequest es una representación de un objeto de transferencia de datos (DTO) utilizado para crear una nueva orden en el sistema. Esta clase encapsula la información necesaria para realizar la solicitud de creación de una orden, incluyendo el ID del cliente y una lista de IDs de libros.</p>
+<h3 id="propiedades-de-createorderrequest"><strong>Propiedades de CreateOrderRequest</strong></h3>
+<ul>
+<li><strong>customerId</strong>: Identificador único del cliente que realiza la orden. Este ID se utiliza para asociar la orden con un cliente específico en el sistema.</li>
+<li><strong>bookIds</strong>: Lista de identificadores únicos de los libros que se incluyen en la orden. Esta lista contiene los IDs de los libros que el cliente desea comprar.</li>
+</ul>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">record</span> <span class="nc">CreateOrderRequest</span><span class="p">(</span><span class="n">Long</span><span class="w"> </span><span class="n">customerId</span><span class="p">,</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span><span class="w"> </span><span class="n">bookIds</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+</span></code></pre></div>
+<p>La clase <code>CreateOrderRequest</code> es importante porque:</p>
+<ul>
+<li><strong>Facilita la Transferencia de Datos</strong>: Proporciona una estructura clara y concisa para transferir la información necesaria al crear una nueva orden en el sistema.</li>
+<li><strong>Asegura la Integridad de los Datos</strong>: Al encapsular los datos requeridos para la creación de una orden, se asegura de que toda la información necesaria esté presente y correctamente estructurada.</li>
+<li><strong>Mejora la Legibilidad del Código</strong>: Al utilizar un objeto de transferencia de datos (DTO), se mejora la legibilidad y mantenibilidad del código, ya que se define claramente qué datos son necesarios para la operación.</li>
+</ul>
+<h3 id="endpoint-de-capture-order"><strong>Endpoint de Capture order</strong></h3>
+<p>El método <code>capturePaypalCheckout</code> captura una orden de PayPal utilizando el servicio <code>PaypalService</code>. Verifica si la captura fue completada y, de ser así, actualiza el estado del pago en la base de datos utilizando el servicio <code>SalesOrderService</code>. Devuelve el estado de la captura y el ID de la orden en un mapa.</p>
+<div class="language-java highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">CheckoutController.java</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-45-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-45-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-45-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-45-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-45-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-45-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-45-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-45-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-45-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-45-10">10</a></span>
+<span class="normal"><a href="#__codelineno-45-11">11</a></span>
+<span class="normal"><a href="#__codelineno-45-12">12</a></span>
+<span class="normal"><a href="#__codelineno-45-13">13</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1"></a><span class="nd">@PostMapping</span><span class="p">(</span><span class="s">&quot;/paypal/capture&quot;</span><span class="p">)</span>
+</span><span id="__span-45-2"><a id="__codelineno-45-2" name="__codelineno-45-2"></a><span class="kd">public</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">capturePaypalCheckout</span><span class="p">(</span><span class="nd">@RequestParam</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">token</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-45-3"><a id="__codelineno-45-3" name="__codelineno-45-3"></a><span class="w">    </span><span class="n">OrderCaptureResponse</span><span class="w"> </span><span class="n">orderCaptureResponse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">paypalService</span><span class="p">.</span><span class="na">captureOrder</span><span class="p">(</span><span class="n">token</span><span class="p">);</span>
+</span><span id="__span-45-4"><a id="__codelineno-45-4" name="__codelineno-45-4"></a>
+</span><span id="__span-45-5"><a id="__codelineno-45-5" name="__codelineno-45-5"></a><span class="w">    </span><span class="kt">boolean</span><span class="w"> </span><span class="n">completed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">orderCaptureResponse</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">orderCaptureResponse</span><span class="p">.</span><span class="na">status</span><span class="p">().</span><span class="na">equals</span><span class="p">(</span><span class="s">&quot;COMPLETED&quot;</span><span class="p">);</span>
+</span><span id="__span-45-6"><a id="__codelineno-45-6" name="__codelineno-45-6"></a><span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">orderId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span><span id="__span-45-7"><a id="__codelineno-45-7" name="__codelineno-45-7"></a>
+</span><span id="__span-45-8"><a id="__codelineno-45-8" name="__codelineno-45-8"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">completed</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-45-9"><a id="__codelineno-45-9" name="__codelineno-45-9"></a><span class="w">        </span><span class="n">orderId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Long</span><span class="p">.</span><span class="na">parseLong</span><span class="p">(</span><span class="n">orderCaptureResponse</span><span class="p">.</span><span class="na">purchaseUnits</span><span class="p">().</span><span class="na">get</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="na">referenceId</span><span class="p">());</span>
+</span><span id="__span-45-10"><a id="__codelineno-45-10" name="__codelineno-45-10"></a><span class="w">        </span><span class="n">salesOrderService</span><span class="p">.</span><span class="na">updatePaymentStatus</span><span class="p">(</span><span class="n">orderId</span><span class="p">,</span><span class="w"> </span><span class="n">PaymentStatus</span><span class="p">.</span><span class="na">PAID</span><span class="p">);</span>
+</span><span id="__span-45-11"><a id="__codelineno-45-11" name="__codelineno-45-11"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-45-12"><a id="__codelineno-45-12" name="__codelineno-45-12"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">Map</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;completed&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">completed</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;orderId&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">orderId</span><span class="p">);</span>
+</span><span id="__span-45-13"><a id="__codelineno-45-13" name="__codelineno-45-13"></a><span class="p">}</span>
+</span></code></pre></div></td></tr></table></div>
+<ul>
+<li>
+<p><strong>Línea 1-2:</strong></p>
+<ul>
+<li>
+<p><strong>Definición del Método capturePaypalCheckout:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a><span class="nd">@PostMapping</span><span class="p">(</span><span class="s">&quot;/paypal/capture&quot;</span><span class="p">)</span>
+</span><span id="__span-46-2"><a id="__codelineno-46-2" name="__codelineno-46-2" href="#__codelineno-46-2"></a><span class="kd">public</span><span class="w"> </span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">capturePaypalCheckout</span><span class="p">(</span><span class="nd">@RequestParam</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">token</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span></code></pre></div>
+<ul>
+<li><strong><code>@PostMapping("/paypal/capture")</code></strong>: Define el endpoint que maneja las solicitudes POST a <code>/paypal/capture</code>.</li>
+<li><strong><code>@RequestParam String token</code></strong>: Captura el parámetro de consulta token de la solicitud.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 3:</strong></p>
+<ul>
+<li>
+<p><strong>Captura de la Orden en PayPal:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-47-1"><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a><span class="n">OrderCaptureResponse</span><span class="w"> </span><span class="n">orderCaptureResponse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">paypalService</span><span class="p">.</span><span class="na">captureOrder</span><span class="p">(</span><span class="n">token</span><span class="p">);</span>
+</span></code></pre></div>
+<ul>
+<li>Se captura la orden en PayPal utilizando el servicio <code>PaypalService</code> con el token de la orden.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 5-6:</strong></p>
+<ul>
+<li>
+<p><strong>Verificación de la Captura:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-48-1"><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a><span class="kt">boolean</span><span class="w"> </span><span class="n">completed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">orderCaptureResponse</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">orderCaptureResponse</span><span class="p">.</span><span class="na">status</span><span class="p">().</span><span class="na">equals</span><span class="p">(</span><span class="s">&quot;COMPLETED&quot;</span><span class="p">);</span>
+</span><span id="__span-48-2"><a id="__codelineno-48-2" name="__codelineno-48-2" href="#__codelineno-48-2"></a><span class="kt">long</span><span class="w"> </span><span class="n">orderId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</span></code></pre></div>
+<ul>
+<li>Se verifica si la captura fue completada comprobando que la respuesta no sea <code>null</code> y que el estado de la orden sea <strong>"COMPLETED"</strong>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 8-11:</strong></p>
+<ul>
+<li>
+<p><strong>Actualización del Estado del Pago:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-49-1"><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">completed</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-49-2"><a id="__codelineno-49-2" name="__codelineno-49-2" href="#__codelineno-49-2"></a><span class="w">    </span><span class="n">orderId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Long</span><span class="p">.</span><span class="na">parseLong</span><span class="p">(</span><span class="n">orderCaptureResponse</span><span class="p">.</span><span class="na">purchaseUnits</span><span class="p">().</span><span class="na">get</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="na">referenceId</span><span class="p">());</span>
+</span><span id="__span-49-3"><a id="__codelineno-49-3" name="__codelineno-49-3" href="#__codelineno-49-3"></a><span class="w">    </span><span class="n">salesOrderService</span><span class="p">.</span><span class="na">updatePaymentStatus</span><span class="p">(</span><span class="n">orderId</span><span class="p">,</span><span class="w"> </span><span class="n">PaymentStatus</span><span class="p">.</span><span class="na">PAID</span><span class="p">);</span>
+</span><span id="__span-49-4"><a id="__codelineno-49-4" name="__codelineno-49-4" href="#__codelineno-49-4"></a><span class="p">}</span>
+</span></code></pre></div>
+<ul>
+<li>Si la captura fue completada, se obtiene el ID de la orden y se actualiza el estado del pago en la base de datos utilizando el servicio <code>SalesOrderService</code>.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Línea 12:</strong></p>
+<ul>
+<li>
+<p><strong>Devolución del Estado de la Captura y el ID de la Orden:</strong></p>
+<div class="language-java highlight"><pre><span></span><code><span id="__span-50-1"><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a><span class="k">return</span><span class="w"> </span><span class="n">Map</span><span class="p">.</span><span class="na">of</span><span class="p">(</span><span class="s">&quot;completed&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">completed</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;orderId&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">orderId</span><span class="p">);</span>
+</span></code></pre></div>
+<ul>
+<li>Se devuelve el estado de la captura y el ID de la orden en un mapa.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>Este controlador <code>CheckoutController</code> permite manejar el flujo de creación y captura de órdenes de PayPal, integrando servicios para gestionar las órdenes y actualizando el estado de los pagos en la base de datos.</p>
+<h3 id="conclusion"><strong>Conclusión</strong></h3>
+<p>En esta sesión, hemos detallado el proceso de integración de PayPal en una aplicación Spring Boot. Empezamos creando los DTOs necesarios para manejar las solicitudes y respuestas de la API de PayPal. Configuramos las propiedades de la aplicación para incluir las credenciales y la URL base de PayPal. Luego, implementamos el servicio PaypalService con métodos para obtener el token de acceso, crear órdenes y capturar órdenes. Finalmente, implementamos el controlador CheckoutController con endpoints para crear y capturar órdenes de PayPal. Este flujo permite manejar pagos de forma eficiente y segura en una aplicación Spring Boot.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2024 Geovanny Mendoza
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/geovannymcode" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M186.1 328.7c0 20.9-10.9 55.1-36.7 55.1s-36.7-34.2-36.7-55.1 10.9-55.1 36.7-55.1 36.7 34.2 36.7 55.1zM480 278.2c0 31.9-3.2 65.7-17.5 95-37.9 76.6-142.1 74.8-216.7 74.8-75.8 0-186.2 2.7-225.6-74.8-14.6-29-20.2-63.1-20.2-95 0-41.9 13.9-81.5 41.5-113.6-5.2-15.8-7.7-32.4-7.7-48.8 0-21.5 4.9-32.3 14.6-51.8 45.3 0 74.3 9 108.8 36 29-6.9 58.8-10 88.7-10 27 0 54.2 2.9 80.4 9.2 34-26.7 63-35.2 107.8-35.2 9.8 19.5 14.6 30.3 14.6 51.8 0 16.4-2.6 32.7-7.7 48.2 27.5 32.4 39 72.3 39 114.2zm-64.3 50.5c0-43.9-26.7-82.6-73.5-82.6-18.9 0-37 3.4-56 6-14.9 2.3-29.8 3.2-45.1 3.2-15.2 0-30.1-.9-45.1-3.2-18.7-2.6-37-6-56-6-46.8 0-73.5 38.7-73.5 82.6 0 87.8 80.4 101.3 150.4 101.3h48.2c70.3 0 150.6-13.4 150.6-101.3zm-82.6-55.1c-25.8 0-36.7 34.2-36.7 55.1s10.9 55.1 36.7 55.1 36.7-34.2 36.7-55.1-10.9-55.1-36.7-55.1z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/geovannycode" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/in/geovannycode/" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.fe8b6f2b.min.js"></script>
+      
+        <script src="https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js"></script>
+      
+        <script src="../javascripts/tablesort.js"></script>
+      
+    
+  </body>
+</html>
