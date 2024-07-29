@@ -1,8 +1,28 @@
 # **Creación de Entidades Order e Item**
 
+## **Introducción**
+
+En esta sección del taller, vamos a crear tres clases fundamentales para gestionar órdenes de venta y los ítems asociados a estas órdenes en nuestro sistema: `SalesOrderEntity`, `SalesOrderItemEntity`, y `PaymentStatus`. Estas clases nos permitirán manejar de forma estructurada y eficiente la información relacionada con las ventas y sus detalles.
+
 ### 1. **Entidad Sales Order**
 
-La clase `SalesOrderEntity` representa una orden en nuestro sistema, que incluye el total de la orden, el estado del pago y los ítems asociados a esa orden.
+#### **Descripción**
+
+La clase `SalesOrderEntity` representa una orden en nuestro sistema, que incluye el total de la orden, el estado del pago y los ítems asociados a esa orden. Esta entidad es esencial para mantener un registro completo y detallado de cada venta realizada.
+
+- **Propiedades de SalesOrderEntity**
+    - **ID**: Identificador único de la orden.
+    - **Total**: Monto total de la orden.
+    - **Estado del Pago**: Indica si el pago ha sido completado, está pendiente, etc.
+    - **Fecha de Creación**: Fecha en la que se creó la orden.
+    - **Cliente**: Referencia a la entidad UserEntity que representa al cliente que realizó la orden.
+    - **Ítems**: Lista de ítems incluidos en la orden.
+
+- **Importancia**
+La entidad `SalesOrderEntity` es crucial porque nos permite:
+    - **Rastrear Ventas**: Registrar cada venta realizada, incluyendo detalles como el monto total y el estado del pago.
+    - **Generar Informes**: Proporcionar datos que pueden ser utilizados para generar informes de ventas y análisis financieros.
+    - **Gestionar Pedidos**: Facilitar la gestión de pedidos, permitiendo a los administradores ver el estado y los detalles de cada orden.
 
 ```java title="SalesOrderEntity.java" linenums="1"
 import com.jconfdominicana.bookstore.model.enums.PaymentStatus;
@@ -76,7 +96,15 @@ public class SalesOrderEntity {
     - **`@Builder`**: Permite construir objetos de esta clase de manera fluida.
 
 ### 2. **Enumerado PaymentStatus**
-El enumerado PaymentStatus define los posibles estados de pago de una orden.
+
+#### **Descripción**
+
+La enumeración `PaymentStatus` define los posibles estados de pago para una orden. Esto nos permite estandarizar y controlar los valores que representan el estado del pago.
+
+Valores de `PaymentStatus`
+
+- **PENDING**: El pago está pendiente.
+- **PAID**: El pago ha sido completado.
 
 ```java title="PaymentStatus.java" linenums="1"
 public enum PaymentStatus {
@@ -85,12 +113,26 @@ public enum PaymentStatus {
 }
 ```
 
-- **`PENDING`**: Indica que el pago está pendiente.
-- **`PAID`**: Indica que el pago ha sido completado.
-
 ### 3. **Entidad Sales Order Item**
 
-La clase `SalesOrderItemEntity` representa un ítem dentro de una orden de venta, incluyendo detalles como el precio, el número de descargas disponibles, y las relaciones con `BookEntity` y `SalesOrderEntity`.
+#### **Descripción**
+
+La clase `SalesOrderItemEntity` representa un ítem individual dentro de una orden de venta. Cada ítem está asociado a un producto específico y tiene propiedades como la cantidad y el precio.
+
+**Propiedades de `SalesOrderItemEntity`**
+
+- **ID**: Identificador único del ítem, generado mediante una secuencia.
+- **Precio**: Precio del ítem en la orden.
+- **Descargas Disponibles**: Número de descargas disponibles para el ítem, si aplica.
+- **Libro**: Referencia a la entidad BookEntity que representa el libro asociado a este ítem.
+- **Orden de Venta**: Referencia a la orden de venta (SalesOrderEntity) a la que pertenece este ítem.
+
+**Importancia**
+La entidad `SalesOrderItemEntity` es fundamental porque nos permite:
+
+- **Desglosar Ventas**: Ver los detalles específicos de cada producto vendido en una orden.
+- **Calcular Totales**: Calcular el total de la orden sumando los precios de cada ítem.
+- **Analizar Productos**: Analizar qué productos se venden más y ajustar inventarios y estrategias de marketing en consecuencia.
 
 ```java title="SalesOrderItemEntity.java" linenums="1"
 @Entity
@@ -259,15 +301,15 @@ public class SalesOrderService {
 
     private final BookRepository bookRepository;
 
-    private final OrderRepository orderRepository;
+    private final SalesOrderRepository orderRepository;
 
-    public SalesOrderService(BookRepository bookRepository, OrderRepository orderRepository) {
+    public SalesOrderService(BookRepository bookRepository, SalesOrderRepository orderRepository) {
         this.bookRepository = bookRepository;
         this.orderRepository = orderRepository;
     }
 
-    public OrderEntity createOrder(List<Long> bookIds){
-        SalesOrderEntity() salesOrderEntity = new SalesOrderEntity();
+    public SalesOrderEntity createOrder(List<Long> bookIds){
+        SalesOrderEntity salesOrderEntity = new SalesOrderEntity();
         List<SalesOrderItemEntity> items =  new ArrayList<>();
         BigDecimal total = BigDecimal.ZERO;
         for( Long bookId : bookIds) {
@@ -279,7 +321,7 @@ public class SalesOrderService {
             salesOrderItem.setBookEntity(book);
             salesOrderItem.setPrice(book.getPrice());
             salesOrderItem.setDownloadsAvailable(3);
-            salesOrderItem.setOrderEntity(salesOrderEntityy);
+            salesOrderItem.setSalesOrderEntity(salesOrderEntity);
 
             items.add(salesOrderItem);
             total = total.add(salesOrderItem.getPrice());
@@ -292,14 +334,6 @@ public class SalesOrderService {
         return orderRepository.save(salesOrderEntity);
     }
 
-    public List<SalesOrderEntity> getOrders() {
-        return orderRepository.findAll();
-    }
-
-    public SalesOrderEntity getOrderById(Long id) {
-        return orderRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Order with id " + id + " not found"));
-    }
 }
 
 ```
@@ -320,55 +354,6 @@ public class SalesOrderService {
         - **`total = total.add(salesOrderItem.getPrice());`**: Actualiza el total de la orden.
     - **`Setters`**: Asigna valores a la orden de venta.
     - **`return orderRepository.save(salesOrderEntity);`**: Guarda la orden en la base de datos y retorna la entidad guardada.
-
-- **Línea 40-42**:
-    - **`getOrders()`**: Método para recuperar todas las órdenes de venta.
-    - **`return orderRepository.findAll();`**: Retorna una lista de todas las entidades `SalesOrderEntity` de la base de datos.
-
-- **Línea 44-47**:
-    - **`getOrderById(Long id)`**: Método para recuperar una orden de venta por su `ID`.
-    - **`return orderRepository.findById(id).orElseThrow(...);`**: Busca una entidad `SalesOrderEntity` por su `ID` o lanza una excepción `ResourceNotFoundException` si no se encuentra.
-
-
-### **Creación del Controlador OrderController**
-
-El controlador OrderController se encarga de manejar las solicitudes HTTP relacionadas con las órdenes de venta. Proporciona endpoints para interactuar con las órdenes, permitiendo su recuperación y, potencialmente, otras operaciones CRUD.
-
-**Controlador `OrderControlle`**
-
-```java title="OrderController.java" linenums="1"
-@RestController
-@RequestMapping("/api/orders")
-public class OrderController {
-
-   private final SalesOrderService salesOrderService;
-
-    public OrderController(SalesOrderService salesOrderService) {
-            this.salesOrderService = salesOrderService;
-
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<SalesOrder> getOrder(@PathVariable Long id) {
-        OrderEntity order = orderService.getOrderById(id);
-
-        if (order != null) {
-            return ResponseEntity.ok(order);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-}
-```
-
-- **Línea 12-21**:
-    - **`@GetMapping("/{id}")`**: Anotación que mapea las solicitudes HTTP GET a la ruta /api/orders/{id} a este método. {id} es una variable de ruta que representa el ID de la orden.
-    - **`@PathVariable Long id`**: Anotación que indica que el valor del parámetro id debe ser tomado de la variable de ruta {id}.
-    - **`ResponseEntity<SalesOrderEntity> getOrder(@PathVariable Long id)`**: Método que maneja la solicitud para obtener una orden por su ID.
-        - **`SalesOrderEntity order = salesOrderService.getOrderById(id);`**: Llama al servicio para obtener la orden por su ID.
-        - **`if (order != null) { ... } else { ... }`**: Verifica si la orden fue encontrada.
-            - **`return ResponseEntity.ok(order);`**: Si la orden es encontrada, devuelve una respuesta HTTP 200 OK con la orden en el cuerpo de la respuesta.
-            - **`return ResponseEntity.notFound().build();`**: Si la orden no es encontrada, devuelve una respuesta HTTP 404 Not Found.
 
 ### **Conlusión**
 

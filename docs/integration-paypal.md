@@ -71,7 +71,7 @@ Para realizar pruebas de integración, puedes utilizar una cuenta de pruebas en 
 1. **Email:** `geovanny-test@personal.example.com`
 2. **Contraseña:** `ow#)_R8w`
 
-## **Guía de laboratorio 2: PayPal**
+## **Guía de PayPal**
 
 En esta sección, aprenderás a implementar la creación de ventas utilizando la API de PayPal. Esto incluye la creación de órdenes de pago, la captura de pagos y la gestión de descargas de archivos comprados.
 
@@ -116,13 +116,13 @@ En esta sección, aprenderás a implementar la creación de ventas utilizando la
 - **Respuesta de PayPal**
     - **PayPal** responde con un token de acceso.
     - El token de acceso tiene la siguiente estructura en JSON:
-        - Figura #1
+![GeoLabs BookStore](./files/Paypal_2.png "GeoLabs BookStore")
 
 Este token de acceso se utilizará para autenticar todas las solicitudes posteriores a la API de PayPal.
 
 ### **2. Creación de la Orden de Pago**
 
-![GeoLabs BookStore](./files/Paypal_2.png "GeoLabs BookStore")
+![GeoLabs BookStore](./files/Paypal_3.png "GeoLabs BookStore")
 <p align="center"><strong>Figura #2</strong></p>
 
 ### **1. Solicitud para Crear una Orden**
@@ -137,12 +137,12 @@ Figura #2
 
 - PayPal responde con los detalles de la orden creada.
 - La respuesta tiene la siguiente estructura en JSON:
-Figura 2
+![GeoLabs BookStore](./files/Paypal_4.png "GeoLabs BookStore")
 
 El enlace con rel: "approve" es el que el cliente debe seguir para aprobar la orden de pago.
 
-3. Captura de la Orden de Pago
-![GeoLabs BookStore](./files/Paypal_3.png "GeoLabs BookStore")
+1. Captura de la Orden de Pago
+![GeoLabs BookStore](./files/Paypal_5.png "GeoLabs BookStore")
 <p align="center"><strong>Figura #3</strong></p>
 
 ### **1.Solicitud para Capturar la Orden**
@@ -156,13 +156,13 @@ El enlace con rel: "approve" es el que el cliente debe seguir para aprobar la or
 
 - PayPal responde con los detalles de la orden capturada.
 - La respuesta tiene la siguiente estructura en JSON:
-Figura # 3
+![GeoLabs BookStore](./files/Paypal_6.png "GeoLabs BookStore")
 
 **En Resumen**
 
-1. Creación del Token de Acceso: Autenticar las solicitudes a la API de PayPal obteniendo un token de acceso.
-2. Creación de la Orden de Pago: Crear una orden de pago en PayPal y obtener el enlace para que el cliente apruebe el pago.
-3. Captura de la Orden de Pago: Capturar la orden de pago aprobada y confirmar la transacción.
+1. **Creación del Token de Acceso**: Autenticar las solicitudes a la API de PayPal obteniendo un token de acceso.
+2. **Creación de la Orden de Pago**: Crear una orden de pago en PayPal y obtener el enlace para que el cliente apruebe el pago.
+3. **Captura de la Orden de Pago**: Capturar la orden de pago aprobada y confirmar la transacción.
 
 ### **Detalle de la Integración con PayPal**
 
@@ -249,8 +249,6 @@ public record OrderItem(
 
 ```java title="PurchaseUnit.java" linenums="1"
 public record PurchaseUnit(
-        // Aquí enviaremos el ID de un objeto Order que representa una venta persistida en nuestra BD
-        // y nos servirá para saber a qué venta corresponde el pago de paypal
         @JsonProperty("reference_id")
         String referenceId,
         Amount amount,
@@ -261,9 +259,9 @@ public record PurchaseUnit(
 
 - **PurchaseUnit**: Estructura de datos para manejar las unidades de compra.
 
-**OrderRequest y OrderResponse**
+**OrderRequest, Intent y OrderResponse**
 
-```java title="OrderRequest.java & OrderResponse.java" linenums="1"
+```java title="OrderRequest.java, OrderResponse.java & Intent.java" linenums="1"
 public record OrderRequest(
         @JsonProperty("application_context")
         ApplicationContext applicationContext,
@@ -277,10 +275,16 @@ public record OrderResponse(
         String status,
         List<Link> links
 ) {}
+
+public enum Intent {
+    CAPTURE
+}
 ```
 
 - **OrderRequest**: Estructura de datos para enviar la solicitud de creación de una orden.
 - **OrderResponse**: Estructura de datos para manejar la respuesta de la creación de una orden.
+- **Intent**: Define el propósito o la intención de una operación específica en nuestro sistema. En este caso, la única intención disponible es `CAPTURE`.
+    - `CAPTURE`: Este valor indica que la operación tiene la intención de capturar una transacción, como un pago o una autorización en un sistema de procesamiento de pagos.
 
 **Link y OrderCaptureResponse**
 
@@ -762,6 +766,25 @@ public Map<String, String> createPaypalCheckout(@RequestParam String returnUrl, 
         ```
     
         - Se devuelve la URL de aprobación en un mapa.
+
+### **Clase CreateOrderRequest**
+
+La clase CreateOrderRequest es una representación de un objeto de transferencia de datos (DTO) utilizado para crear una nueva orden en el sistema. Esta clase encapsula la información necesaria para realizar la solicitud de creación de una orden, incluyendo el ID del cliente y una lista de IDs de libros.
+
+### **Propiedades de CreateOrderRequest**
+
+- **customerId**: Identificador único del cliente que realiza la orden. Este ID se utiliza para asociar la orden con un cliente específico en el sistema.
+- **bookIds**: Lista de identificadores únicos de los libros que se incluyen en la orden. Esta lista contiene los IDs de los libros que el cliente desea comprar.
+
+```java
+public record CreateOrderRequest(Long customerId, List<Long> bookIds) {}
+```
+
+La clase `CreateOrderRequest` es importante porque:
+
+- **Facilita la Transferencia de Datos**: Proporciona una estructura clara y concisa para transferir la información necesaria al crear una nueva orden en el sistema.
+- **Asegura la Integridad de los Datos**: Al encapsular los datos requeridos para la creación de una orden, se asegura de que toda la información necesaria esté presente y correctamente estructurada.
+- **Mejora la Legibilidad del Código**: Al utilizar un objeto de transferencia de datos (DTO), se mejora la legibilidad y mantenibilidad del código, ya que se define claramente qué datos son necesarios para la operación.
 
 ### **Endpoint de Capture order**
 
